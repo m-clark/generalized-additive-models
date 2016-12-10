@@ -1,0 +1,44 @@
+setupIntro	$	::	F	library	list	T
+examplelmcode	~	lm	mydata
+fitPlotsDataSetup	$	%>%	^	~	==	arrange	data.frame	fitted	library	lm	predict	rgamma	rnorm	round	set.seed	sort	which
+linearFitPlot	%>%	add_trace	dxy	F	fitlm	layout	library	list	plot_ly	theme_plotly	x	y
+quadraticFitPlot	%>%	add_trace	dxy	F	fitx2	layout	list	plot_ly	theme_plotly	x	y
+loessgraph1	%>%	add_trace	c	dxy	F	layout	list	max	min	neighborhood	plot_ly	sort	theme_plotly	x	y
+loessgraph2	%>%	add_trace	dxy	F	layout	list	neighborfit	neighborhood	plot_ly	theme_plotly	x	y
+loessgraph3	%>%	~	add_trace	dxy	F	fitted	layout	list	loess	plot_ly	theme_plotly	x	y
+mcycleDataSetup	$	$<-	::	~	accel	attach	c	data.frame	detach	factor	fitted	ksmooth	library	lm	lowess	mcycle	melt	smooth.spline	times
+mcycleFigure	%>%	~	accel	aes	element_blank	facet_wrap	geom_line	geom_point	ggplot	ggplotly	layout	mcycle3	theme	theme_plotly	theme_trueMinimal	times	value	xlab	ylab
+initial_inspection_of_pisa	::	read.csv
+scatterwrap	%>%	::	~	aes	Country	Evidence	Explain	facet_wrap	gather	geom_point	geom_text	ggplot	ggplotly	Issues	labs	layout	library	Overall	pisa	theme_trueMinimal	Value	Variable
+scatterwrapSmooth	%>%	~	aes	Country	dmelt	element_rect	F	facet_wrap	geom_point	geom_smooth	geom_text	ggplot	ggplotly	labs	layout	Overall	theme	theme_trueMinimal	Value
+mod_lm	~	gam	library	pisa	summary
+polynomialBasis	$	$<-	%>%	^	~	aes	c	expression	F	facet_grid	factor	geom_line	geom_smooth	ggplot	ggplotly	Income	layout	levels<-	nrow	Overall	pisa	rbind	rep	theme_trueMinimal	ylab
+csbyhand	$	%>%	::	[<-	^	~	abs	aes	coef	data.frame	F	geom_line	geom_point	geom_smooth	ggplot	ggplotly	Income	layout	length	lm	matrix	outer	Overall	pisa	seq	theme_trueMinimal	xlim
+mod_gam1	~	gam	pisa	summary
+pvalue	
+plot_mod_gam1	::	axis	axTicks	F	mod_gam1	mtext	par	plot	T
+mod_lm_fit	$	AIC	mod_lm	summary
+compareLMGAM	$	AIC	c	colnames<-	data.frame	format	mod_gam1	mod_lm	pander	rbind	round	rownames<-	summary
+mod_lm_mod_gam1_anova	anova	mod_gam1	mod_lm
+mod_lm2	~	gam	pisa	summary
+mod_gam2	~	gam	pisa	summary
+mod_gam2_update	~	mod_gam2	summary	update
+mod_gam2_plot	c	F	library	list	mod_gam2	par	visreg
+plot_mod_gam2_responseA	$	%>%	aes	data.frame	fit	geom_line	geom_ribbon	ggplot	Income	lower	mean	mod_gam2	mutate	predict	se.fit	seq	T	theme_trueMinimal	upper
+plot_mod_gam2_responseB	%>%	ggplotly	layout	plot_mod_gam2_response
+contour	$	$<-	c	mod_gam2	names<-	t	vis.gam	visreg2d
+contourheat	%>%	::	colorRampPalette	Edu	Income	lapply	layout	Overall	plot_ly	rev	round	tt	with
+mod_gam3	~	gam	pisa	summary
+mod_gam3_plot	$	$<-	%>%	::	c	colorRampPalette	Edu	Income	lapply	layout	list	mod_gam3	names<-	Overall	plot_ly	rev	round	t	toRGB	visreg2d	with
+mod_lm2_mod_gam2_anova	anova	mod_gam2	mod_lm2
+gam_check	::	gam.check	mod_gam2	par
+concurvity	concurvity	mod_gam2
+mod_comparison	~	AIC	gam	pisa
+anova_nest	~	anova	gam	pisa
+Penalized_Estimation_Example	$	[<-	^	~	abs	c	data.frame	diag	eigen	length	lm	matrix	max	min	outer	rbind	sqrt	t	T
+Penalized_Estimation_Example_Example1	%>%	~	aes	coef	data.frame	element_blank	geom_line	geom_point	ggplot	ggplotly	layout	library	lm	spl.X	theme	theme_trueMinimal	wear	x
+Penalized_Estimation_Example_Example12	%>%	[<-	~	aes	c	coef	d	data.frame	element_blank	facet_wrap	for	gather	geom_line	geom_point	ggplot	ggplotly	layout	library	paste	prs.fit	spl.X	T	theme	theme_trueMinimal	value	variable	wear	x	xp
+csbs	%>%	.	^	>=	arrange	data.frame	detach	head	ifelse	length	na.omit	pisa	sapply	select	seq	sort
+csbsPlot	%>%	add_trace	arrange	bsfunc	data.frame	gather	Income	layout	library	plot_ly	theme_plotly
+csbsScaledPlot	%>%	&	~	<	==	>=	add_trace	arrange	bs	bsfunc	c	coef	colnames<-	data.frame	filter	gather	Income	knots	layout	lm	paste0	plot_ly	rbind	sweep	theme_plotly
+unnamed-chunk-6	%>%	add_trace	fitted	Income	layout	list	lmMod	mod_gam1	order	plot_ly	sort	theme_plotly

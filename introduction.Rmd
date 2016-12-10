@@ -1,0 +1,259 @@
+---
+title: <span style="color:#0085A1; font-size:5rem">Generalized Additive Models</span>
+author: |
+  | <a href="http://mclark--.github.io/"><span style="font-size:2rem">Michael Clark</span></a>
+  | <span style="color:#00274c">Statistician Lead
+  | Consulting for Statistics, Computing and Analytics Research
+  | Advanced Research Computing </span>
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    css: tufte-css-master/tufte.css
+    highlight: pygments
+    keep_md: no
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+bibliography: refs.bib
+nocite: | 
+  @wood_generalized_2006, @venables_modern_2002, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
+  @rigby_generalized_2005, @hastie_generalized_1990, @fox_multiple_2000, @fox_nonparametric_2000,
+  @breiman_statistical_2001, @bybee_pisa_2009, @hastie_elements_2009, @ruppert_semiparametric_2003,
+  @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
+---
+```{r setupIntro, include=FALSE}
+knitr::opts_chunk$set(cache = F, message = F, warning = F, R.options=list(width=120), 
+                      fig.height=4, fig.width=4, fig.align = 'center', comment=NA, autodep=T)
+library(magrittr); library(dplyr); library(pander)
+```
+
+# <a name='intro'>Introduction</a>
+
+## <a name='beyondGLM1'>Beyond the General Linear Model I</a>
+
+### <a name='lm1'>General Linear Model</a>
+
+<span class="newthought">Let us begin</span> by considering the standard linear regression model (SLiM) estimated via ordinary least squares (OLS).  We have some response/variable we wish to study, and believe it to be some function of other variables.  In the margin to the right, $y$ is the variable of interest,
+<span class="marginnote">$$y\sim \mathcal{N}(\mu,\sigma^2) \\ \mu = b_0+b_1X_1+b_2X_2...+b_pX_p$$</span>
+assumed to be normally distributed with mean $\mu$ and variance $\sigma^2$, and the Xs are the predictor variables/covariates in this scenario.  The predictors are multiplied by the coefficients ($\beta$) and summed, giving us the linear predictor, which in this case also directly provides us the estimated fitted values.
+
+Since we'll be using R and might as well get into that mindset, I'll give an example of how the R code might look like.
+
+```{r examplelmcode, eval=F}
+mymod = lm(y ~ x1 + x2, data=mydata)
+```
+
+One of the issues with this model is that, in its basic form it can be very limiting in  its assumptions about the data generating process for the variable we wish to study.  Also, while the above is one variant of the usual of the manner in which it is presented in introductory texts, it also very typically will not capture what is going on in a great many data situations. 
+
+### <a name='glm'>Generalized Linear Model</a>
+In that light, we may consider the *generalized* linear model.  Generalized linear models incorporate other types of distributions<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Of the [exponential family](https://en.wikipedia.org/wiki/Exponential_family).</span>, and include a link function $g(.)$ relating the mean $\mu$, or stated differently, the expected values $E(y)$, to the linear predictor $X\beta$, often denoted $\eta$.  The general form is thus $g(\mu) = X\beta$. 
+
+<span class="marginnote">
+$$g(\mu) = \eta = X\beta \\
+E(y) = \mu = g^{-1}(\eta)$$
+</span>
+
+Consider again the typical linear regression.  We assume a Gaussian (i.e. Normal) distribution for the response, we assume equal variance for all observations, and that there is a direct link of the linear predictor and the expected value $\mu$, i.e. $X\beta = \mu$. In fact the typical linear regression model is a generalized linear model with a Gaussian distribution and 'identity' link function.
+
+To further illustrate the generalization, we consider a distribution other than the Gaussian.  In the example to the right, we examine a Poisson distribution for some vector of count data.  
+<span class="marginnote">
+$$y \sim \mathcal{P}(\mu) \\
+g(\mu) = b_0+b_1X_1+b_2X_2...+b_pX_p$$
+</span> 
+There is only one parameter to be considered, $\mu$, since for the Poisson the mean and variance are equal.  For the Poisson, the (canonical) link function $g(.)$, is the natural log, and so relates the log of $\mu$ to the linear predictor.  As such we could also write it in terms of exponentiating the right hand side.
+<span class="marginnote">
+$$\mu = e^{b_0+b_1X_1+b_2X_2...+b_pX_p}$$
+</span>
+
+While there is a great deal to further explore with regard to generalized linear models, the point here is to simply to note them as a generalization of the typical linear model with which all would be familiar after an introductory course in statistics. As we eventually move to generalized additive models, we can see them as a subsequent step in the  generalization.
+
+
+### <a name='gam1'>Generalized Additive Model</a>
+Now let us make another generalization to incorporate nonlinear forms of the predictors.  The form
+<span class="marginnote">
+$$
+    y \sim ExpoFam(\mu, etc.) \\
+    \mu = E(y) \\
+    g(\mu) = b_0 + f(x_1) + f(x_2) +...+f(x_p)$$
+</span> at the right gives the new setup relating our new, now nonlinear predictor to the expected value, with whatever link function may be appropriate.
+
+So what's the difference?  In short, we are using smooth functions of our predictor variables, which can take on a great many forms, with more detail in the following section. For now, it is enough to note the observed values $y$ are assumed to be of some exponential family distribution, and $\mu$ is still related to the model predictors via a link function.  The key difference is that the linear predictor now incorporates smooth functions of at least some (possibly all) covariates, represented as $f(x)$.
+
+
+
+## <a name='beyondGLM2'>Beyond the General Linear Model II</a>
+
+### <a name='lm1'>Fitting the Standard Linear Model</a>
+
+In many data situations the relationship between some covariate(s) $X$ and response $y$ is not so straightforward. Consider the following plot. Attempting to fit a standard OLS regression results in the blue line, which doesn't capture the relationship very well. 
+
+```{r fitPlotsDataSetup, echo=F}
+library(dplyr); library(lazerhawk)
+set.seed(666)
+x = rgamma(1000, 2)
+y = x + x^2 + rnorm(100)
+
+dxy = data.frame(x,y) %>% arrange(x)
+
+fitlm = lm(y~x, data=dxy)$fitted
+fitx2 = lm(y~poly(x,2), data=dxy)$fitted
+#loess
+marker <- which(round(sort(x),2)==3)
+neighborhood= (marker-100):(marker+100)
+
+neighbormod = lm(y~x, dxy[neighborhood,])
+neighborfit = fitted(neighbormod)
+# neighborfit[names(neighborfit)==paste(marker)]
+fitat3 = predict(neighbormod, newdat=data.frame(x=3,y=NA))
+
+```
+
+<!-- <span class="marginnote"><span class="imgbigger"><img src="vis/lmfit.png" style="display:block; margin: 0 auto;"></span><span> -->
+
+```{r linearFitPlot, echo=F}
+library(plotly)
+plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
+                    marker=list(opacity=.1, color='#ff5503')) %>% 
+  add_trace(data=dxy, x=x, y=fitlm, name='lm fit', marker=list(color='#1e90ff')) %>% 
+  theme_plotly() %>% 
+  layout(paper_bgcolor='rgba(0,0,0,0)',
+         plot_bgcolor='rgba(0,0,0,0)')
+```
+
+### <a name='polyreg'>Polynomial Regression</a>
+<span class="marginnote">$$
+    y \sim \mathcal{N}(\mu,\sigma^2)\\
+    \mu = b_0 + b_{1}X_1+b_{2}X^2
+$$</span>
+One common approach we could undertake is to add a transformation of the predictor $X$, and in this case we might consider a quadratic term such that our model looks something like that to the right.
+
+```{r quadraticFitPlot, echo=F}
+plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
+                    marker=list(opacity=.1, color='#ff5503')) %>% 
+  add_trace(data=dxy, x=x, y=fitx2, name='quadratic fit', marker=list(color='#1e90ff')) %>% 
+  theme_plotly() %>% 
+  layout(paper_bgcolor='rgba(0,0,0,0)',
+         plot_bgcolor='rgba(0,0,0,0)')
+```
+
+We haven't really moved from the general linear model in this case, but we have a much better fit to the data as evidenced by the graph.
+
+
+### <a name='scattersmooth'>Scatterplot Smoothing</a>
+
+There are still other possible routes we could take. Many are probably familiar with <span class="emph">loess</span> (or lowess) regression, if only in the sense that often statistical packages may, either by default or with relative ease, add a nonparametric fit line to a scatterplot<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See the scatterplots in the <span class="pack">car</span> package for example.</span>. By default this is typically *lowess*, or *locally weighted scatterplot smoothing*.  
+
+Take a look at the following figure. For every (sorted) $x_0$ value, we choose a neighborhood around it and, for example, fit a simple regression.  As an example, let's look at $x_0$ = 3.0, and choose a neighborhood of 100 X values below and 100 values above.  
+
+```{r loessgraph1, echo=FALSE}
+# because plotly can't do calculations on the fly for some things
+minx = min(sort(x)[neighborhood])
+maxx = max(sort(x)[neighborhood])
+maxy = max(y) + 2
+plot_ly(x=c(minx,minx), y=c(0, maxy), mode='line', showlegend=F, width='75%',
+        line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% # marker opacity to 0 to remove idiotic placed endpoints
+  add_trace(x=c(maxx, maxx), y=c(0, maxy), mode='line', showlegend=F,
+            line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% 
+  add_trace(data=dxy[-neighborhood,], x=x, y=y, mode='markers', showlegend=F, 
+            marker=list(color='gray', opacity=.1))%>% 
+  add_trace(data=dxy[neighborhood,], x=x, y=y, mode='markers', showlegend=F, 
+            marker=list(color='darkred', opacity=.1)) %>% 
+  theme_plotly() %>% 
+  layout(paper_bgcolor='rgba(0,0,0,0)',
+         plot_bgcolor='rgba(0,0,0,0)',
+         xaxis=list(title='x'),
+         yaxis=list(title='y'))
+```
+
+
+Now, for just that range we fit a linear regression model and note the fitted value where $x_0=3.0$. 
+
+```{r loessgraph2, echo=FALSE}
+plot_ly(data=dxy[neighborhood,], x=x, y=y, mode='markers', showlegend=F, width='75%',
+                    marker=list(opacity=.2, color='#ff5503')) %>% 
+  add_trace(data=dxy[neighborhood,], x=x, y=neighborfit, name='lm fit',marker=list(color='#1e90ff')) %>% 
+  theme_plotly() %>% 
+  layout(paper_bgcolor='rgba(0,0,0,0)',
+         plot_bgcolor='rgba(0,0,0,0)')
+```
+
+If we now do this for *every* $x_0$ value, we'll have fitted values based on a rolling neighborhood that is relative to each value being considered. Other options we could throw into this process, and usually do, would be to fit a polynomial regression for each neighborhood, and weight observations the closer they are to the value, with less weight given to more distant observations.
+
+```{r loessgraph3, echo=FALSE}
+plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
+                    marker=list(opacity=.1, color='#ff5503')) %>% 
+  add_trace(data=dxy, x=x, y=fitted(loess(y~x)), name='loess fit',marker=list(color='#1e90ff')) %>% 
+  theme_plotly() %>% 
+  layout(paper_bgcolor='rgba(0,0,0,0)',
+         plot_bgcolor='rgba(0,0,0,0)')
+```
+
+The above plot shows the result from such a fitting process.  For comparison the regular regression fit is also provided. Even without using a lowess approach, we could have fit have fit a model assuming a quadratic relationship,  $y = x + x^2$, and it would result in a far better fit than the simpler model<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">$y$ was in fact constructed as $x + x^2 +$ noise.</span>.  While polynomial regression might suffice in some cases, the issue is that nonlinear relationships are generally not specified so easily, as we'll see next<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Bolker 2008 notes an example of fitting a polynomial to 1970s U.S. Census data that would have predicted a population crash to zero by 2015.</span>.
+
+```{r mcycleDataSetup, echo=FALSE}
+library(MASS); library(splines)
+attach(mcycle)
+polyfit = fitted(lm(accel~poly(times,3)))
+nsfit = fitted(lm(accel~ns(times,df=5)))
+ssfit = fitted(smooth.spline(times,accel))
+lowfit = lowess(times, accel, .2)$y
+ksfit = ksmooth(times, accel, 'normal', bandwidth=5, x.points=times)$y #locpoly(times, accel, kernel='normal', bandwidth=10)
+gamfit = fitted(mgcv::gam(accel~s(times,bs="cs"))) #original drops duplicates
+mcycle2 = data.frame(mcycle, polyfit, nsfit, ssfit, lowfit, ksfit, gamfit)
+detach('mcycle')
+
+library(reshape2)
+mcycle3 = melt(mcycle2, id=c('times','accel'))
+mcycle3$variable =factor(mcycle3$variable, labels=c('Polynomial Regression (cubic)', 'Natural Splines', 'Smoothing Splines',
+                                                    'Lowess', 'Kernel Smoother', 'GAM'))
+```
+
+
+### <a name='gam2'>Generalized Additive Models</a>
+The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">This is a version of that found in @venables_modern_2002.</a>.  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
+
+```{r mcycleFigure, echo=FALSE}
+mcycleFigure = ggplot(aes(x=times,y=accel), data=mcycle3) + 
+  geom_point(color='#ff5503', alpha=.25, size=1) + 
+  geom_line(aes(y=value), color='#1e90ff', size=.75) +
+  facet_wrap(~variable) +
+  ylab('Acceleration') +
+  xlab('Time') +
+  theme(plot.background=element_blank()) +
+  theme_trueMinimal()
+ggplotly(mcycleFigure, width='75%') %>% 
+    theme_plotly() %>% 
+  layout(paper_bgcolor='rgba(0,0,0,0)',
+         plot_bgcolor='rgba(0,0,0,0)')
+```
+
+
+
+## Summary
+
+Let's summarize our efforts up to this point.
+
+
+- Standard Linear Model
+
+$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
+$$\mu = b_{0}+b_{1}X_{1}$$
+
+
+
+- Polynomial Regression
+
+$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
+$$\mu = b_{0}+b_{1}X_{1}+b_{2}X^2$$
+
+- GLM formulation
+
+$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
+$$g(\mu) = b_{0}+b_{1}X_{1}+b_{2}X$$ 
+
+- GAM formulation
+
+$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
+$$g(\mu) = f(X)$$  
+
+Now that some of the mystery will hopefully have been removed, let's take a look at GAMs in action.

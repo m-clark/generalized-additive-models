@@ -1,0 +1,73 @@
+---
+title: <span style="color:#0085A1; font-size:5rem">Generalized Additive Models</span>
+author: |
+  | <a href="http://mclark--.github.io/"><span style="font-size:2rem">Michael Clark</span></a>
+  | <span style="color:#00274c">Statistician Lead
+  | Consulting for Statistics, Computing and Analytics Research
+  | Advanced Research Computing </span>
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    css: tufte-css-master/tufte.css
+    highlight: pygments
+    keep_md: no
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+bibliography: refs.bib
+nocite: | 
+  @wood_generalized_2006, @venables_modern_2002, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
+  @rigby_generalized_2005, @hastie_generalized_1990, @fox_multiple_2000, @fox_nonparametric_2000,
+  @breiman_statistical_2001, @bybee_pisa_2009, @hastie_elements_2009, @ruppert_semiparametric_2003,
+  @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = T, message = F, warning = F, R.options=list(width=120), 
+                      fig.width=8, fig.align = 'center', comment=NA, autodep=T)
+library(magrittr); library(dplyr); library(pander); library(plotly); library(lazerhawk)
+```
+
+
+# [Preface](#preface)
+
+The following provides a brief introduction to generalized additive models and some thoughts on getting started within the R environment.  It doesn't assume much more than a basic exposure to regression, and maybe a general idea of R though not necessarily any particular expertise. The presentation is of a very applied nature, and such that the topics build upon the familiar and generalize to the less so, with the hope that one can bring the concepts they are comfortable with to the new material. The audience in mind is a researcher with typical applied science training.
+
+As this document is more conceptual, a basic familiarity with R is all that is needed to follow the code, though there is much to be gained from simple web browsing on R if one needs it. And while it wasn't the intention starting out, this document could be seen as a vignette for the <span class="pack">mgcv</span> package, which is highly recommended.
+
+
+This document was created with [Rstudio](http://rstudio.org/) and rmarkdown. <span class="marginnote">Last modified `r Sys.Date()`. Original draft August, 2012.</span>
+
+
+Color guide:
+
+- <span class="emph">important term</span>
+- [link]()
+- <span class="pack">package</span>
+- <span class="func">function</span>
+- <span class="objclass">object or class</span>
+
+R Info: **`r sessionInfo()$R.version$version.string` `r sessionInfo()$R.version$nickname`**
+
+
+
+```{r child='introduction.Rmd'}
+```
+
+```{r child='application.Rmd'}
+```
+
+```{r child='issues.Rmd'}
+```
+
+```{r child='approaches.Rmd'}
+```
+
+#<a name='conclusion'>Conclusion</a>
+
+Generalized additive models are a conceptually straightforward tool that allows one to incorporate nonlinear predictor effects into their otherwise linear models. In addition, they allow one to keep within the linear and generalized linear modeling frameworks with which one is already familiar, while providing new avenues of model exploration and possibly improved results.  As was demonstrated, it is easy enough with just a modicum of familiarity to pull them off within the R environment, and as such, it is hoped that this document provides the means to do so.
+
+```{r child='appendix.Rmd'}
+```
+
+
+# References
