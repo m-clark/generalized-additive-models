@@ -50,6 +50,7 @@ body { width: 100%;                    /* mc change */
        counter-reset: sidenote-counter; }
 
 h1 { font-weight: 400;
+     color: #0085a1;
      margin-top: 4rem;
      margin-bottom: 1.5rem;
      font-size: 3.2rem;
@@ -57,6 +58,7 @@ h1 { font-weight: 400;
 
 h2 { font-style: normal;
      font-weight: 200;                 /* mc change */
+     color: #0085a1;
      margin-top: 2.1rem;
      margin-bottom: 0;
      font-size: 2.2rem;
@@ -64,6 +66,7 @@ h2 { font-style: normal;
 
 h3 { font-style:  normal;
      font-weight: 200;                 /* mc change */
+     color: #0085a1;
      font-size: 1.7rem;
      opacity: .9;                      /* mc change */
      margin-top: 2rem;
@@ -72,6 +75,7 @@ h3 { font-style:  normal;
 
 h4 { font-variant: normal;             /* mc add */
      font-weight: 200;
+     color: #0085a1;
      font-size: 1.5rem;
      opacity: .9;
      margin-top: 1.9rem;

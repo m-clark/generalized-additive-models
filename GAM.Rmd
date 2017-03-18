@@ -1,7 +1,7 @@
 ---
 title: <span style="color:#0085A1; font-size:5rem">Generalized Additive Models</span>
 author: |
-  | <a href="http://mclark--.github.io/"><span style="font-size:2rem">Michael Clark</span></a>
+  | <a href="http://m-clark.github.io/"><span style="font-size:2rem">Michael Clark</span></a>
   | <span style="color:#00274c">Statistician Lead
   | Consulting for Statistics, Computing and Analytics Research
   | Advanced Research Computing </span>
@@ -22,13 +22,17 @@ nocite: |
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = T, message = F, warning = F, R.options=list(width=120), 
+knitr::opts_chunk$set(cache.rebuild=F, cache = F, message = F, warning = F, R.options=list(width=120), 
                       fig.width=8, fig.align = 'center', comment=NA, autodep=T)
-library(magrittr); library(dplyr); library(pander); library(plotly); library(lazerhawk)
+```
+
+```{r loadpacks}
+library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk)
 ```
 
 
-# [Preface](#preface)
+
+# Preface
 
 The following provides a brief introduction to generalized additive models and some thoughts on getting started within the R environment.  It doesn't assume much more than a basic exposure to regression, and maybe a general idea of R though not necessarily any particular expertise. The presentation is of a very applied nature, and such that the topics build upon the familiar and generalize to the less so, with the hope that one can bring the concepts they are comfortable with to the new material. The audience in mind is a researcher with typical applied science training.
 
@@ -62,7 +66,7 @@ R Info: **`r sessionInfo()$R.version$version.string` `r sessionInfo()$R.version$
 ```{r child='approaches.Rmd'}
 ```
 
-#<a name='conclusion'>Conclusion</a>
+# Conclusion
 
 Generalized additive models are a conceptually straightforward tool that allows one to incorporate nonlinear predictor effects into their otherwise linear models. In addition, they allow one to keep within the linear and generalized linear modeling frameworks with which one is already familiar, while providing new avenues of model exploration and possibly improved results.  As was demonstrated, it is easy enough with just a modicum of familiarity to pull them off within the R environment, and as such, it is hoped that this document provides the means to do so.
 

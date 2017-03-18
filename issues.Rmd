@@ -22,9 +22,9 @@ nocite: |
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
 ---
 
-#<a name='OtherIssues'>Other Issues</a>
+# Other Issues
 
-##<a name='Estimation'>Estimation</a>
+## Estimation
 
 <span class="newthought">As noted previously</span>, estimation of GAMs in the mgcv package is conducted via a penalized likelihood approach. Conceptually this amounts to fitting the following model:
 
@@ -38,17 +38,17 @@ Given a matrix of coefficients $S$, we can more formally note a penalized likeli
 
 $$l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta$$
 
-where $l(\beta)$ is the usual GLM likelihood function, and $\lambda_j$ are the smoothing parameters.  The part of the function including $\lambda$ penalizes curvature in the function, where $\lambda$  establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">$\lambda\rightarrow\infty$ would result in a straight line estimate for $f_j$, while $\lambda = 0$ would allow any $f$ that interpolates the data. See p. 128, @wood_generalized_2006.</span>.  Technically we could specify the smoothing parameters explicitly, and the [Appendix](#Penalized_Estimation_Example) has some 'by-hand' code taken directly from @wood_generalized_2006 with only slight modifications, where the smoothing parameters are chosen and compared.
+where $l(\beta)$ is the usual GLM likelihood function, and $\lambda_j$ are the smoothing parameters.  The part of the function including $\lambda$ penalizes curvature in the function, where $\lambda$  establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">$\lambda\rightarrow\infty$ would result in a straight line estimate for $f_j$, while $\lambda = 0$ would allow any $f$ that interpolates the data. See p. 128, @wood_generalized_2006.</span>.  Technically we could specify the smoothing parameters explicitly, and the [Appendix][Penalized Estimation Example] has some 'by-hand' code taken directly from @wood_generalized_2006 with only slight modifications, where the smoothing parameters are chosen and compared.
 
 Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before.  Smoothing parameters are selected which minimize the GCV score by default, though one has other options.  Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.
 
 
-###<a name='Shrinkage'>Shrinkage & Variable Selection</a>
+###Shrinkage & Variable Selection
 
 Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions.  An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See also, the `select` argument to the <span class="func">gam</span> function. Also, in version 1.7-19, <span class="func">summary.gam</span> and <span class="func">anova.gam</span> had changes made to improve the p-value computation in penalized situations.</span>.  In this manner one can assess whether a predictor is adding anything to the model, i.e. if it's effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.
 
 
-###<a name='EDF'>Effective degrees of freedom again</a>
+###Effective degrees of freedom again
 
 If we define a matrix $F$ that maps the unpenalized estimates of $\beta$ to the penalized estimates such that
 
@@ -62,12 +62,12 @@ $$\hat{\beta} = F\tilde{\beta}$$
 the diagonal elements of $F$ are where the effective degrees of freedom for each covariate come from.  
 
 
-##<a name='smoothFunc'>Choice of Smoothing Function</a>
+## Choice of Smoothing Function
 
 A number of smooths are available with the <span class="pack">mgcv</span> package, and one can learn more via the help file for <span class="func">smooth.terms</span> ([link](http://www.inside-r.org/r-doc/mgcv/smooth.terms)). In our models we have used cubic regression splines and thin plate regression splines (TPRS), the latter being the default for a GAM in this package.  As a brief summary, TPRS work well in general in terms of performance and otherwise has some particular advantages, and has a shrinkage alternative available.  One should still feel free to play around, particularly when dealing with multiple smooths, where the tensor product smooths would be better for covariates of different scales.
 
 
-##<a name='diagnostics'>Diagnostics</a>
+## Diagnostics
 
 We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.
 
@@ -81,7 +81,7 @@ gam.check(mod_gam2, k.rep=1000, bty='n', pch=20, cex=2, col=scales::alpha('#ff55
 The plots are of the sort we're used to from a typical regression setting, though it's perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low.  The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue.  However, if there were a potential problem, it is suggested to double $k$<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">$k$ can be set as an argument to `s(var1, k=?)`.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.</span>.  Given the penalization process, the exact choice of $k$ isn't too big of a deal, but the defaults are arbitrary.  You want to set it large enough to get at the true effect as best as possible, but in some cases computational efficiency will also be of concern.  For example, in fairly complex models with many predictors, interactions, etc., it might be worthwhile to reduce $k$ at the outset. The help on the function <span class="func">choose.k</span> provides another approach to examining $k$ based on the residuals from the model under consideration, and provides other useful information.
 
 
-###<a name='concurvity'>Concurvity</a>
+### Concurvity
 
 <span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem, i.e. unstable estimates.
 
@@ -94,12 +94,12 @@ concurvity(mod_gam2)
 It should probably come as little surprise that we may have an issue here given the nature of the covariates.  We can certainly make assumptions about wealthier nations' education and health status, for example.  What can we do?  Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data.  We certainly can't do that here as we are dealing with country level data.  That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores).  In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique.  For example, if it is the result of having several time- or spatially- covarying predictors, one might be able retain only those that best capture that effect.  However, the mgcv estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See @wood2008.
 
 
-##<a name='prediction'>Prediction</a>
+##Prediction
 
-A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale.  Typically we'd use this on new data.  I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that.  It is worth noting again that there is an option, `type='lpmatrix'`, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values.  This can be particularly useful towards opening the [black box](#blackbox) as one learns the technique.
+A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale.  Typically we'd use this on new data.  I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that.  It is worth noting again that there is an option, `type='lpmatrix'`, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values.  This can be particularly useful towards opening the [black box][The Black Box] as one learns the technique.
 
 
-##<a name='modComparisonRevisited'>Model Comparison Revisited</a>
+##Model Comparison Revisited
 
 We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter.  Using an extra penalty to allow coefficients to tend toward zero with the argument `select=TRUE` is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">GCV scores are not useful for comparing fits of different families; AIC is still okay though.</span>, and in general either of these would be viable approaches. Consider the following comparison:
 
@@ -115,7 +115,7 @@ In some cases we might prefer to be explicit in comparing models with and withou
 mod_A = gam(Overall ~ s(Income, bs="cr", k=5) + s(Edu, bs="cr", k=5), data=pisa)
 mod_B = gam(Overall ~ ti(Income, bs="cr", k=5) + ti(Edu, bs="cr", k=5) + ti(Income, Edu, bs='cr'), data=pisa)
 
-anova(mod_A,mod_B, test="Chi")
+anova(mod_A,mod_B, test="Chisq")
 ```
 
 Again though, we could have just used the summary output from the second model.

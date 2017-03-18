@@ -21,9 +21,9 @@ nocite: |
   @breiman_statistical_2001, @bybee_pisa_2009, @hastie_elements_2009, @ruppert_semiparametric_2003,
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
 ---
-#<a name='appendix'>Appendix</a>
+# Appendix
 
-##<a name='packages'>R packages</a>
+## R packages
 <span class="newthought">The following is</span> a non-exhaustive list of R packages which contain GAM functionality. Each is linked to the CRAN page for the package.  Note also that several build upon the <span class="pack">mgcv</span> package used for this document.
 
 [brms](http://cran.r-project.org/web/packages/brms/) Allows for Bayesian GAMs via the Stan modeling language (very new implementation).
@@ -60,7 +60,7 @@ nocite: |
 
 
 
-##<a name='Penalized_Estimation_Example'>Penalized Estimation Example</a>
+## Penalized Estimation Example
 
 Initial data set up and functions.
 
@@ -132,7 +132,7 @@ ex1 = ggplot(aes(x=x, y=wear), data=data.frame(x,wear))+
   theme_trueMinimal() +
   theme(plot.background=element_blank(),
         panel.background=element_blank())
-ggplotly(ex1, width='75%') %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+ggplotly() %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', width='100%')
 ```
 
 
@@ -162,11 +162,11 @@ csplot = ggplot(aes(x=x, y=wear), data=d) +
   theme_trueMinimal() +
   theme(plot.background=element_blank(),
         panel.background=element_blank())
-ggplotly(width='75%') %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+ggplotly() %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
 
-##<a name='basisfunc'>Basis functions for a cubic spline</a>
+## Basis functions for a cubic spline
 
 We can take the same approach as with the polynomial example earlier in the document, and take a closer look at the basis functions. While we're using the same approach here as above, you can inspect this in one of two ways with the <span class="pack">mgcv</span> package. One is to use the `fit=FALSE` argument, which will return the model matrix instead of a fitted gam object<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Doing so actually returns an list of many elements. The one named `X` is the model matrix.</span>.  Secondly, after a model is run, you can use the <span class="func">predict</span> function on *any* data with the argument `type='lpmatrix'` to return the matrix.
 
@@ -199,8 +199,11 @@ pisa2 = data.frame(Income, bs) %>%
 #         marker=list(color='black', opacity=.2)) %>% 
 #   add_trace(data=arrange(pisa2,Income), x=Income, y=bsfunc, group=bs) %>% 
 #   theme_plotly()
-plot_ly(pisa2, width='75%') %>%  
-  add_trace(data=arrange(pisa2,Income), x=Income, y=bsfunc, group=bs) %>% 
+
+# arrange(pisa2,Income) %>% 
+pisa2 %>% 
+  plot_ly(width='100%') %>%  
+  add_lines(x=~Income, y=~bsfunc, split=~bs) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
@@ -224,21 +227,22 @@ pisa3 = data.frame(Income, bsScaled) %>%
 #         marker=list(color='black', opacity=.2)) %>% 
 #   add_trace(data=arrange(pisa3,Income), x=Income, y=bsfunc, group=bs) %>% 
 #   theme_plotly()
-plot_ly(data=filter(pisa3, bs=='int' & Income<knots[2]), x=Income, y=bsfunc, mode='line', name='Intercept', width='75%') %>% 
-    add_trace(data=filter(pisa3, bs=='X1' & Income>=knots[1]), x=Income, y=bsfunc, mode='line', name='X1') %>% 
-    add_trace(data=filter(pisa3, bs=='X2' & Income>=knots[2]), x=Income, y=bsfunc, mode='line', name='X2') %>% 
-    add_trace(data=filter(pisa3, bs=='X3' & Income>=knots[3]), x=Income, y=bsfunc, mode='line', name='X3') %>% 
-    add_trace(data=filter(pisa3, bs=='X4' & Income>=knots[4]), x=Income, y=bsfunc, mode='line', name='X4') %>% 
-    add_trace(data=filter(pisa3, bs=='X5' & Income>=knots[5]), x=Income, y=bsfunc, mode='line', name='X5') %>% 
-    add_trace(data=filter(pisa3, bs=='X6' & Income>=knots[6]), x=Income, y=bsfunc, mode='line', name='X6') %>% 
-    add_trace(data=filter(pisa3, bs=='X7' & Income>=knots[7]), x=Income, y=bsfunc, mode='line', name='X7') %>% 
-    add_trace(data=rbind(filter(pisa3, bs=='X8' & Income>=knots[8]),
+plot_ly(pisa3, width='100%') %>% 
+    add_markers(data=filter(pisa3, bs=='int' & Income<knots[2]), x=~Income, y=~bsfunc, name='Intercept') %>% 
+    add_lines(data=filter(pisa3, bs=='X1' & Income>=knots[1]), x=~Income, y=~bsfunc, name='X1') %>% 
+    add_lines(data=filter(pisa3, bs=='X2' & Income>=knots[2]), x=~Income, y=~bsfunc, name='X2') %>% 
+    add_lines(data=filter(pisa3, bs=='X3' & Income>=knots[3]), x=~Income, y=~bsfunc, name='X3') %>% 
+    add_lines(data=filter(pisa3, bs=='X4' & Income>=knots[4]), x=~Income, y=~bsfunc, name='X4') %>% 
+    add_lines(data=filter(pisa3, bs=='X5' & Income>=knots[5]), x=~Income, y=~bsfunc, name='X5') %>% 
+    add_lines(data=filter(pisa3, bs=='X6' & Income>=knots[6]), x=~Income, y=~bsfunc, name='X6') %>% 
+    add_lines(data=filter(pisa3, bs=='X7' & Income>=knots[7]), x=~Income, y=~bsfunc, name='X7') %>% 
+    add_lines(data=rbind(filter(pisa3, bs=='X8' & Income>=knots[8]),
                          filter(pisa3, bs=='X8' & Income>=knots[8]),
                          filter(pisa3, bs=='X8' & Income>=knots[8]),
-                         filter(pisa3, bs=='X8' & Income>=knots[8])), x=Income, y=bsfunc, mode='line', name='X8') %>%
+                         filter(pisa3, bs=='X8' & Income>=knots[8])), x=~Income, y=~bsfunc, mode='line', name='X8') %>%
              # plotly stupidly add markers automatically when less than 20 observations
 # add_trace(data=filter(pisa3, bs=='X8' & Income>=knots[8]), x=Income, y=bsfunc, mode='line', name='X8') %>%
-    add_trace(data=filter(pisa3, bs=='X9' & Income>=knots[9]), x=Income, y=bsfunc, mode='line', name='X9') %>% 
+    add_lines(data=filter(pisa3, bs=='X9' & Income>=knots[9]), x=~Income, y=~bsfunc, name='X9') %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
@@ -246,8 +250,8 @@ plot_ly(data=filter(pisa3, bs=='int' & Income<knots[2]), x=Income, y=bsfunc, mod
 Each trend line represents the fit at the knot points. For example, The intercept is the starting point, and from there the function is initially increasing. After the second knot point that initial increase starts to slow down.  If it helps, think of a quadratic function. This is similar to a scenario where the coefficient for $x$ is positive while it is negative and smaller for $x^2$. We then see the trend turn strongly positive again and so on.  Here is the final plot. Note that since we used lm, this is an **unpenalized fit** and so overfits the data a bit at the end where there extreme and few values.  This serves also as an insight into the benefits of the penalization process. Using the gam function, our fit would not drop so much for Qatar.
 
 ```{r echo=FALSE}
-plot_ly(x=sort(Income), y=fitted(lmMod)[order(Income)], name='unpenalized', width='75%') %>% 
-  add_trace(x=sort(Income),y=fitted(mod_gam1)[order(Income)], name='penalized') %>% 
+plot_ly(x=sort(Income), y=fitted(lmMod)[order(Income)], name='unpenalized', width='100%') %>% 
+  add_lines(x=sort(Income),y=fitted(mod_gam1)[order(Income)], name='penalized') %>% 
   theme_plotly() %>% 
   layout(yaxis=list(title='Overall'),
          xaxis=list(title='Income'), 

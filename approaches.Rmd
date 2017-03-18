@@ -22,21 +22,21 @@ nocite: |
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
 ---
 
-#<a name='OtherApproaches'>Other Approaches</a>
+# Other Approaches
 
 <span class="newthought">This section will discuss</span> some ways to relate the generalized models above to other forms of nonlinear modeling approaches, some familiar and others perhaps less so.  In addition, I will note some extensions to GAMs to consider.
 
-##<a name='nonlinear'>Other Nonlinear Modeling Approaches</a>
+##Other Nonlinear Modeling Approaches
 
 
-###<a name='knownForm'>Known Form</a>
+### Known Form
 
 It<span class="marginnote">A general form for linear and nonlinear models: $$y = f(X,\beta)+\epsilon$$</span> should be noted that one can place generalized additive models under a general heading of *nonlinear models* whose focus may be on transformations of the outcome (as with generalized linear models), the predictor variables (polynomial regression and GAMs), or both (GAMs), in addition to those whose effects are nonlinear in the parameters<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">For example, various theoretically motivated models in economics and ecology.</span>. A primary difference between GAMs and those models is that we don't specify the functional form beforehand in GAMs.
 
 In cases where the functional form may be known<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">A common model example is the logistic growth curve.</span>, one can use an approach such as nonlinear least squares, and there is inherent functionality within a standard R installation, such as the <span class="func">nls</span> function. As is the usual case, such functionality is readily extendable to a great many other analytic situations, e.g. the <span class="pack">gnm</span> for generalized nonlinear models or <span class="pack">nlme</span> for nonlinear mixed effects models.
 
 
-###<a name='responseTransformation'>Response Transformation</a>
+### Response Transformation
 
 It is common practice, perhaps too common, to manually transform the response and go about things with a typical linear model.  While there might be specific reasons for doing so, the primary reason applied researchers seem to do so is to make the distribution 'more normal' so that regular regression methods can be applied, which stems from a misunderstanding of the assumptions of standard regression.  As an example, a typical transformation is to take the log, particularly to tame 'outliers' or deal with heteroscedasticity.  
 
@@ -45,7 +45,7 @@ While it was a convenience 'back in the day' because we didn't have software or 
 There are still cases where one might focus on response transformation, just not so one can overcome some particular nuisance in trying to fit a linear regression.  An example might be in some forms of <span class="">functional data analysis</span>, where we are concerned with some function of the response that has been measured on many occasions over time.
 
 
-###<a name='blackbox'>The Black Box</a>
+### The Black Box
 
 @venables_modern_2002[, Section 11.5] make an interesting delineation of nonlinear models into those that are less flexible but under full user control (fully parametric)<span class="marginnote">One could probably make the case that most modeling is 'black box' for a great many researchers.</span>, and those that are <span class="emph">black box</span> techniques that are highly flexible and fully automatic: stuff goes in, stuff comes out, but we're not privy to the specifics<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">For an excellent discussion of these different approaches to understanding data see @breiman_statistical_2001 and associated commentary. For some general packages outside of R that incorporate a more algorithmic approach to modeling, you might check out the <span class="pack">scikit-learn</span> module for Python.</span>.  
 
@@ -56,36 +56,36 @@ In the case of neural net models<span class="marginnote"><img src='vis/nnet.png'
 Such models are usually found among data mining/machine learning techniques, any number of which might be utilized in a number of disciplines. Other more algorithmic/black box approaches include <span class="emph">k-nearest-neighbors</span>, <span class="emph">networks</span>, <span class="emph">random forests</span>, <span class="emph">support vector machines</span>, and various tweaks or variations thereof including boosting, bagging, bragging and other alliterative shenanigans<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See @hastie_elements_2009 for an overview of such approaches. A more recent and very applied version of that text is also [available](http://link.springer.com/book/10.1007/978-1-4614-7138-7?no-access=true). I have an R oriented intro [here](http://m-clark.github.io/docs/mlcrash.pdf).</span>. As Venables and Ripley note, generalized additive models might be thought of as falling somewhere in between the fully parametric and interpretable models of linear regression and black box techniques.  Indeed, there are algorithmic approaches which utilize GAMs as part of their approach.
 
 
-##<a name='extensions'>Extensions</a>
+## Extensions
 
-###<a name='otherGams'>Other GAMs</a>
+### Other GAMs
 
-####<a name='cats'>Categorical variables</a>
+#### Categorical variables
 
-Note that just as generalized additive models are an extension of the generalized linear model, there are generalizations of the basic GAM beyond the settings described.  In particular, <span class="emph">random effects</span> can be dealt with in this context as they can with linear and generalized linear models, and there is an interesting connection between smooths and random effects in general <label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">@wood_generalized_2006 has a whole chapter devoted to the subject, though @fahrmeir2013regression provides an even fuller treatment. I also have a document on [mixed models](http://m-clark.github.io/projects/docs/mixedModels/mixedModelML.html) that goes into it some. In addition, Wood also provides a complementary package, <span class="pack">gamm4</span>, for adding random effects to GAMs via <span class="pack">lme4</span>.</span>.  This allowance for categorical variables, i.e. factors, works also to allow separate smooths for each level of the factor.  This amounts to an interaction of the sort we demonstrated with two continuous variables.
+Note that just as generalized additive models are an extension of the generalized linear model, there are generalizations of the basic GAM beyond the settings described.  In particular, <span class="emph">random effects</span> can be dealt with in this context as they can with linear and generalized linear models, and there is an interesting connection between smooths and random effects in general <label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">@wood_generalized_2006 has a whole chapter devoted to the subject, though @fahrmeir2013regression provides an even fuller treatment. I also have a document on [mixed models](http://m-clark.github.io/docs/mixedModels/mixedModelML.html) that goes into it some. In addition, Wood also provides a complementary package, <span class="pack">gamm4</span>, for adding random effects to GAMs via <span class="pack">lme4</span>.</span>.  This allowance for categorical variables, i.e. factors, works also to allow separate smooths for each level of the factor.  This amounts to an interaction of the sort we demonstrated with two continuous variables.
 
-####<a name='spatial'>Spatial Modeling</a>
+#### Spatial Modeling
 
 Additive models also provide a framework for dealing with spatially correlated data as well.  As an example, a <span class="emph">Markov Random Field</span> smooth can be implemented for discrete spatial structure, such as countries or states<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Incidentally, this same approach would potentially be applicable to network data as well, e.g. social networks.</span>.  For the continuous spatial domain, one can use the 2d smooth as was demonstrated previously, e.g. with latitude and longitude.  See also the gaussian process paragraph.
 
 
-####<a name='stars'>Structured Additive Regression Models</a>
+#### Structured Additive Regression Models
 
 The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- <span class="emph">structured additive regression models</span>, or STARs.  It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix.  With those two components we can specify the models in almost identical fashion, and combine such effects within a single model.  This results in a very powerful regression modeling strategy.  Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling<span class="marginnote">The <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the mgcv package's syntax style.</span>.
 
-####<a name='gamlss'>GAMLSS</a>
+#### GAMLSS
 
 Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See @rigby_generalized_2005 and the <span class="pack">gamlss</span> package, though <span class="pack">mgcv</span> has several options in this regard as well</span>.  
 
-####<a name='mlgam'>Other</a>
+#### Other
 In addition there are boosted, ensemble and other machine learning approaches that apply GAMs as well<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See the <span class="pack">GAMens</span> package for example. Also, [boosted models](http://projecteuclid.org/euclid.aos/1016218223) *are* GAMs.</span>.  In short, there's plenty to continue to explore once one gets the hang of generalized additive models.
 
 
-###<a name='rk'>Reproducing Kernel Hilbert Space</a>
+### Reproducing Kernel Hilbert Space
 
 Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>.  I won't pretend to be able to get into it here, but the idea is that the some forms of additive models can be represented in the inner product form used in RKHS approaches<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">You might note that the function used in the spline example in the appendix is called *rk*.</span>.  This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods.  For the interested, I have an example of RKHS regression [here](https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md).
 
-###<a name='gp'>Gaussian Processes</a>
+### Gaussian Processes
 
 We can also approach modeling by using generalizations of the Gaussian distribution.  Where the Gaussian distribution is over vectors and defined by a mean vector and covariance matrix, a <span class="emph">Gaussian Process</span> is a *distribution over functions*. A function $f$ is distributed as a Gaussian Process defined by a mean function $m$ and covariance function $k$. They have a close tie to RKHS methods, and generalize commonly used models in spatial modeling.
 

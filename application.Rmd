@@ -23,10 +23,10 @@ nocite: |
 ---
 
 
-# <a name='application'>Application Using R</a>
+# Application Using R
 
 
-## <a name='initialExam'>Initial Examination</a>
+## Initial Examination
 
 <span class="newthought">The data set has been constructed</span> using average Science scores by country from the Programme for International Student Assessment ([PISA](http://www.pisa.oecd.org/)) 2006, along with GNI per capita (Purchasing Power Parity, 2005 dollars), Educational Index, Health Index, and Human Development Index from [UN data](http://hdr.undp.org/en/data).  The key variables are as follows (variable abbreviations in bold):
 
@@ -69,7 +69,6 @@ The scatterplot matrix has quite a bit of information to spend some time with- u
 <a name='countryscatter'></a>
 
 ```{r scatterwrap, echo=F}
-library(ggplot2); library(tidyr)
 #get data into a form to take advantage of ggplot
 # dmelt = melt(pisa, id=c('Country','Overall'), 
 #              measure=c('Interest','Support','Income','Health','Edu','HDI'))
@@ -86,7 +85,7 @@ scatterwrap = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   labs(x='') +
   theme_trueMinimal() 
 
-ggplotly(scatterwrap, width='75%') %>% 
+ggplotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -102,7 +101,7 @@ scatterwrapSmooth = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   labs(x='') +
   theme_trueMinimal() +
   theme(plot.background=element_rect(color='transparent'))
-ggplotly(scatterwrapSmooth, width='75%') %>% 
+ggplotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -110,9 +109,9 @@ Often in these situations people will perform some standard transformation, such
 
 
 
-## <a name='singlePredictor'>Single Predictor</a>
+## Single Predictor
 
-### <a name='linearFitSingle'>Linear Fit</a>
+### Linear Fit
 
 We will start with the simple situation of a single predictor. Let's begin by using a typical linear regression to predict science scores by the Income index.  We could use the standard R <span class="func">lm</span> function, but I'll leave that as an exercise for comparison.  We can still do straightforward linear models with the <span class="func">gam</span> function, and again it is important to note that the standard linear model can be seen as a special case of a GAM.
 
@@ -125,7 +124,7 @@ summary(mod_lm)
 What are we getting here?  The same thing you get from a regular linear model, because you just ran one.  However there are a couple things to look at.  The coefficient is statistically significant, but serves as a reminder that it usually a good idea to scale predictor variables so that the effect is more meaningful.  Here, moving one unit on Income is akin from going broke to being the richest country.  But in a more meaningful sense, if we moved from say, .7 to .8, we'd expect an increase of about 35 points on the science score.  We also see the deviance explained<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">For those more familiar with generalized linear models, this is calculated as (Dev$_{Null}$-Dev$_{Residual}$)/Dev$_{Null}$ <br>
 One can verify this by running the same model via the <span class="func">glm</span>, and using the corresponding values from the summary of the model object.</span>, which serves as a generalization of R-squared, and in this case, it actually is equivalent to the unadjusted R-squared.  Likewise there is the familiar adjusted version of it to account for small sample size and model complexity.  The scale estimate is the scaled deviance, which here is equivalent to the residual sums of squares.  The GCV score we will save for when we run a GAM.
 
-### <a name='GAMSingle'>GAM</a>
+### GAM
 
 Let's now try some nonlinear approaches, keeping in mind that $\mu=f(x)$.  As a point of comparison, we can start by trying a standard polynomial regression, and it might do well enough<span class="marginnote">This example is pretty much straight from @wood_generalized_2006 with little modification.</span>.  To begin we must consider a <span class="emph">basis</span> to use, a space that $f$ is an element of. Doing so leads to choosing  a set of <span class="emph">basis functions</span> $b_j$, with parameters $\beta_j$ that will be combined to produce $f(x)$:
 
@@ -178,13 +177,13 @@ polynomialBasis = ggplot(aes(x=Income, y=Income), data=dpoly) +
   facet_grid(basis~., scales='free_y') +  # , labeller=label_parsed if using expressions
   theme_trueMinimal() 
 
-ggplotly(polynomialBasis, width='75%') %>% 
+ggplotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
 At this point we have done nothing we couldn't do in our regular regression approach, as polynomial regression has a long history of use in modeling. However, the take home message is that as we move to GAMs we are going about things in much the same fashion; we are simply changing the nature of the basis, and have a great deal more flexibility in choosing the form.
 
-In the next figure I show the fit using a 'by-hand' cubic spline basis (see the [Appendix](#Penalized_Estimation_Example) and p.126-7 in @wood_generalized_2006).  
+In the next figure I show the fit using a 'by-hand' cubic spline basis (see the [Appendix][Penalized_Estimation_Example] and p.126-7 in @wood_generalized_2006).  
 
 ```{r csbyhand, echo=FALSE}
 rk <- function(x,z) {
@@ -217,7 +216,7 @@ csbyhand = ggplot(aes(x=Income, y=Overall), data=pisa)+
   xlim(.4,1) +
   theme_trueMinimal()
 
-ggplotly(csbyhand, width='75%') %>% 
+ggplotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -225,7 +224,7 @@ A cubic spline is essentially a connection of multiple cubic polynomial regressi
 
 
 
-#### Fitting the mdoel
+#### Fitting the model
 
 Let's now fit an actual generalized additive model using the same cubic spline as our basis. We again use the <span class="func">gam</span> function as before for basic model fitting, but now we are using a function <span class="func">s</span> within the formula to denote the smooth terms.  Within that function we also specify the type of smooth, though a default is available.  I chose `bs = cr`, denoting cubic regression splines, to keep consistent with our previous example.
 
@@ -237,7 +236,7 @@ summary(mod_gam1)
 
 The first thing to note is, that aside from the smooth part, our model code is similar to what we're used to with core R functions such as <span class="func">lm</span> and <span class="func">glm</span>.  In the summary, we first see the distribution assumed as well as the link function used, in this case normal and identity, respectively, which to iterate, had we had no smoothing, would result in a SLiM.  After that we see that the output is separated into <span class="emph">parametric</span> and <span class="emph">smooth</span>, or nonparametric parts<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">As an aside, the term *nonparametric* has at least two general uses in the statistical world. [Wikipedia](https://en.wikipedia.org/wiki/Nonparametric_statistics) has a nice delineation.</span>.  In this case, the only parametric component is the intercept, but it's good to remember that you are not bound to smooth every effect of interest, and indeed, as we will discuss in more detail later, part of the process may involve refitting the model with terms that were found to be linear for the most part anyway.  The smooth component of our model regarding a country's income and its relationship with overall science score suggests it is statistically significant, but there are a couple of things in the model summary that would be unfamiliar.  
 
-<span class="marginnote">This part regarding edf should ring a bell for those who use the <span class="pack">lme4</span> package for mixed models. All of this applies there too, and may provide more insight as to why they don't even provide p-values as a default. See the [Other Approaches](#cats) section.</span>We'll start with the <span class="emph">effective degrees of freedom</span>, or **edf**.  In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure, something that will be discussed more later<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">In this example there are actually 9 terms associated with this smooth, but they are each 'penalized' to some extent and thus the edf does not equal 9.</span>. In this situation, we are still trying to minimize the residual sums of squares, but also have a built in penalty for 'wiggliness' of the fit, where in general we try to strike a balance between an undersmoothed fit and an oversmoothed fit. The default p-value for the test is based on the effective degrees of freedom and the rank $r$ of the covariance matrix for the coefficients for a particular smooth, so here, *conceptually*, it is the p-value associated with the $F(r, n-edf)$.  However there are still other issues to be concerned about, and `?summary.gam` will provide your first step down that particular rabbit hole. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Here it is noted `Ref.df` but if, for example, the argument `p.type = 5` is used, it will be labeled `Est.Rank`. Also, there are *four* p-value types one can choose from.  The full story of edf, p-values and related is scattered throughout Wood's text. See also `?anova.gam`</span>.  At this point you might be thinking these p-values are a bit fuzzy, and you'd be right. The gist is, they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">But then, standard p-values shouldn't be used that way either.</span>, but if they are pretty low you can feel comfortable claiming statistical significance, which of course is the end all, be all, of the scientific endeavor- right?
+<span class="marginnote">This part regarding edf should ring a bell for those who use the <span class="pack">lme4</span> package for mixed models. All of this applies there too, and may provide more insight as to why they don't even provide p-values as a default. See the [Other Approaches][Categorical variables] section.</span>We'll start with the <span class="emph">effective degrees of freedom</span>, or **edf**.  In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure, something that will be discussed more later<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">In this example there are actually 9 terms associated with this smooth, but they are each 'penalized' to some extent and thus the edf does not equal 9.</span>. In this situation, we are still trying to minimize the residual sums of squares, but also have a built in penalty for 'wiggliness' of the fit, where in general we try to strike a balance between an undersmoothed fit and an oversmoothed fit. The default p-value for the test is based on the effective degrees of freedom and the rank $r$ of the covariance matrix for the coefficients for a particular smooth, so here, *conceptually*, it is the p-value associated with the $F(r, n-edf)$.  However there are still other issues to be concerned about, and `?summary.gam` will provide your first step down that particular rabbit hole. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Here it is noted `Ref.df` but if, for example, the argument `p.type = 5` is used, it will be labeled `Est.Rank`. Also, there are *four* p-value types one can choose from.  The full story of edf, p-values and related is scattered throughout Wood's text. See also `?anova.gam`</span>.  At this point you might be thinking these p-values are a bit fuzzy, and you'd be right. The gist is, they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">But then, standard p-values shouldn't be used that way either.</span>, but if they are pretty low you can feel comfortable claiming statistical significance, which of course is the end all, be all, of the scientific endeavor- right?
 
 ```{r pvalue, echo=FALSE, eval=FALSE}
 # pf(fval5, mod_gam1$smooth[[1]]$df,mod_gam1$df.res,lower=F)
@@ -246,7 +245,7 @@ The first thing to note is, that aside from the smooth part, our model code is s
 
 The GCV, or <span class="emph">generalized cross validation</span> score can be taken as an estimate of the *mean square prediction error* based on a leave-one-out cross validation estimation process.  We estimate the model for all observations except $i$, then note the squared residual predicting observation $i$ from the model.  Then we do this for all observations. However, the GCV score is an efficient measure of this concept that doesn't actually require fitting all those models and overcomes other issues<span class="marginnote">In this initial model the GCV can be found as: $$GCV = \frac{n*scaled\, est.}{(n-edf-{[n\,of\, parametric\, terms]})^{2}}$$</span>.  It is this score that is minimized by default when determining the specific nature of the smooth.  On its own it doesn't tell us much, but we can use it similar to AIC as a comparative measure to choose among different models, with lower being better.  
 
-### <a name='graphDispSingle'>Graphical Display</a>
+### Graphical Display
 
 One can get  sense of the form of the fit by simply plotting the model object as follows:
 
@@ -269,7 +268,7 @@ mtext(side = 2, text = axTicks(2), at = axTicks(2), col = "gray25", line = 1)
 Note that this will only plot the smooth terms in the model<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">A better alternative is with the <span class="pack">visreg</span> package, which will plot all effects, and by default be nicer looking and easier to customize. You can simply feed the model to the <span class="func">visreg</span> function. It also has 2 and 3d capabilities like the corresponding <span class="pack">mgcv</span> functions.</span>. The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single predictor case one can also revisit the previous graph.  
 
 
-### <a name='modComparisonSingle'>Model Comparison</a>
+### Model Comparison
 
 Let us now compare our regular regression fit to the GAM model fit. The following shows how one can extract various measures of performance, and the subsequent table shows them gathered together. 
 
@@ -299,11 +298,11 @@ It would appear the anova results tell us what we have probably come to believe 
 
 
 
-## <a name='multiplePredictors'>Multiple Predictors</a>
+## Multiple Predictors
 
 Let's now see what we can do with a more realistic case where we have added model complexity.  
 
-### <a name='linearFitMulti'>Linear Fit</a>
+### Linear Fit
 
 We'll start with the SLiM approach again, this time adding the Health and Education indices.
 
@@ -314,7 +313,7 @@ summary(mod_lm2)
 
 It appears we have statistical effects for Income and Education, but not for Health, and the adjusted R-squared suggests a notable amount of the variance is accounted for<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Note that a difference in sample sizes do not make this directly comparable to the first model.</span>.  Let's see about nonlinear effects.
 
-### <a name='GAMMulti'>GAM</a>
+### GAM
 
 As far as the generalized additive model goes, we can approach things in a similar manner as before.  We will ignore the results of the linear model for now and look for nonlinear effects for each covariate.
 
@@ -335,7 +334,7 @@ summary(mod_gam2B)
 We can also note that this model accounts for much of the variance in Overall science scores, with an adjusted R-squared of .86.  In short, it looks like the living standards and educational resources of a country are associated with overall science scores, even if we don't really need the Health index in the model.
 
 
-### <a name='graphicalDispMulti'>Graphical Display</a>
+### Graphical Display
 
 Now we examine the effects of interest visually via component plots<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See e.g. John Fox's texts and chapters regarding regression diagnostics, and his <span class="func">crplots</span> function in the <span class="pack">car</span> package.</span>. 
 
@@ -374,12 +373,12 @@ plot_mod_gam2_response = ggplot(aes(x=Income,y=fit), data=predicts) +
 ```
 
 ```{r plot_mod_gam2_responseB, echo=F}
-ggplotly(plot_mod_gam2_response, width='75%') %>% 
+ggplotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
 
-#### <a name='2d'>2d Smooths</a>
+#### 2d Smooths
 
 This gives us a sense for one predictor, but let's take a gander at Income and Education at the same time.  Previously, we saw how to use the <span class="func">plot</span> method for a GAM class object. There is another plotting function, <span class="func">vis.gam</span>, that will give us a bit more to play with, and specifically to display 2d smooths.  It has a corresponding version from <span class="pack">visreg</span> which will look a bit better by default, <span class="func">visreg2d</span>. The following code will produce a contour plot with Income on the x axis, Education on the y, with values on the response scale given by the contours, with lighter color indicating higher values.  The actual plot provided instead depicts a heatmap<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">I'm actually using the data from such plots and <span class="pack">plotly</span> to produce a more web-oriented version.  For example, contour lines are unnecessary when you can get the values by hovering.</span>.
 
@@ -395,11 +394,11 @@ tt$Overall = t(tt$Overall)
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
 # contour plot; note with isn't necessary, can use tt$
 # with(tt, 
-#      plot_ly(x=Income, y=Edu,  z=Overall, type='contour', colors=colfun, hoverinfo='none', width='75%', 
+#      plot_ly(x=Income, y=Edu,  z=Overall, type='contour', colors=colfun, hoverinfo='none', width='100%', 
 #              contours=list(start=240, end=550,size=10)))  %>% 
 #   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 with(lapply(tt, round, 2),
-     plot_ly(x=Income, y=Edu,  z=Overall, type='heatmap', colors=colfun, width='75%'))  %>%
+     plot_ly(x=Income, y=Edu,  z=Overall, type='heatmap', colors=colfun, width='100%'))  %>%
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -423,9 +422,9 @@ tt$Overall = t(tt$Overall)
 # because of a lack of  sense, x is y in plotting
 
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
-with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap', colors=colfun, width='75%'))  %>% 
+with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap', colors=colfun, width='100%'))  %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='surface', hoverinfo='none', colors=colfun, width='75%',
+with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='surface', hoverinfo='none', colors=colfun, width='100%',
                                    lighting=list(roughness=.01, ambient=.75), 
                                    contours=list(x=list(highlightcolor=toRGB('gray90'), width=1),
                                                  y=list(highlightcolor=toRGB('gray90'), width=1),
@@ -435,9 +434,9 @@ with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='surface'
 
 In the above we are using a type of smooth called a tensor product smooth, and by smoothing the marginal smooths of Income and Education, we see a bit clearer story.  As we might suspect, wealthy countries with more of an apparent educational infrastructure are going to score higher on the Overall science score.  However, wealth alone does not necessarily guarantee higher science scores (note the dark bottom right corner on the contour plot)<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Probably this is due to Qatar.  Refer again to the previous [figure](#countryscatter).</span>, though without at least moderate wealth hopes are fairly dim for a decent score.
 
-One can also, for example, examine interactions between a smooth and a linear term $f(x)z$, and in a similar vein of thought look at smooths at different levels of a [grouping factor](#cats).
+One can also, for example, examine interactions between a smooth and a linear term $f(x)z$, and in a similar vein of thought look at smooths at different levels of a [grouping factor][Categorical variables].
 
-### <a name='modComparisonMulti'>Model Comparison</a>
+### Model Comparison
 
 As before, we can examine indices such as GCV or perhaps adjusted R-squared, which both suggest our GAM performs considerably better. Statistically we can compare the two models with the anova function as before.  
 

@@ -27,11 +27,11 @@ knitr::opts_chunk$set(cache = F, message = F, warning = F, R.options=list(width=
 library(magrittr); library(dplyr); library(pander)
 ```
 
-# <a name='intro'>Introduction</a>
+# Introduction
 
-## <a name='beyondGLM1'>Beyond the General Linear Model I</a>
+## Beyond the General Linear Model I
 
-### <a name='lm1'>General Linear Model</a>
+### General Linear Model
 
 <span class="newthought">Let us begin</span> by considering the standard linear regression model (SLiM) estimated via ordinary least squares (OLS).  We have some response/variable we wish to study, and believe it to be some function of other variables.  In the margin to the right, $y$ is the variable of interest,
 <span class="marginnote">$$y\sim \mathcal{N}(\mu,\sigma^2) \\ \mu = b_0+b_1X_1+b_2X_2...+b_pX_p$$</span>
@@ -45,7 +45,7 @@ mymod = lm(y ~ x1 + x2, data=mydata)
 
 One of the issues with this model is that, in its basic form it can be very limiting in  its assumptions about the data generating process for the variable we wish to study.  Also, while the above is one variant of the usual of the manner in which it is presented in introductory texts, it also very typically will not capture what is going on in a great many data situations. 
 
-### <a name='glm'>Generalized Linear Model</a>
+### Generalized Linear Model
 In that light, we may consider the *generalized* linear model.  Generalized linear models incorporate other types of distributions<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">Of the [exponential family](https://en.wikipedia.org/wiki/Exponential_family).</span>, and include a link function $g(.)$ relating the mean $\mu$, or stated differently, the expected values $E(y)$, to the linear predictor $X\beta$, often denoted $\eta$.  The general form is thus $g(\mu) = X\beta$. 
 
 <span class="marginnote">
@@ -68,7 +68,7 @@ $$\mu = e^{b_0+b_1X_1+b_2X_2...+b_pX_p}$$
 While there is a great deal to further explore with regard to generalized linear models, the point here is to simply to note them as a generalization of the typical linear model with which all would be familiar after an introductory course in statistics. As we eventually move to generalized additive models, we can see them as a subsequent step in the  generalization.
 
 
-### <a name='gam1'>Generalized Additive Model</a>
+### Generalized Additive Model
 Now let us make another generalization to incorporate nonlinear forms of the predictors.  The form
 <span class="marginnote">
 $$
@@ -81,9 +81,9 @@ So what's the difference?  In short, we are using smooth functions of our predic
 
 
 
-## <a name='beyondGLM2'>Beyond the General Linear Model II</a>
+## Beyond the General Linear Model II
 
-### <a name='lm1'>Fitting the Standard Linear Model</a>
+### Fitting the Standard Linear Model
 
 In many data situations the relationship between some covariate(s) $X$ and response $y$ is not so straightforward. Consider the following plot. Attempting to fit a standard OLS regression results in the blue line, which doesn't capture the relationship very well. 
 
@@ -111,16 +111,17 @@ fitat3 = predict(neighbormod, newdat=data.frame(x=3,y=NA))
 <!-- <span class="marginnote"><span class="imgbigger"><img src="vis/lmfit.png" style="display:block; margin: 0 auto;"></span><span> -->
 
 ```{r linearFitPlot, echo=F}
-library(plotly)
-plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
+dxy %>% 
+  plot_ly(width='100%') %>% 
+  add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5503')) %>% 
-  add_trace(data=dxy, x=x, y=fitlm, name='lm fit', marker=list(color='#1e90ff')) %>% 
+  add_lines(x=~x, y=~fitlm, name='lm fit', line=list(color='#1e90ff')) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)')
 ```
 
-### <a name='polyreg'>Polynomial Regression</a>
+### Polynomial Regression
 <span class="marginnote">$$
     y \sim \mathcal{N}(\mu,\sigma^2)\\
     \mu = b_0 + b_{1}X_1+b_{2}X^2
@@ -128,9 +129,11 @@ $$</span>
 One common approach we could undertake is to add a transformation of the predictor $X$, and in this case we might consider a quadratic term such that our model looks something like that to the right.
 
 ```{r quadraticFitPlot, echo=F}
-plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
+dxy %>% 
+  plot_ly( width='100%') %>% 
+  add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5503')) %>% 
-  add_trace(data=dxy, x=x, y=fitx2, name='quadratic fit', marker=list(color='#1e90ff')) %>% 
+  add_lines(x=~x, y=~fitx2, name='quadratic fit', color=I('#1e90ff')) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)')
@@ -139,7 +142,7 @@ plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
 We haven't really moved from the general linear model in this case, but we have a much better fit to the data as evidenced by the graph.
 
 
-### <a name='scattersmooth'>Scatterplot Smoothing</a>
+### Scatterplot Smoothing
 
 There are still other possible routes we could take. Many are probably familiar with <span class="emph">loess</span> (or lowess) regression, if only in the sense that often statistical packages may, either by default or with relative ease, add a nonparametric fit line to a scatterplot<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See the scatterplots in the <span class="pack">car</span> package for example.</span>. By default this is typically *lowess*, or *locally weighted scatterplot smoothing*.  
 
@@ -150,13 +153,14 @@ Take a look at the following figure. For every (sorted) $x_0$ value, we choose a
 minx = min(sort(x)[neighborhood])
 maxx = max(sort(x)[neighborhood])
 maxy = max(y) + 2
-plot_ly(x=c(minx,minx), y=c(0, maxy), mode='line', showlegend=F, width='75%',
-        line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% # marker opacity to 0 to remove idiotic placed endpoints
+plot_ly(width='100%') %>% # marker opacity to 0 to remove idiotic placed endpoints
+  add_trace(x=c(minx,minx), y=c(0, maxy), mode='line', showlegend=F,
+        line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% 
   add_trace(x=c(maxx, maxx), y=c(0, maxy), mode='line', showlegend=F,
             line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% 
-  add_trace(data=dxy[-neighborhood,], x=x, y=y, mode='markers', showlegend=F, 
-            marker=list(color='gray', opacity=.1))%>% 
-  add_trace(data=dxy[neighborhood,], x=x, y=y, mode='markers', showlegend=F, 
+  add_trace(data=dxy[-neighborhood,], x=~x, y=~y, mode='markers', showlegend=F, 
+            marker=list(color='gray', opacity=.1)) %>% 
+  add_trace(data=dxy[neighborhood,], x=~x, y=~y, mode='markers', showlegend=F, 
             marker=list(color='darkred', opacity=.1)) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
@@ -169,9 +173,10 @@ plot_ly(x=c(minx,minx), y=c(0, maxy), mode='line', showlegend=F, width='75%',
 Now, for just that range we fit a linear regression model and note the fitted value where $x_0=3.0$. 
 
 ```{r loessgraph2, echo=FALSE}
-plot_ly(data=dxy[neighborhood,], x=x, y=y, mode='markers', showlegend=F, width='75%',
+plot_ly( width='100%') %>% 
+  add_markers(data=dxy[neighborhood,], x=~x, y=~y, showlegend=F,
                     marker=list(opacity=.2, color='#ff5503')) %>% 
-  add_trace(data=dxy[neighborhood,], x=x, y=neighborfit, name='lm fit',marker=list(color='#1e90ff')) %>% 
+  add_lines(x=~x, y=neighborfit, name='lm fit', opacity=.5, line=list(color='#1e90ff', width=3)) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)')
@@ -180,9 +185,11 @@ plot_ly(data=dxy[neighborhood,], x=x, y=y, mode='markers', showlegend=F, width='
 If we now do this for *every* $x_0$ value, we'll have fitted values based on a rolling neighborhood that is relative to each value being considered. Other options we could throw into this process, and usually do, would be to fit a polynomial regression for each neighborhood, and weight observations the closer they are to the value, with less weight given to more distant observations.
 
 ```{r loessgraph3, echo=FALSE}
-plot_ly(data=dxy, x=x, y=y, mode='markers', showlegend=F, width='75%',
+dxy %>% 
+  plot_ly( width='100%') %>% 
+  add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5503')) %>% 
-  add_trace(data=dxy, x=x, y=fitted(loess(y~x)), name='loess fit',marker=list(color='#1e90ff')) %>% 
+  add_lines(x=~x, y=~fitted(loess(y~x)), name='loess fit', line=list(color='#1e90ff')) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)')
@@ -209,7 +216,8 @@ mcycle3$variable =factor(mcycle3$variable, labels=c('Polynomial Regression (cubi
 ```
 
 
-### <a name='gam2'>Generalized Additive Models</a>
+### Generalized Additive Models
+
 The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">This is a version of that found in @venables_modern_2002.</a>.  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
 
 ```{r mcycleFigure, echo=FALSE}
@@ -221,7 +229,7 @@ mcycleFigure = ggplot(aes(x=times,y=accel), data=mcycle3) +
   xlab('Time') +
   theme(plot.background=element_blank()) +
   theme_trueMinimal()
-ggplotly(mcycleFigure, width='75%') %>% 
+ggplotly(mcycleFigure, width=500) %>%    # unlike plot_ly, ggplotly can't handle % width
     theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)')
