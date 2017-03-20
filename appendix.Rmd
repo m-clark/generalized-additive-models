@@ -132,7 +132,7 @@ ex1 = ggplot(aes(x=x, y=wear), data=data.frame(x,wear))+
   theme_trueMinimal() +
   theme(plot.background=element_blank(),
         panel.background=element_blank())
-ggplotly() %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', width='100%')
+ggplotly() %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', width='75%')
 ```
 
 
@@ -202,7 +202,7 @@ pisa2 = data.frame(Income, bs) %>%
 
 # arrange(pisa2,Income) %>% 
 pisa2 %>% 
-  plot_ly(width='100%') %>%  
+  plot_ly(width='75%') %>%  
   add_lines(x=~Income, y=~bsfunc, split=~bs) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
@@ -227,7 +227,7 @@ pisa3 = data.frame(Income, bsScaled) %>%
 #         marker=list(color='black', opacity=.2)) %>% 
 #   add_trace(data=arrange(pisa3,Income), x=Income, y=bsfunc, group=bs) %>% 
 #   theme_plotly()
-plot_ly(pisa3, width='100%') %>% 
+plot_ly(pisa3, width='75%') %>% 
     add_markers(data=filter(pisa3, bs=='int' & Income<knots[2]), x=~Income, y=~bsfunc, name='Intercept') %>% 
     add_lines(data=filter(pisa3, bs=='X1' & Income>=knots[1]), x=~Income, y=~bsfunc, name='X1') %>% 
     add_lines(data=filter(pisa3, bs=='X2' & Income>=knots[2]), x=~Income, y=~bsfunc, name='X2') %>% 
@@ -250,7 +250,7 @@ plot_ly(pisa3, width='100%') %>%
 Each trend line represents the fit at the knot points. For example, The intercept is the starting point, and from there the function is initially increasing. After the second knot point that initial increase starts to slow down.  If it helps, think of a quadratic function. This is similar to a scenario where the coefficient for $x$ is positive while it is negative and smaller for $x^2$. We then see the trend turn strongly positive again and so on.  Here is the final plot. Note that since we used lm, this is an **unpenalized fit** and so overfits the data a bit at the end where there extreme and few values.  This serves also as an insight into the benefits of the penalization process. Using the gam function, our fit would not drop so much for Qatar.
 
 ```{r echo=FALSE}
-plot_ly(x=sort(Income), y=fitted(lmMod)[order(Income)], name='unpenalized', width='100%') %>% 
+plot_ly(x=sort(Income), y=fitted(lmMod)[order(Income)], name='unpenalized', width='75%') %>% 
   add_lines(x=sort(Income),y=fitted(mod_gam1)[order(Income)], name='penalized') %>% 
   theme_plotly() %>% 
   layout(yaxis=list(title='Overall'),

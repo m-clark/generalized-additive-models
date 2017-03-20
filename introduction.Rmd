@@ -112,7 +112,7 @@ fitat3 = predict(neighbormod, newdat=data.frame(x=3,y=NA))
 
 ```{r linearFitPlot, echo=F}
 dxy %>% 
-  plot_ly(width='100%') %>% 
+  plot_ly(width='75%') %>% 
   add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5503')) %>% 
   add_lines(x=~x, y=~fitlm, name='lm fit', line=list(color='#1e90ff')) %>% 
@@ -130,7 +130,7 @@ One common approach we could undertake is to add a transformation of the predict
 
 ```{r quadraticFitPlot, echo=F}
 dxy %>% 
-  plot_ly( width='100%') %>% 
+  plot_ly( width='75%') %>% 
   add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5503')) %>% 
   add_lines(x=~x, y=~fitx2, name='quadratic fit', color=I('#1e90ff')) %>% 
@@ -153,7 +153,7 @@ Take a look at the following figure. For every (sorted) $x_0$ value, we choose a
 minx = min(sort(x)[neighborhood])
 maxx = max(sort(x)[neighborhood])
 maxy = max(y) + 2
-plot_ly(width='100%') %>% # marker opacity to 0 to remove idiotic placed endpoints
+plot_ly(width='75%') %>% # marker opacity to 0 to remove idiotic placed endpoints
   add_trace(x=c(minx,minx), y=c(0, maxy), mode='line', showlegend=F,
         line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% 
   add_trace(x=c(maxx, maxx), y=c(0, maxy), mode='line', showlegend=F,
@@ -173,7 +173,7 @@ plot_ly(width='100%') %>% # marker opacity to 0 to remove idiotic placed endpoin
 Now, for just that range we fit a linear regression model and note the fitted value where $x_0=3.0$. 
 
 ```{r loessgraph2, echo=FALSE}
-plot_ly( width='100%') %>% 
+plot_ly( width='75%') %>% 
   add_markers(data=dxy[neighborhood,], x=~x, y=~y, showlegend=F,
                     marker=list(opacity=.2, color='#ff5503')) %>% 
   add_lines(x=~x, y=neighborfit, name='lm fit', opacity=.5, line=list(color='#1e90ff', width=3)) %>% 
@@ -186,7 +186,7 @@ If we now do this for *every* $x_0$ value, we'll have fitted values based on a r
 
 ```{r loessgraph3, echo=FALSE}
 dxy %>% 
-  plot_ly( width='100%') %>% 
+  plot_ly( width='75%') %>% 
   add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5503')) %>% 
   add_lines(x=~x, y=~fitted(loess(y~x)), name='loess fit', line=list(color='#1e90ff')) %>% 
@@ -229,7 +229,7 @@ mcycleFigure = ggplot(aes(x=times,y=accel), data=mcycle3) +
   xlab('Time') +
   theme(plot.background=element_blank()) +
   theme_trueMinimal()
-ggplotly(mcycleFigure, width=500) %>%    # unlike plot_ly, ggplotly can't handle % width
+ggplotly(mcycleFigure, width=600) %>%    # unlike plot_ly, ggplotly can't handle % width
     theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)')

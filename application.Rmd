@@ -373,7 +373,7 @@ plot_mod_gam2_response = ggplot(aes(x=Income,y=fit), data=predicts) +
 ```
 
 ```{r plot_mod_gam2_responseB, echo=F}
-ggplotly() %>% 
+ggplotly(width=600) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -394,11 +394,11 @@ tt$Overall = t(tt$Overall)
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
 # contour plot; note with isn't necessary, can use tt$
 # with(tt, 
-#      plot_ly(x=Income, y=Edu,  z=Overall, type='contour', colors=colfun, hoverinfo='none', width='100%', 
+#      plot_ly(x=Income, y=Edu,  z=Overall, type='contour', colors=colfun, hoverinfo='none', width='75%', 
 #              contours=list(start=240, end=550,size=10)))  %>% 
 #   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 with(lapply(tt, round, 2),
-     plot_ly(x=Income, y=Edu,  z=Overall, type='heatmap', colors=colfun, width='100%'))  %>%
+     plot_ly(x=Income, y=Edu,  z=Overall, type='heatmap', colors=colfun, width='75%'))  %>%
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -422,9 +422,9 @@ tt$Overall = t(tt$Overall)
 # because of a lack of  sense, x is y in plotting
 
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
-with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap', colors=colfun, width='100%'))  %>% 
+with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap', colors=colfun, width='75%'))  %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='surface', hoverinfo='none', colors=colfun, width='100%',
+with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='surface', hoverinfo='none', colors=colfun, width='75%',
                                    lighting=list(roughness=.01, ambient=.75), 
                                    contours=list(x=list(highlightcolor=toRGB('gray90'), width=1),
                                                  y=list(highlightcolor=toRGB('gray90'), width=1),
