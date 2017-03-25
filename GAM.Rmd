@@ -22,11 +22,11 @@ nocite: |
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache.rebuild=F, cache = F, message = F, warning = F, R.options=list(width=120), 
+knitr::opts_chunk$set(cache.rebuild=F, cache = T, message = F, warning = F, R.options=list(width=120), 
                       fig.width=8, fig.align = 'center', comment=NA, autodep=T)
 ```
 
-```{r loadpacks}
+```{r loadpacks, include=FALSE}
 library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk)
 ```
 

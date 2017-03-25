@@ -117,7 +117,7 @@ prs.fit <- function(y, x, knots, lambda) {
 
 Example 1.
 
-```{r Penalized_Estimation_Example_Example1, dev.args = list(bg = 'transparent')}
+```{r Penalized_Estimation_Example_Example1, dev.args = list(bg = 'transparent'), echo=1:5}
 knots = 1:4/5
 X = spl.X(x, knots)           # generate model matrix
 mod.1 = lm(wear ~ X - 1)      # fit model
@@ -132,22 +132,22 @@ ex1 = ggplot(aes(x=x, y=wear), data=data.frame(x,wear))+
   theme_trueMinimal() +
   theme(plot.background=element_blank(),
         panel.background=element_blank())
-ggplotly() %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', width='75%')
+ggplotly(width=600) %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', width='75%')
 ```
 
 
 Example 2.
 
 
-```{r Penalized_Estimation_Example_Example12, dev.args = list(bg = 'transparent')}
+```{r Penalized_Estimation_Example_Example12, dev.args = list(bg = 'transparent'), echo=1:5}
 knots = 1:7/8
 
 pisa2 = data.frame(x=xp)
 
 for (i in c(.1, .01, .001, .0001, .00001, .000001)) {
-  mod.2 = prs.fit(y=wear, x=x, knots=knots, lambda=i)   # fit penalized regression 
-                                                        # spline choosing lambda
-  Xp = spl.X(xp,knots)                                  # matrix to map parameters to fitted values at xp
+  mod.2 = prs.fit(y=wear, x=x, knots=knots, lambda=i) # fit penalized regression 
+                                # spline choosing lambda
+  Xp = spl.X(xp,knots)          # matrix to map parameters to fitted values at xp
   pisa2[,paste('lambda = ',i, sep="")] = Xp%*%coef(mod.2)
 }
 
@@ -162,7 +162,7 @@ csplot = ggplot(aes(x=x, y=wear), data=d) +
   theme_trueMinimal() +
   theme(plot.background=element_blank(),
         panel.background=element_blank())
-ggplotly() %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+ggplotly(width=600) %>% layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
 
@@ -189,7 +189,6 @@ Note that we have many more columns than we normally would fit with a polynomial
 If we plot these against Income, it doesn't look like much, but we can tell where the knots are.
 
 ```{r csbsPlot, echo=FALSE, eval=TRUE}
-library(tidyr)
 bs = data.frame(int=1, bs)
 pisa2 = data.frame(Income, bs) %>% 
   gather(key=bs, value=bsfunc, -Income)

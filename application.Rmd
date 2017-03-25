@@ -44,25 +44,33 @@ But even before we get too far, it would be good to know our options in the worl
 
 The first thing to do is get the data in and do some initial inspections.
 
-```{r initial_inspection_of_pisa, echo=1:2, eval=1:2}
+```{r initial_inspection_of_pisa, echo=1:2, eval=T, cache=TRUE, fig.width=6, dev.args = list(bg = 'transparent')}
 pisa = read.csv('data/pisasci2006.csv')
 psych::describe(pisa)[-1,1:9]  #univariate
 
-png(file='vis/scattermatrix.png', bg='transparent')
-car::scatterplotMatrix(pisa[,-c(1,3:5)],pch=19,cex=.5,reg.line=F, lwd=1,
-                       spread=F,ellipse=T, col=c('gray60','#1e90ff','#FF5503'),
-                       col.axis='gray50', cex.labels=.5)
-dev.off()
+source('funcs/better_smooth.R')
+source('funcs/better_corr.R')
+
 library(GGally)
-ggpairs(pisa[,-c(1,3:5)], 
-        lower=list(continuous=wrap('smooth',  alpha=.2, color=c('#ff5503'), method='loess')), 
-        diag = list(continuous=wrap('densityDiag', color='gray50')),
-        upper='blank', axisLabels="none") + 
+p = ggpairs(pisa[,-c(1,3:5)], 
+        lower=list(continuous=wrap(better_smooth,  ptalpha=.25, ptcol='#ff5503', ptsize=1,
+                                   linecol='#03b3ff', method='loess', se=F, lwd=.5)), 
+        diag = list(continuous=wrap('densityDiag', color='gray50', lwd=.5)),
+        upper=list(continuous=wrap(better_corr)),
+        axisLabels="none") + 
   theme_trueMinimal() +
-  theme(axis.text.x=element_text(color='gray50'))
+  theme(axis.text.x=element_text(color='gray50')) +
+  theme(legend.position = "none", 
+        panel.grid.major = element_blank(), 
+        axis.ticks = element_blank())
+p
+# ggplotly(p, width=600)
+# ggscatmat(pisa[,-c(1,3:5)], alpha=.2) + 
+#   theme_trueMinimal() +
+#   theme(axis.text.x=element_text(color='gray50'))
 ```
 
-<img src="vis/scattermatrix.png" style="display:block; margin: 0 auto;  width='50%'">
+
 
 The scatterplot matrix has quite a bit of information to spend some time with- univariate and bivariate density, as well as loess curves.  For our purposes we will ignore the issue regarding the haves vs. have-nots on the science scale and save that for another day. Note the surprising negative correlation between interest and overall score for science, which might remind us of [Simpson's paradox](http://en.wikipedia.org/wiki/Simpson_paradox), namely, that what occurs for the individual may not be the same for the group. One will also note that while there is a positive correlation between Income and Overall science scores, it flattens out after an initial rise. Linear fits might be difficult to swallow for human development sub-scales in general, but let's take a closer look.
 
@@ -85,7 +93,7 @@ scatterwrap = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   labs(x='') +
   theme_trueMinimal() 
 
-ggplotly() %>% 
+ggplotly(width=600) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -93,7 +101,7 @@ We can see again that linear fits aren't going to do so well for some, though it
 
 ```{r scatterwrapSmooth,  echo=F}
 scatterwrapSmooth = ggplot(aes(x=Value,y=Overall), data=dmelt) +
-  geom_point(color='#FF8000',alpha=.75) +
+  geom_point(color='#FF5503',alpha=.75) +
   geom_smooth(se=F, lwd=.5, color='#1e90ff') +
   geom_text(aes(label=Country), alpha=0, size=1,angle=30, hjust=-.2,   # making transparent so only plotly will show the country
             vjust=-.2) +
@@ -101,7 +109,7 @@ scatterwrapSmooth = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   labs(x='') +
   theme_trueMinimal() +
   theme(plot.background=element_rect(color='transparent'))
-ggplotly() %>% 
+ggplotly(width=600) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -177,7 +185,7 @@ polynomialBasis = ggplot(aes(x=Income, y=Income), data=dpoly) +
   facet_grid(basis~., scales='free_y') +  # , labeller=label_parsed if using expressions
   theme_trueMinimal() 
 
-ggplotly() %>% 
+ggplotly(width=600) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -216,7 +224,7 @@ csbyhand = ggplot(aes(x=Income, y=Overall), data=pisa)+
   xlim(.4,1) +
   theme_trueMinimal()
 
-ggplotly() %>% 
+ggplotly(width=600) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 

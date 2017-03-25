@@ -154,14 +154,14 @@ minx = min(sort(x)[neighborhood])
 maxx = max(sort(x)[neighborhood])
 maxy = max(y) + 2
 plot_ly(width='75%') %>% # marker opacity to 0 to remove idiotic placed endpoints
-  add_trace(x=c(minx,minx), y=c(0, maxy), mode='line', showlegend=F,
-        line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% 
-  add_trace(x=c(maxx, maxx), y=c(0, maxy), mode='line', showlegend=F,
-            line=list(color='gray'), opacity=.1, marker=list(opacity=0)) %>% 
-  add_trace(data=dxy[-neighborhood,], x=~x, y=~y, mode='markers', showlegend=F, 
+  add_lines(x=c(minx,minx), y=c(0, maxy), showlegend=F,
+        line=list(color='gray'), opacity=.1) %>% 
+  add_lines(x=c(maxx, maxx), y=c(0, maxy), showlegend=F,
+            line=list(color='gray'), opacity=.1) %>% 
+  add_markers(data=dxy[-neighborhood,], x=~x, y=~y, showlegend=F, 
             marker=list(color='gray', opacity=.1)) %>% 
-  add_trace(data=dxy[neighborhood,], x=~x, y=~y, mode='markers', showlegend=F, 
-            marker=list(color='darkred', opacity=.1)) %>% 
+  add_markers(data=dxy[neighborhood,], x=~x, y=~y, showlegend=F, 
+            marker=list(color='#B2001D', opacity=.1)) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
          plot_bgcolor='rgba(0,0,0,0)',
@@ -175,7 +175,7 @@ Now, for just that range we fit a linear regression model and note the fitted va
 ```{r loessgraph2, echo=FALSE}
 plot_ly( width='75%') %>% 
   add_markers(data=dxy[neighborhood,], x=~x, y=~y, showlegend=F,
-                    marker=list(opacity=.2, color='#ff5503')) %>% 
+                    marker=list(opacity=.2, color='#B2001D')) %>% 
   add_lines(x=~x, y=neighborfit, name='lm fit', opacity=.5, line=list(color='#1e90ff', width=3)) %>% 
   theme_plotly() %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)',
@@ -218,7 +218,7 @@ mcycle3$variable =factor(mcycle3$variable, labels=c('Polynomial Regression (cubi
 
 ### Generalized Additive Models
 
-The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">This is a version of that found in @venables_modern_2002.</a>.  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
+The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">This is a version of that found in @venables_modern_2002.  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
 
 ```{r mcycleFigure, echo=FALSE}
 mcycleFigure = ggplot(aes(x=times,y=accel), data=mcycle3) + 

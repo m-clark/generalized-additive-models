@@ -75,7 +75,7 @@ The combination of random effects, spatial effects, etc. into the additive model
 
 #### GAMLSS
 
-Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See @rigby_generalized_2005 and the <span class="pack">gamlss</span> package, though <span class="pack">mgcv</span> has several options in this regard as well</span>.  
+Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See @rigby_generalized_2005 and the <span class="pack">gamlss</span> package, though <span class="pack">mgcv</span> has several options in this regard as well.</span>
 
 #### Other
 In addition there are boosted, ensemble and other machine learning approaches that apply GAMs as well<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See the <span class="pack">GAMens</span> package for example. Also, [boosted models](http://projecteuclid.org/euclid.aos/1016218223) *are* GAMs.</span>.  In short, there's plenty to continue to explore once one gets the hang of generalized additive models.
