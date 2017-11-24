@@ -41,6 +41,7 @@ _book/*.pdf
 *.sh linguist-vendored
 *.css linguist-vendored
 *.tex linguist-vendored
+*.aspx linguist-vendored
 
 *.Rmd linguist-language=R
 *.stan linguist-language=Stan
