@@ -23,7 +23,7 @@ nocite: |
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache.rebuild=F, cache = T, message = F, warning = F, R.options=list(width=120), 
-                      fig.width=8, fig.align = 'center', comment=NA, autodep=T)
+                      fig.width=8, fig.align = 'center', comment=NA, autodep=T, dev.args = list(bg = 'transparent'))
 ```
 
 ```{r loadpacks, include=FALSE}
