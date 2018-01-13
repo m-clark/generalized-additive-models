@@ -36,7 +36,7 @@ body {
 }
 
 p {
-
+ width: 100%;
 }
 
 .author {
@@ -130,5 +130,5 @@ div.datatables {
 }
 
 table {
-  margin: auto;
+  /* margin: auto; */
 }

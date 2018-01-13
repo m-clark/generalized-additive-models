@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-01-12">
+<meta name="date" content="2018-01-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -93,8 +93,9 @@ code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* Com
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
-<link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="css/tufte.css" type="text/css" />
 <link rel="stylesheet" href="css/standard_html.css" type="text/css" />
+<link rel="stylesheet" href="css/book.css" type="text/css" />
 </head>
 
 <body>
@@ -125,6 +126,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-models"><i class="fa fa-check"></i>Generalized Additive Models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html"><i class="fa fa-check"></i>Why not just use standard methods?</a><ul>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html#heteroscedasticity-non-normality-etc."><i class="fa fa-check"></i>Heteroscedasticity, non-normality etc.</a></li>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a><ul>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html#a-more-complex-relationship"><i class="fa fa-check"></i>A more complex relationship</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
@@ -238,9 +245,9 @@ Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
 indicate that k is too low, especially if edf is close to k&#39;.
 
             k&#39;  edf k-index p-value
-s(Income) 9.00 7.59    1.26    0.96
-s(Edu)    9.00 6.20    1.01    0.43
-s(Health) 9.00 1.00    0.90    0.19</code></pre>
+s(Income) 9.00 7.59    1.26    0.98
+s(Edu)    9.00 6.20    1.01    0.49
+s(Health) 9.00 1.00    0.90    0.18</code></pre>
 <p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote"><span class="math inline">\(k\)</span> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.</span>. Given the penalization process, the exact choice of <span class="math inline">\(k\)</span> isn’t too big of a deal, but the defaults are arbitrary. You want to set it large enough to get at the true effect as best as possible, but in some cases computational efficiency will also be of concern. For example, in fairly complex models with many predictors, interactions, etc., it might be worthwhile to reduce <span class="math inline">\(k\)</span> at the outset. The help on the function <span class="func">choose.k</span> provides another approach to examining <span class="math inline">\(k\)</span> based on the residuals from the model under consideration, and provides other useful information.</p>
 <div id="concurvity" class="section level3">
 <h3>Concurvity</h3>

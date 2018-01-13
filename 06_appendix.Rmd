@@ -173,7 +173,7 @@ We can take the same approach as with the polynomial example earlier in the docu
 The following is arranged in order of the Income values.
 
 ```{r csbs, echo=FALSE, eval=TRUE}
-detach(package:MASS)
+# detach(package:MASS)
 Income = select(pisa, Overall, Income) %>% na.omit()  %>% select(Income) %>% .[,1]
 Overall = select(pisa, Overall, Income) %>% na.omit() %>% select(Overall) %>% .[,1]
 knots = seq(.4, 1, length=10); knots = knots[-length(knots)]  # don't need the last value

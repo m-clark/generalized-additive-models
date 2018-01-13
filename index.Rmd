@@ -9,7 +9,7 @@ date: '`r Sys.Date()`'
 site: bookdown::bookdown_site
 output:
   bookdown::gitbook:
-    css: [css/book.css, css/standard_html.css]
+    css: [css/tufte.css, css/standard_html.css, css/book.css]
     highlight: pygments
     number_sections: false
     config:
@@ -50,8 +50,8 @@ knitr::opts_chunk$set(cache.rebuild=F, cache = T, message = F, warning = F, R.op
                       fig.width=8, fig.align = 'center', comment=NA, autodep=T, dev.args = list(bg = 'transparent'))
 ```
 
-```{r loadpacks, include=FALSE}
-library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk)
+```{r loadpacks, include=FALSE, cache=FALSE}
+library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk); library(broom)
 ```
 
 #

@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-01-12">
+<meta name="date" content="2018-01-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -93,8 +93,9 @@ code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* Com
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
-<link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="css/tufte.css" type="text/css" />
 <link rel="stylesheet" href="css/standard_html.css" type="text/css" />
+<link rel="stylesheet" href="css/book.css" type="text/css" />
 </head>
 
 <body>
@@ -125,6 +126,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-models"><i class="fa fa-check"></i>Generalized Additive Models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html"><i class="fa fa-check"></i>Why not just use standard methods?</a><ul>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html#heteroscedasticity-non-normality-etc."><i class="fa fa-check"></i>Heteroscedasticity, non-normality etc.</a></li>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a><ul>
+<li class="chapter" data-level="" data-path="why-not-just-use-standard-methods.html"><a href="why-not-just-use-standard-methods.html#a-more-complex-relationship"><i class="fa fa-check"></i>A more complex relationship</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
@@ -197,7 +204,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1>Preface</h1>
 <p>The following provides a brief introduction to generalized additive models and some thoughts on getting started within the R environment. It doesn’t assume much more than a basic exposure to regression, and maybe a general idea of R though not necessarily any particular expertise. The presentation is of a very applied nature, and such that the topics build upon the familiar and generalize to the less so, with the hope that one can bring the concepts they are comfortable with to the new material. The audience in mind is a researcher with typical applied science training.</p>
 <p>As this document is more conceptual, a basic familiarity with R is all that is needed to follow the code, though there is much to be gained from simple web browsing on R if one needs it. And while it wasn’t the intention starting out, this document could be seen as a vignette for the <span class="pack">mgcv</span> package, which is highly recommended.</p>
-<p>This document was created with <a href="http://rstudio.org/">Rstudio</a> and rmarkdown. <span class="marginnote">Last modified 2018-01-12. Original draft August, 2012.</span></p>
+<p>This document was last modified 2018-01-13. Original draft August, 2012.</span></p>
 <p>Color guide:</p>
 <ul>
 <li><span class="emph">important term</span></li>
