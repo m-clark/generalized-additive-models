@@ -49,19 +49,26 @@ p.subtitle { font-style: italic;
 .danger { color: red; }
 
 /* Tables */
+/* see other css table options also */
 table { overflow-x: scroll;
-        clear: left;
-        text-align: center;
+        max-width: 60%;           /* to keep within para width*/
+
+        /* text-align: center;
         font-size: 1.2rem;
         line-height: 1.2;
-        margin: 1.4rem 0;
+        margin: 1.4rem 0
+        margin-right: 0;
+        float: left;
+        margin-left: auto
         border-collapse: separate;
-        border-spacing: 0 5px;
+        border-spacing: 0 5px;*/
         -webkit-font-feature-settings: 'tnum'; /* This is technically redundant */
         -moz-font-feature-settings: 'tnum';
         -ms-font-feature-settings: 'tnum'; }
 
+/*
 table > tbody > tr > td { vertical-align: top; }
+*/
 
 .intro {
   width: 75%;
@@ -98,10 +105,10 @@ table.supertable > tbody > tr > td.footer { padding-left: 0em;
 table > tbody > tr.divider > td { padding-bottom: 5px;
                                   border-bottom: 1px solid #AAAAAA; }
 
-thead th { text-align: left;
+/*thead th { text-align: left;
            border-bottom: 1px solid #AAAAAA;
            font-weight: 400; }
-
+*/
 .text { text-align: left; }
 
 .number { text-align: right; }
