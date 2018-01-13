@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Generalized Additive Models</title>
+  <meta name="description" content="Generalized Additive Models">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Generalized Additive Models" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://m-clark.github.io/" />
+  <meta property="og:image" content="https://m-clark.github.io/img/nineteeneightyR.png" />
+  <meta property="og:description" content="Generalized Additive Models" />
+  <meta name="github-repo" content="m-clark/" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Generalized Additive Models" />
+  
+  <meta name="twitter:description" content="Generalized Additive Models" />
+  <meta name="twitter:image" content="https://m-clark.github.io/img/nineteeneightyR.png" />
+
+
+
+<meta name="date" content="2018-01-12">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
+<link rel="prev" href="application-using-r.html">
+<link rel="next" href="other-approaches.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.7.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/plotlyjs-1.29.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotlyjs-1.29.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="css/standard_html.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="https://m-clark.github.io/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#0085A1; font-family:Roboto">Generalized Additive Models</span></a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-i"><i class="fa fa-check"></i>Beyond the General Linear Model I</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#general-linear-model"><i class="fa fa-check"></i>General Linear Model</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-linear-model"><i class="fa fa-check"></i>Generalized Linear Model</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-model"><i class="fa fa-check"></i>Generalized Additive Model</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-ii"><i class="fa fa-check"></i>Beyond the General Linear Model II</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#fitting-the-standard-linear-model"><i class="fa fa-check"></i>Fitting the Standard Linear Model</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#polynomial-regression"><i class="fa fa-check"></i>Polynomial Regression</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#scatterplot-smoothing"><i class="fa fa-check"></i>Scatterplot Smoothing</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-models"><i class="fa fa-check"></i>Generalized Additive Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#single-predictor"><i class="fa fa-check"></i>Single Predictor</a><ul>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#linear-fit"><i class="fa fa-check"></i>Linear Fit</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#gam"><i class="fa fa-check"></i>GAM</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#graphical-display"><i class="fa fa-check"></i>Graphical Display</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#multiple-predictors"><i class="fa fa-check"></i>Multiple Predictors</a><ul>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#linear-fit-1"><i class="fa fa-check"></i>Linear Fit</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#gam-1"><i class="fa fa-check"></i>GAM</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#graphical-display-1"><i class="fa fa-check"></i>Graphical Display</a></li>
+<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#model-comparison-1"><i class="fa fa-check"></i>Model Comparison</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html"><i class="fa fa-check"></i>Other Issues</a><ul>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#estimation"><i class="fa fa-check"></i>Estimation</a><ul>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#shrinkage-variable-selection"><i class="fa fa-check"></i>Shrinkage &amp; Variable Selection</a></li>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#effective-degrees-of-freedom-again"><i class="fa fa-check"></i>Effective degrees of freedom again</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#choice-of-smoothing-function"><i class="fa fa-check"></i>Choice of Smoothing Function</a></li>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#diagnostics"><i class="fa fa-check"></i>Diagnostics</a><ul>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#concurvity"><i class="fa fa-check"></i>Concurvity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="other-issues.html"><a href="other-issues.html#model-comparison-revisited"><i class="fa fa-check"></i>Model Comparison Revisited</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html"><i class="fa fa-check"></i>Other Approaches</a><ul>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#other-nonlinear-modeling-approaches"><i class="fa fa-check"></i>Other Nonlinear Modeling Approaches</a><ul>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#known-form"><i class="fa fa-check"></i>Known Form</a></li>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#response-transformation"><i class="fa fa-check"></i>Response Transformation</a></li>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#the-black-box"><i class="fa fa-check"></i>The Black Box</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#extensions"><i class="fa fa-check"></i>Extensions</a><ul>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#other-gams"><i class="fa fa-check"></i>Other GAMs</a></li>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#reproducing-kernel-hilbert-space"><i class="fa fa-check"></i>Reproducing Kernel Hilbert Space</a></li>
+<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Conclusion</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#penalized-estimation-example"><i class="fa fa-check"></i>Penalized Estimation Example</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#basis-functions-for-a-cubic-spline"><i class="fa fa-check"></i>Basis functions for a cubic spline</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
+<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><span style="color:#0085A1; font-size:5rem">Generalized Additive Models</span></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="other-issues" class="section level1">
+<h1>Other Issues</h1>
+<div id="estimation" class="section level2">
+<h2>Estimation</h2>
+<p><span class="newthought">As noted previously</span>, estimation of GAMs in the mgcv package is conducted via a penalized likelihood approach. Conceptually this amounts to fitting the following model:</p>
+<p><span class="math display">\[g(\mu) = X\beta + f(x_1) + f(x_2) ... f(x_p)\]</span></p>
+<p>But note that each smooth has its own model matrix made up of the basis functions. So for each smooth covariate <span class="math inline">\(j\)</span> we have:</p>
+<p><span class="math display">\[f_j = \tilde{X}_j \tilde{\beta}_j\]</span></p>
+<p>Given a matrix of coefficients <span class="math inline">\(S\)</span>, we can more formally note a penalized likelihood function:</p>
+<p><span class="math display">\[l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta\]</span></p>
+<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote"><span class="math inline">\(\lambda\rightarrow\infty\)</span> would result in a straight line estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data. See p. 128, <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span>.</span>. Technically we could specify the smoothing parameters explicitly, and the <a href="appendix.html#penalized-estimation-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
+<p>Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before. Smoothing parameters are selected which minimize the GCV score by default, though one has other options. Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.</p>
+<div id="shrinkage-variable-selection" class="section level3">
+<h3>Shrinkage &amp; Variable Selection</h3>
+<p>Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions. An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">See also, the <code>select</code> argument to the <span class="func">gam</span> function. Also, in version 1.7-19, <span class="func">summary.gam</span> and <span class="func">anova.gam</span> had changes made to improve the p-value computation in penalized situations.</span>. In this manner one can assess whether a predictor is adding anything to the model, i.e. if it’s effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.</p>
+</div>
+<div id="effective-degrees-of-freedom-again" class="section level3">
+<h3>Effective degrees of freedom again</h3>
+<p>If we define a matrix <span class="math inline">\(F\)</span> that maps the unpenalized estimates of <span class="math inline">\(\beta\)</span> to the penalized estimates such that</p>
+<p><span class="math display">\[F = (X^T X + S)^{-1} X^T X\]</span></p>
+<p>and note</p>
+<p><span class="math display">\[\tilde{\beta} = (X^T X)^{-1} X^T y\]</span> <span class="math display">\[\hat{\beta} = F\tilde{\beta}\]</span></p>
+<p>the diagonal elements of <span class="math inline">\(F\)</span> are where the effective degrees of freedom for each covariate come from.</p>
+</div>
+</div>
+<div id="choice-of-smoothing-function" class="section level2">
+<h2>Choice of Smoothing Function</h2>
+<p>A number of smooths are available with the <span class="pack">mgcv</span> package, and one can learn more via the help file for <span class="func">smooth.terms</span> (<a href="http://www.inside-r.org/r-doc/mgcv/smooth.terms">link</a>). In our models we have used cubic regression splines and thin plate regression splines (TPRS), the latter being the default for a GAM in this package. As a brief summary, TPRS work well in general in terms of performance and otherwise has some particular advantages, and has a shrinkage alternative available. One should still feel free to play around, particularly when dealing with multiple smooths, where the tensor product smooths would be better for covariates of different scales.</p>
+</div>
+<div id="diagnostics" class="section level2">
+<h2>Diagnostics</h2>
+<p>We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## gam.check(mod_gam2, k.rep=1000)</code></pre></div>
+<p><img src="GAM_files/figure-html/gam_check-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre><code>
+Method: GCV   Optimizer: magic
+Smoothing parameter selection converged after 21 iterations.
+The RMS GCV score gradient at convergence was 2.499332e-05 .
+The Hessian was positive definite.
+Model rank =  28 / 28 
+
+Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+indicate that k is too low, especially if edf is close to k&#39;.
+
+            k&#39;  edf k-index p-value
+s(Income) 9.00 7.59    1.26    0.96
+s(Edu)    9.00 6.20    1.01    0.43
+s(Health) 9.00 1.00    0.90    0.19</code></pre>
+<p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote"><span class="math inline">\(k\)</span> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.</span>. Given the penalization process, the exact choice of <span class="math inline">\(k\)</span> isn’t too big of a deal, but the defaults are arbitrary. You want to set it large enough to get at the true effect as best as possible, but in some cases computational efficiency will also be of concern. For example, in fairly complex models with many predictors, interactions, etc., it might be worthwhile to reduce <span class="math inline">\(k\)</span> at the outset. The help on the function <span class="func">choose.k</span> provides another approach to examining <span class="math inline">\(k\)</span> based on the residuals from the model under consideration, and provides other useful information.</p>
+<div id="concurvity" class="section level3">
+<h3>Concurvity</h3>
+<p><span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem, i.e. unstable estimates.</p>
+<p>Wood provides three indices related to concurvity via the concurvity function, all range from 0 to 1 with 0 suggesting no problem, and 1 indicating that the function lies entirely in the space of one or more of the other smooth terms. See <code>?concurvity</code> for details.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">concurvity</span>(mod_gam2)</code></pre></div>
+<pre><code>                 para s(Income)    s(Edu) s(Health)
+worst    2.698463e-24 0.9839101 0.9651345 0.9745969
+observed 2.698463e-24 0.7967932 0.6115974 0.8682284
+estimate 2.698463e-24 0.7610774 0.6470586 0.7971159</code></pre>
+<p>It should probably come as little surprise that we may have an issue here given the nature of the covariates. We can certainly make assumptions about wealthier nations’ education and health status, for example. What can we do? Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data. We certainly can’t do that here as we are dealing with country level data. That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores). In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique. For example, if it is the result of having several time- or spatially- covarying predictors, one might be able retain only those that best capture that effect. However, the mgcv estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See <span class="citation">Wood (<a href="#ref-wood2008">2008</a>)</span>.</p>
+</div>
+</div>
+<div id="prediction" class="section level2">
+<h2>Prediction</h2>
+<p>A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale. Typically we’d use this on new data. I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that. It is worth noting again that there is an option, <code>type='lpmatrix'</code>, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values. This can be particularly useful towards opening the <a href="other-approaches.html#the-black-box">black box</a> as one learns the technique.</p>
+</div>
+<div id="model-comparison-revisited" class="section level2">
+<h2>Model Comparison Revisited</h2>
+<p>We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select=TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">GCV scores are not useful for comparing fits of different families; AIC is still okay though.</span>, and in general either of these would be viable approaches. Consider the following comparison:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)
+mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income,Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)
+<span class="kw">AIC</span>(mod_1d, mod_2d)</code></pre></div>
+<pre><code>             df      AIC
+mod_1d 15.59154 476.0631
+mod_2d 13.24670 489.7046</code></pre>
+<p>In some cases we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance. We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function. While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place. The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)
+mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)
+
+<span class="kw">anova</span>(mod_A,mod_B, <span class="dt">test=</span><span class="st">&quot;Chisq&quot;</span>)</code></pre></div>
+<pre><code>Analysis of Deviance Table
+
+Model 1: Overall ~ s(Income, bs = &quot;cr&quot;, k = 5) + s(Edu, bs = &quot;cr&quot;, k = 5)
+Model 2: Overall ~ ti(Income, bs = &quot;cr&quot;, k = 5) + ti(Edu, bs = &quot;cr&quot;, k = 5) + 
+    ti(Income, Edu, bs = &quot;cr&quot;)
+  Resid. Df Resid. Dev     Df Deviance Pr(&gt;Chi)   
+1    46.059      36644                            
+2    40.030      24998 6.0291    11645 0.003322 **
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Again though, we could have just used the summary output from the second model.</p>
+<p>Instances where such a statistical test does not appear to be appropriate within the context of the <span class="mgcv"></span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it’s possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical. <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> suggests that if such model comparison is the ultimate goal an unpenalized approach<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">This can be achieved with the argument <code>s(..., fx=T)</code>, although now one has to worry more about the k value used, as very high k will lead to low power.</span> would be best to have much confidence in the p-values<label for="sn-demo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-demo" class="margin-toggle"/><span class="sidenote">One might also examine the <span class="pack">gss</span> package for an ANOVA based approach to generalized smoothing splines.</span>.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-wood_generalized_2006">
+<p>Wood, S. N. 2006. <em>Generalized Additive Models: An Introduction with R</em>. Vol. 66. CRC Press.</p>
+</div>
+<div id="ref-wood2008">
+<p>Wood, Simon N. 2008. “Fast Stable Direct Fitting and Smoothness Selection for Generalized Additive Models.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 70 (3). Wiley Online Library: 495–518.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="application-using-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="other-approaches.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["twitter", "facebook", "google", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"download": null,
+"toc": {
+"collapse": "section",
+"depth": 2,
+"scroll_highlight": true
+},
+"highlight": "pygments",
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

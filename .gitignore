@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+*_book
+*_cache
+*GAM_cache
+*GAM_files
+*.DS_Store

@@ -1,0 +1,3 @@
+# Conclusion
+
+Generalized additive models are a conceptually straightforward tool that allows one to incorporate nonlinear predictor effects into their otherwise linear models. In addition, they allow one to keep within the linear and generalized linear modeling frameworks with which one is already familiar, while providing new avenues of model exploration and possibly improved results.  As was demonstrated, it is easy enough with just a modicum of familiarity to pull them off within the R environment, and as such, it is hoped that this document provides the means to do so.

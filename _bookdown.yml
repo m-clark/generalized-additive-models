@@ -1,0 +1,5 @@
+book_filename: "gam"
+language:
+  ui:
+    chapter_name: "Chapter "
+output_dir: "docs"
