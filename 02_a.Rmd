@@ -1,5 +1,13 @@
-# Why not just use standard methods?
+# The case for GAMs
 
+
+```{r setupCase, include=FALSE}
+knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+```
+
+## Why not just use standard methods?
+
+We have seen that GAM generalize our typical approaches, but can they really help?  The standard linear model is ubiquitous in statistical training and application, and for good reason.  It is simple to do and easy to understand. Let's go ahead and do one to get things started.
 
 ```{r setupIntroducingGAM, include=FALSE}
 knitr::opts_chunk$set(cache.rebuild=F, cache = T)
@@ -64,7 +72,8 @@ augment(mod) %>%
   geom_smooth(se=F, color='#00aaff') +
   labs(title='Fitted vs. Observed') +
   hrbrthemes::theme_ipsum_rc() +
-  theme_trueMinimal()
+  theme_trueMinimal() +
+  theme(title = element_text(colour = '#585858'))
 ```
 
 
@@ -84,7 +93,8 @@ Now let's go back and visualize the data.  The following plots both predictors a
   theme_trueMinimal() +
   theme(legend.title=element_blank(),
         legend.background=element_blank(),
-        legend.key=element_blank())
+        legend.key=element_blank(),
+        title = element_text(colour = '#585858'))
 # ggplotly()
 
 ```
@@ -110,7 +120,7 @@ modlog = lm(log(y) ~ x1 + x2, dat)
 #   round(2) %>% 
 #   pander
 summary(modlog) %>% 
-  pander(justify='lrrrr', caption='')
+  pander(justify='lrrrr', caption='', round=2)
 ```
 
 <br>
@@ -143,7 +153,8 @@ augment(modlog) %>%
   geom_smooth(se=F, color='#00aaff') +
   labs(title='Fitted vs. Observed', y='log(y)') +
   hrbrthemes::theme_ipsum_rc() +
-  theme_trueMinimal()
+  theme_trueMinimal() +
+  theme(title = element_text(colour = '#585858'))
 ```
 
 We continue to see some poor fitting cases and now our fit is flattening even more than it was. 
@@ -204,7 +215,7 @@ newdat %>%
 
 <br>
 
-Part of the reason is that, outside of deterministic relationships due known physical or other causes, you are unlikely to discover a quadratic relationship between variables among found data.  Even when it appears to fit, without a lot of data it is almost certainly <span class="emph">overfit</span> due to this reason.  Fitting a polynomial is more akin to enforcing our vision of how the data should be, rather than letting the data speak for itself. Sure, it might be a good approximation some of the time, just as assuming a linear relationship is, but often it's just wishful thinking.
+Part of the reason is that, outside of deterministic relationships due to known physical or other causes, you are unlikely to discover a quadratic relationship between variables among found data.  Even when it appears to fit, without a lot of data it is almost certainly <span class="emph">overfit</span> due to this reason.  Fitting a polynomial is more akin to enforcing our vision of how the data should be, rather than letting the data speak for itself. Sure, it might be a good approximation some of the time, just as assuming a linear relationship is, but often it's just wishful thinking.
 
 
 Compare the previous result to the following fit from a generalized additive model.  GAMs are susceptible to extrapolation, as is every statistical model ever created.  However, the original fit (in red) is much better. Notice how it was better able to follow the straightened out data points at the high end, rather than continuing the bend that the quadratic approach enforced.
@@ -232,15 +243,7 @@ newdat %>%
 
 ### A more complex relationship
 
-Perhaps you would have been satisfied with the initial quadratic fit above or perhaps a cubic fit[^cubic]. We may come across a situation where the target of interest $y$ is a function of some covariate $x$, whose effect is not straightforward at all.  In a standard regression we can generally write the model as follows:
-
-$$y = f(x) + e$$
-
-If we are talking a linear relationship between y and x, f(x) might be a simple sum of the covariates.
-
-$$y = b_0 + b_1*x + e$$
-
-If that were the case, we could do our standard regression model.  Now consider the following functional form for x:
+Perhaps you would have been satisfied with the initial quadratic fit above or perhaps a cubic fit[^cubic]. We may come across a situation where the target of interest $y$ is a function of some covariate $x$, whose effect is not straightforward at all.  Consider the following functional form for x:
 
 $$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2} + \epsilon$$
 $$\epsilon \sim N(0,.3^2)$$
@@ -281,6 +284,7 @@ fits = sapply(seq(3,15, 3), function(p) fitted(lm(y~poly(x,p)))) %>%
 plot_ly(width=700, data=d) %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.2), showlegend=F) %>% 
   add_lines(~x, ~fits, color=~polynomial, data=fits) %>% 
+  config(displayModeBar=F) %>% 
   theme_blank()
 ```
 

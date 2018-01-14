@@ -1,0 +1,98 @@
+# Building up to GAMs
+
+
+```{r setupBuild, include=FALSE}
+knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+```
+
+```{r polyreg_repeat, echo=FALSE}
+plot_ly(width=700, data=d) %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.1), showlegend=F) %>% 
+  add_lines(~x, ~fits, color=~polynomial, data=fits) %>% 
+  theme_plotly()
+```
+
+## Piecewise polynomial
+
+<span class="newthought">So how might we solve the problem</span> we saw with polynomial regression?  One way would be to divide the data into chunks at various points (<span class='emph'>knots</span>), and fit a linear regression or polynomial model within that subset of data.  The following fits a cubic polynomial for each 10 evenly divided subsets of x.
+
+```{r piecewisePoly, echo=FALSE}
+knots = seq(0,1, by=.1)
+d$xcut = cut(x, knots, right=F)
+d$xcut = factor(d$xcut, levels=c('Int', levels(d$xcut))) # add int for later
+
+fits = d %>% 
+  group_by(xcut) %>% 
+  do(data.frame(x=.$x, y=.$y, fit=fitted(lm(y~poly(x, 3), data=.))))
+
+
+plot_ly(fits, width='100%') %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5), showlegend=F) %>% 
+  add_lines(~x, ~fit, color=I('#00aaff'), showlegend=F) %>% 
+  theme_plotly()
+```
+
+<br>
+
+While this is notably better fit than e.g., a cubic polynomial, again it is unsatisfactory. The separate fits are unconnected, leading to sometimes notably different predictions for values close together.  Being fit to small amounts of data means each fit *overfits* that area of data, leading to a fairly 'wiggly' result most of the time.
+
+## Introducing Generalized Additive Models
+
+In essence, a GAM is a GLM. What distinguishes it from the ones you know is that, unlike a standard GLM, it is composed of a sum of smooth functions of covariates instead of or in addition to the standard linear covariate effects.  Consider the standard (g)lm[^subscripts]:
+
+$$y = \gamma_0 + \gamma_1\cdot x$$
+
+In the above, $y$ is our target, $x$ the predictor variable, the coefficients are $\gamma$ and $\epsilon$ the error.
+
+For the GAM, we can specify it generally as follows:
+
+$$y = f(x) + \epsilon$$
+
+Now we are dealing with some specific (additive) function of inputs, which will not require the (possibly transformed) $y$ to be a linear function of $x$.  It involves choosing a <span class="emph">basis</span>, which in technical terms means choosing a space of functions for which $f$ is some element of it.  On the practical side, it is a means to capture nonlinear relationships. As we'll see later, an example would be choosing a <span class="emph">cubic spline</span> for the basis.  Choosing a basis also means we're selecting basis functions, which will actually go into the analysis.  We can add more detail as follows:
+
+$$y = f(x) + \epsilon = \sum_{j=1}^{d}B_j(x)\gamma_j + \epsilon$$
+
+Above, each $B_j$ is a <span class="emph">[basis function](https://en.wikipedia.org/wiki/Basis_function)</span> that is the transformed $x$ depending on the type of basis considered, and the $\gamma$ are the corresponding regression coefficients.  This might sound complicated, *until you realise you've done this before*.  Let's go back to the quadratic polynomial, which uses the polynomial basis.
+
+$$f(x) = \gamma_0 + \gamma_1\cdot x^1 \ldots +\gamma_d\cdot x^d$$
+
+In that case $d=2$ and we have our standard regression with a quadratic term, but in fact, we can use this approach to produce the bases for any polynomial.  
+
+As far as mechanics go, these basis functions become extra columns in the data, just like your $x^2$ etc. from the polynomial approach, and then you just run a GLM!  However, an additional aspect is that we will use <span class="emph">penalized estimation</span>, something that is quite common in some modeling contexts (e.g. machine learning), but not common enough in applied research.
+
+For those new to penalized regression, again consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. *Conceptually* we can write the <span class="emph">penalized likelihood</span> as follows:
+
+
+$$l_p(\beta)= l(\beta) - \color{darkred}{\mathcal{penalty}}$$
+
+If you prefer least squares as the loss function, we can put it as:
+
+$$\mathcal{Loss} = \sum (y-X\beta)^2 + \color{darkred}{\mathcal{penalty}}$$
+
+The penalty regards the complexity of the model, and specifically the size of the coefficients for the smooth terms.  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly[^wiggly].  
+
+In summary, you're doing a GLM, but a slightly modified one.  You could have always been using penalized GLM (e.g. lasso or ridge regression), and you'd have slightly better predictive capability if you had.  We can use different loss functions, different penalties etc. but the concepts are the main thing to note here.  For a little more detail on this section visit the [technical section][GAM].
+
+
+## Polynomial spline
+
+Let's get things started by demonstrating the results from a GAM that uses a <span class="emph">polynomial spline</span> for the basis.  The brave may refer to the [technical details][Technical details] section for additional insights.  Conceptually, it is useful to continue to think of the piece-wise approach we talked about before.  However, we'll end up with a smoother and connected result when all is said and done.
+
+```{r polysplinedemo, echo=FALSE}
+d %>% 
+  add_predictions(model = gam(y ~ s(x, bs='cr', k=12), data=d)) %>% 
+  plot_ly() %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5), showlegend=F) %>% 
+  add_lines(~x, ~pred, color=I('#00aaff'), showlegend=F) %>% 
+  theme_plotly()
+```
+
+<br>
+
+This is much better. We now have a connected result that isn't overly wiggly, and more importantly, actually fits the data quite well. 
+
+
+
+[^subscripts]: I am leaving out subscripts where I don't think it helps, and as these are conceptual depictions, they usually don't.
+
+[^wiggly]: Wiggly is a highly technical term I will use throughout the presentation.
