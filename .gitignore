@@ -5,5 +5,5 @@
 *_book
 *_cache
 *GAM_cache
-*GAM_files
+*bookdown_files
 *.DS_Store
