@@ -180,9 +180,9 @@ div.epigraph > blockquote > footer > cite { font-style: italic; }
 
 /* end chapter epigraphs styles */
 
-blockquote { font-size: 1.4rem; }
+blockquote { font-size: 1.4em; }
 
-blockquote p { width: 50%; }
+blockquote p { width: 100%; }
 
 blockquote footer { width: 50%;
                     font-size: 1.1rem;

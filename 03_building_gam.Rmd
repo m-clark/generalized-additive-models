@@ -2,11 +2,11 @@
 
 
 ```{r setupBuild, include=FALSE}
-knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+# knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 ```
 
-```{r polyreg_repeat, echo=FALSE}
-plot_ly(width=700, data=d) %>% 
+```{r polyreg_repeat, echo=FALSE, out.width='45%', fig.asp=.5}
+plot_ly(data=d) %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.1), showlegend=F) %>% 
   add_lines(~x, ~fits, color=~polynomial, data=fits) %>% 
   theme_plotly()
@@ -16,7 +16,7 @@ plot_ly(width=700, data=d) %>%
 
 <span class="newthought">So how might we solve the problem</span> we saw with polynomial regression?  One way would be to divide the data into chunks at various points (<span class='emph'>knots</span>), and fit a linear regression or polynomial model within that subset of data.  The following fits a cubic polynomial for each 10 evenly divided subsets of x.
 
-```{r piecewisePoly, echo=FALSE}
+```{r piecewisePoly, echo=FALSE, out.width='40%', fig.asp=.5}
 knots = seq(0,1, by=.1)
 d$xcut = cut(x, knots, right=F)
 d$xcut = factor(d$xcut, levels=c('Int', levels(d$xcut))) # add int for later
@@ -26,7 +26,7 @@ fits = d %>%
   do(data.frame(x=.$x, y=.$y, fit=fitted(lm(y~poly(x, 3), data=.))))
 
 
-plot_ly(fits, width='100%') %>% 
+plot_ly(fits) %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5), showlegend=F) %>% 
   add_lines(~x, ~fit, color=I('#00aaff'), showlegend=F) %>% 
   theme_plotly()
@@ -36,7 +36,7 @@ plot_ly(fits, width='100%') %>%
 
 While this is notably better fit than e.g., a cubic polynomial, again it is unsatisfactory. The separate fits are unconnected, leading to sometimes notably different predictions for values close together.  Being fit to small amounts of data means each fit *overfits* that area of data, leading to a fairly 'wiggly' result most of the time.
 
-## Introducing Generalized Additive Models
+## What is a GAM?
 
 In essence, a GAM is a GLM. What distinguishes it from the ones you know is that, unlike a standard GLM, it is composed of a sum of smooth functions of covariates instead of or in addition to the standard linear covariate effects.  Consider the standard (g)lm[^subscripts]:
 
@@ -56,11 +56,11 @@ Above, each $B_j$ is a <span class="emph">[basis function](https://en.wikipedia.
 
 $$f(x) = \gamma_0 + \gamma_1\cdot x^1 \ldots +\gamma_d\cdot x^d$$
 
-In that case $d=2$ and we have our standard regression with a quadratic term, but in fact, we can use this approach to produce the bases for any polynomial.  
+In that case, $d=2$ and we have our standard regression with a quadratic term, but in fact, we can use this approach to produce the bases for any polynomial.  
 
 As far as mechanics go, these basis functions become extra columns in the data, just like your $x^2$ etc. from the polynomial approach, and then you just run a GLM!  However, an additional aspect is that we will use <span class="emph">penalized estimation</span>, something that is quite common in some modeling contexts (e.g. machine learning), but not common enough in applied research.
 
-For those new to penalized regression, again consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. *Conceptually* we can write the <span class="emph">penalized likelihood</span> as follows:
+For those new to penalized regression, again consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. Conceptually we can write the <span class="emph">penalized likelihood</span> as follows:
 
 
 $$l_p(\beta)= l(\beta) - \color{darkred}{\mathcal{penalty}}$$
@@ -76,9 +76,9 @@ In summary, you're doing a GLM, but a slightly modified one.  You could have alw
 
 ## Polynomial spline
 
-Let's get things started by demonstrating the results from a GAM that uses a <span class="emph">polynomial spline</span> for the basis.  The brave may refer to the [technical details][Technical details] section for additional insights.  Conceptually, it is useful to continue to think of the piece-wise approach we talked about before.  However, we'll end up with a smoother and connected result when all is said and done.
+Let's get things started by demonstrating the results from a GAM that uses a <span class="emph">polynomial spline</span> for the basis.  The brave may refer to the [technical details][a detailed example] section for additional insights.  Conceptually, it is useful to continue to think of the piece-wise approach we talked about before.  However, we'll end up with a smoother and connected result when all is said and done.
 
-```{r polysplinedemo, echo=FALSE}
+```{r polysplinedemo, echo=FALSE, out.width='40%', fig.asp=.5}
 d %>% 
   add_predictions(model = gam(y ~ s(x, bs='cr', k=12), data=d)) %>% 
   plot_ly() %>% 

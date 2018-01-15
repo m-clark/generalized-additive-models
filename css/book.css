@@ -38,10 +38,24 @@
     background: 0 0;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal blockquote, .book .book-body .page-wrapper .page-inner section.normal dl, .book .book-body .page-wrapper .page-inner section.normal ol, .book .book-body .page-wrapper .page-inner section.normal p, .book .book-body .page-wrapper .page-inner section.normal table, .book .book-body .page-wrapper .page-inner section.normal ul {
+.book .book-body .page-wrapper .page-inner section.normal dl,
+.book .book-body .page-wrapper .page-inner section.normal ol,
+.book .book-body .page-wrapper .page-inner section.normal p,
+.book .book-body .page-wrapper .page-inner section.normal ul {
     margin-top: 0;
     margin-bottom: .85em;
     width: 60%;                 /*fiddle with this relative to marginnote; div.sourceCode should be the same*/
+}
+
+/* taken out of the above */
+.book .book-body .page-wrapper .page-inner section.normal blockquote {
+ font-size: 80%;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal table {
+  max-width: 35%;
+  margin-left: 10%;
+  font-size: 75%;
 }
 
 .body-inner {
@@ -163,7 +177,7 @@ div.sourceCode {
 /* marginnote, sidenotes, footnotes */
 .book .book-body .page-wrapper .page-inner section.normal .marginnote span.mjx-chtml, span.mjx-block {
     display: block;
-    font-size: 75%;
+    font-size: 80%;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal .footnotes p, ol {

@@ -32,7 +32,7 @@
   
   <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
 <link rel="prev" href="appendix.html">
-<link rel="next" href="technical-details.html">
+
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -136,7 +136,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html"><i class="fa fa-check"></i>Building up to GAMs</a><ul>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#introducing-generalized-additive-models"><i class="fa fa-check"></i>Introducing Generalized Additive Models</a></li>
+<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
@@ -178,11 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Conclusion</a></li>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="concluding-remarks.html"><a href="concluding-remarks.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html"><i class="fa fa-check"></i>Technical details</a><ul>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#gam-2"><i class="fa fa-check"></i>GAM</a><ul>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
@@ -197,6 +193,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
 <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
@@ -221,14 +221,109 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="references" class="section level1">
 <h1>References</h1>
 
+<div id="refs" class="references">
+<div>
+<p>Breiman, Leo. 2001. “Statistical Modeling: The Two Cultures (with Comments and a Rejoinder by the Author).” <em>Statistical Science</em> 16 (3): 199–231. doi:<a href="https://doi.org/10.1214/ss/1009213726">10.1214/ss/1009213726</a>.</p>
 </div>
+<div>
+<p>Bybee, Rodger W., and Barry McCrae. 2009. <em>Pisa Science 2006: Implications for Science Teachers and Teaching</em>. NSTA Press.</p>
+</div>
+<div>
+<p>Fahrmeir, Ludwig, Thomas Kneib, Stefan Lang, and Brian Marx. 2013. <em>Regression: Models, Methods and Applications</em>. Springer Science &amp; Business Media.</p>
+</div>
+<div>
+<p>Fox, John. 2000a. <em>Nonparametric Simple Regression: Smoothing Scatterplots</em>. SAGE.</p>
+</div>
+<div>
+<p>———. 2000b. <em>Multiple and Generalized Nonparametric Regression</em>. SAGE.</p>
+</div>
+<div>
+<p>Friedman, Jerome, Trevor Hastie, Robert Tibshirani, and others. 2000. “Additive Logistic Regression: A Statistical View of Boosting (with Discussion and a Rejoinder by the Authors).” <em>The Annals of Statistics</em> 28 (2). Institute of Mathematical Statistics: 337–407.</p>
+</div>
+<div>
+<p>Hardin, James W., and Joseph M. Hilbe. 2012. <em>Generalized Linear Models and Extensions, Third Edition</em>. Stata Press.</p>
+</div>
+<div>
+<p>Hastie, T.J., and R.J. Tibshirani. 1990. <em>Generalized Additive Models</em>. CRC Press.</p>
+</div>
+<div>
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction, Second Edition</em>. 2nd ed. 2009. Corr. 3rd printing 5th Printing. Springer.</p>
+</div>
+<div>
+<p>Rasmussen, Carl Edward, and Christopher K. I Williams. 2006. <em>Gaussian Processes for Machine Learning</em>. Cambridge, Mass.: MIT Press.</p>
+</div>
+<div>
+<p>Rigby, R. A., and D. M. Stasinopoulos. 2005. “Generalized Additive Models for Location, Scale and Shape.” <em>Journal of the Royal Statistical Society: Series C (Applied Statistics)</em> 54 (3). doi:<a href="https://doi.org/10.1111/j.1467-9876.2005.00510.x">10.1111/j.1467-9876.2005.00510.x</a>.</p>
+</div>
+<div>
+<p>Ruppert, David, Matt P. Wand, and Raymond J. Carroll. 2003. <em>Semiparametric Regression</em>. Cambridge University Press.</p>
+</div>
+<div>
+<p>Shalizi, Cosma. 2016. <em>Advanced Data Analysis from an Elementary Point of View</em>.</p>
+</div>
+<div>
+<p>Venables, William N., and Brian D. Ripley. 2002. <em>Modern Applied Statistics with S</em>. Birkhäuser.</p>
+</div>
+<div>
+<p>Wasserman, Larry. 2006. <em>All of Nonparametric Statistics</em>. Springer.</p>
+</div>
+<div>
+<p>Wood, S. N. 2006. <em>Generalized Additive Models: An Introduction with R</em>. Vol. 66. CRC Press.</p>
+</div>
+<div>
+<p>———. 2017. <em>Generalized Additive Models: An Introduction with R</em>. 2nd ed. CRC Press.</p>
+</div>
+<div>
+<p>Wood, Simon N. 2008. “Fast Stable Direct Fitting and Smoothness Selection for Generalized Additive Models.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 70 (3). Wiley Online Library: 495–518.</p>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="appendix.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="technical-details.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="appendix.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

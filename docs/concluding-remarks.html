@@ -32,7 +32,7 @@
   
   <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
 <link rel="prev" href="other-approaches.html">
-<link rel="next" href="appendix.html">
+<link rel="next" href="technical-details.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -136,7 +136,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html"><i class="fa fa-check"></i>Building up to GAMs</a><ul>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#introducing-generalized-additive-models"><i class="fa fa-check"></i>Introducing Generalized Additive Models</a></li>
+<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
@@ -178,11 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Conclusion</a></li>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="concluding-remarks.html"><a href="concluding-remarks.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html"><i class="fa fa-check"></i>Technical details</a><ul>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#gam-2"><i class="fa fa-check"></i>GAM</a><ul>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
@@ -197,6 +193,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
 <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
@@ -218,9 +218,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="conclusion" class="section level1">
-<h1>Conclusion</h1>
-<p>Generalized additive models are a conceptually straightforward tool that allows one to incorporate nonlinear predictor effects into their otherwise linear models. In addition, they allow one to keep within the linear and generalized linear modeling frameworks with which one is already familiar, while providing new avenues of model exploration and possibly improved results. As was demonstrated, it is easy enough with just a modicum of familiarity to pull them off within the R environment, and as such, it is hoped that this document provides the means to do so.</p>
+<div id="concluding-remarks" class="section level1">
+<h1>Concluding remarks</h1>
+<p>Generalized additive models are a conceptually straightforward tool that allows one to incorporate nonlinear and other relationships into their otherwise linear models. In addition, they allow one to keep within the linear and generalized linear modeling frameworks with which one is already familiar, while providing new avenues of model exploration and improved results. As was demonstrated, it is easy enough with just a modicum of familiarity to pull them off, and as such, it is hoped that this document provided one the means to do so.</p>
+<p>In closing, I offer the following lifted directly from Shalizi, <em>Advanced Data Analysis from an Elementary Point of View</em>, as I don’t think I could have put it more clearly:</p>
+<blockquote>
+<p>With modern computing power, there are very few situations in which it is actually better to do linear regression than to fit an additive model. In fact, there seem to be only two good reasons to prefer linear models.</p>
+<ol style="list-style-type: decimal">
+<li>Our data analysis is guided by a credible scientific theory which asserts linear relationships among the variables we measure (not others, for which our observables serve as imperfect proxies).</li>
+<li>Our data set is so massive that either the extra processing time, or the extra computer memory, needed to fit and store an additive rather than a linear model is prohibitive.</li>
+</ol>
+<p>Even when the first reason applies, and we have good reasons to believe a linear theory, the truly scientific thing to do would be to check linearity, by fitting a flexible non-linear model and seeing if it looks close to linear. Even when the second reason applies, we would like to know how much bias we’re introducing by using linear predictors, which we could do by randomly selecting a subset of the data which is small enough for us to manage, and fitting an additive model.</p>
+<p>In the vast majority of cases when users of statistical software fit linear models, neither of these justifications applies: theory doesn’t tell us to expect linearity, and our machines don’t compel us to use it. Linear regression is then employed for no better reason than that users know how to type lm but not gam. <strong>You now know better, and can spread the word</strong>.</p>
+</blockquote>
+<p><br></p>
+<div style="text-align:center">
+<p><span style="font-size:150%">Best of luck with your research!</span></p>
+</div>
 
 </div>
             </section>
@@ -229,7 +243,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
         </div>
       </div>
 <a href="other-approaches.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="appendix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="technical-details.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -1,6 +1,6 @@
 # Technical details
 
-Workshops see all types of folks at different levels. This is for some of the more technically inclined, though you'll find more context and detail in  and @wood_generalized_2006, from which a good chunk of this section is taken more or less directly from.
+This section is for some of the more technically inclined, though you'll find more context and detail in  and @wood_generalized_2006 and @wood_generalized_2017, from which a good chunk of this section is taken more or less directly from.
 
 ## GAM
 
@@ -359,34 +359,44 @@ The following reproduces the plots produced by <span class="pack">mgcv</span> an
 First we'll start with the basic GAM plot. First we get the term for year, i.e. the linear combination of the basis functions for year.  The <span class="pack">mgcv</span> package provides this for you via the <span class="func">predict</span> function with `type='terms'`. For non-smooth components this is just the original covariate times its corresponding coefficient.  Next we need the partial residuals, which are just the basic residuals plus the term of interest added. With the original predictor variable, we're ready to proceed.
 
 
-```{r termplot_gam, dev='svglite', eval=FALSE}
-year_term = predict(gam_model, type='terms')[,'s(year)']
-res_partial = residuals(gam_model) + year_term
-year = 1948:2005 
+```{r termplot_gam, dev='svglite', eval=T}
+income_term = predict(mod_gam2, type='terms')[,'s(Income)']
+res_partial = residuals(mod_gam2) + income_term
+income = mod_gam2$model$Income
 par(mfrow=c(1,2))
-plot(year, res_partial, ylim=c(-.8,.8), col='black', 
-     ylab='s(year, 7.06)', pch=19, main='ours')
-lines(year, year_term)
-plot(gam_model, se=F, residuals=T, pch=19, rug=F, ylim=c(-.8,.8), main='mgcv')
+plot(income, res_partial, ylim=c(-200,100), col='black', 
+     ylab='s(income, 7.59)', pch=19, main='ours')
+lines(income[order(income)], income_term[order(income)])
+plot(mod_gam2, select = 1, se=F, residuals=T, pch=19, rug=F, ylim=c(-200,100), main='mgcv')
 ```
 
-Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default these key values are at the median for numeric variables, and most common category for categorical variables.
+Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to smooth the line, but for our purposes getting the concept is the goal.
 
-```{r termplot_visreg, dev='svglite', echo=-9, eval=FALSE}
-pred_data = movies_yearly %>% 
-  select(budget_2016, votes, length) %>% 
-  na.omit() %>% 
-  summarise_all(median) %>% 
-  data.frame(year=1948:2005)
-preds = predict(gam_model, newdata=pred_data)
-res_partial = gam_model$residuals + preds
+```{r termplot_visreg, dev='svglite', echo=-9, eval=T}
+pred_data = pisa %>% 
+  select(Edu, Health) %>%
+  summarise_all(median, na.rm=T) %>% 
+  data.frame(Income=mod_gam2$model$Income)
+preds = predict(mod_gam2, newdata=pred_data)
+res_partial = mod_gam2$residuals + preds
 
 par(mfrow=c(1,2))
-plot(year, preds, col='dodgerblue', ylab='f(year)', lwd=3, 
-     ylim=c(5,7), type='l', main='ours')
-points(year, res_partial, col='gray50', pch=19)
-visreg(gam_model, xvar='year', points.par=list(cex=1), band=F, 
-       ylim=c(5,7), main='visreg')
+plot(pred_data$Income[order(pred_data$Income)], 
+     preds[order(pred_data$Income)], 
+     col='dodgerblue', 
+     ylab='f(income)', 
+     lwd=3, 
+     ylim=c(250, 600), 
+     type='l', 
+     main='ours',
+     xlab='Income')
+points(pred_data$Income, res_partial, col='gray50', pch=19)
+visreg(mod_gam2, 
+       xvar='Income', 
+       points.par=list(cex=1), 
+       band=F, 
+       ylim=c(250, 600),
+       main='visreg')
 graphics::layout(1)
 ```
 

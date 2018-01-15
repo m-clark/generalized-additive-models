@@ -40,14 +40,14 @@ favicon: 'img/R.ico'
 github-repo:  m-clark/
 bibliography: refs.bib
 nocite: | 
-  @wood_generalized_2006, @venables_modern_2002, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
+  @wood_generalized_2006,  @wood_generalized_2017, @venables_modern_2002, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
   @rigby_generalized_2005, @hastie_generalized_1990, @fox_multiple_2000, @fox_nonparametric_2000,
   @breiman_statistical_2001, @bybee_pisa_2009, @hastie_elements_2009, @ruppert_semiparametric_2003,
-  @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive
+  @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive, @shalizi2016
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache.rebuild=F, cache = T, message = F, warning = F, R.options=list(width=120), 
-                      fig.width=8, fig.align = 'center', comment=NA, autodep=T, dev.args = list(bg = 'transparent'))
+                      fig.width=8, fig.align = 'center', comment=NA, autodep=T, dev='svglite', dev.args = list(bg = 'transparent'))
 ```
 
 ```{r loadpacks, include=FALSE, cache=FALSE}

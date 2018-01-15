@@ -1,6 +1,6 @@
 
 ```{r setupIntro, include=FALSE}
-knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+# knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 ```
 
 # Introduction
@@ -9,7 +9,10 @@ knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 
 ### General Linear Model
 
-<span class="newthought">Let us begin</span> by considering the <span class="emph">standard linear regression model</span> (SLiM) estimated via ordinary least squares (OLS).  We have some response or target variable we wish to study, and believe it to be some function of other variables.  In terms of the underlying data generating process, $y$ is the variable of interest, assumed to be normally distributed with mean $\mu$ and variance $\sigma^2$, and the Xs are the predictor variables/covariates in this scenario.  The predictors are multiplied by the coefficients ($\beta$) and summed, giving us the linear predictor, which in this case also directly provides us the estimated fitted values.  To the right is a variant of the usual of the manner in which such a model is presented in introductory texts.<span class="marginnote">$$y\sim \mathcal{N}(\mu,\sigma^2) \\ \mu = b_0+b_1X_1+b_2X_2...+b_pX_p$$</span>
+<span class="newthought">Let us begin</span> by considering the <span class="emph">standard linear regression model</span> (SLiM) estimated via ordinary least squares (OLS).  We have some response or target variable we wish to study, and believe it to be some function of other variables.  In terms of the underlying data generating process, $y$ is the variable of interest, assumed to be normally distributed with mean $\mu$ and variance $\sigma^2$, and the Xs are the predictor variables/covariates in this scenario.  The predictors are multiplied by the coefficients ($\beta$) and summed, giving us the linear predictor, which in this case also directly provides us the estimated fitted values.  To the right is a variant of the usual of the manner in which such a model is presented in introductory texts.<span class="marginnote">
+$$y\sim \mathcal{N}(\mu,\sigma^2)$$
+$$\mu = b_0+b_1X_1+b_2X_2...+b_pX_p$$
+</span>
 
 Here is an example of how the R code would look like for such a model.
 
@@ -23,17 +26,16 @@ One of the issues with this model is that, in its basic form it can be very limi
 
 In that light, we may consider the <span class="emph">generalized linear model</span>.  Generalized linear models incorporate other types of distributions[^expofam], and include a link function $g(.)$ relating the mean $\mu$, or stated differently, the expected values $E(y)$, to the linear predictor $X\beta$, often denoted $\eta$.  The general form is thus $g(\mu) = X\beta$. 
 <span class="marginnote">
-$$g(\mu) = \eta = X\beta \\
-E(y) = \mu = g^{-1}(\eta)$$
+$$g(\mu) = \eta = X\beta$$
+$$E(y) = \mu = g^{-1}(\eta)$$
 </span>
 
 Consider again the typical linear regression.  In that situation we assume a Gaussian (i.e. normal) distribution for the response, we assume equal variance for all observations, and that there is a direct link of the linear predictor and the expected value $\mu$, i.e. $\mu = X\beta$. As such, the typical linear regression model is a generalized linear model with a Gaussian distribution and 'identity' link function.
 
 To further illustrate the generalization, we consider a distribution other than the Gaussian.  <span class="marginnote">
-$$y \sim \mathcal{P}(\mu) \\
-g(\mu) = b_0+b_1X_1+b_2X_2...+b_pX_p \\ 
-\quad\\
-\mu = e^{b_0+b_1X_1+b_2X_2...+b_pX_p}$$
+$$y \sim \mathcal{P}(\mu)$$
+$$\ln(\mu) = b_0+b_1X_1+b_2X_2...+b_pX_p$$
+$$\mu = e^{b_0+b_1X_1+b_2X_2...+b_pX_p}$$
 </span> 
 In the example to the right, we examine a Poisson distribution for some vector of count data.  There is only one parameter to be considered, $\mu$, since for the Poisson the mean and variance are equal.  For the Poisson, the (canonical) link function $g(.)$, is the natural log, and so relates the log of $\mu$ to the linear predictor.  As such we could also write it in terms of exponentiating the right hand side.
 
@@ -45,7 +47,7 @@ While there is a great deal to further explore with regard to generalized linear
 Now let us make another generalization to incorporate nonlinear forms of the predictors, via a <span class="emph">generalized additive model</span>.  The form
 <span class="marginnote">$$
     y \sim ExpoFam(\mu, etc.) \\
-    \mu = E(y) \\
+    E(y) = \mu \\
     g(\mu) = b_0 + f(x_1) + f(x_2) +...+f(x_p)$$
 </span> 
 at the right gives the new setup relating our new, now nonlinear predictor to the expected value, with whatever link function may be appropriate.
@@ -80,11 +82,10 @@ neighborfit = fitted(neighbormod)
 fitat3 = predict(neighbormod, newdat=data.frame(x=3,y=NA))
 ```
 
-<!-- <span class="marginnote"><span class="imgbigger"><img src="vis/lmfit.png" style="display:block; margin: 0 auto;"></span><span> -->
 
-```{r linearFitPlot, echo=F}
+```{r linearFitPlot, echo=F, out.width='40%', fig.asp=.5}
 dxy %>% 
-  plot_ly(width='75%', displayModeBar=F) %>% 
+  plot_ly() %>% 
   add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5500')) %>% 
   add_lines(x=~x, y=~fitlm, name='lm fit', line=list(color='#00aaff')) %>% 
@@ -102,9 +103,9 @@ dxy %>%
 $$</span>
 One common approach we could undertake is to add a transformation of the predictor $X$, and in this case we might consider a quadratic term such that our model looks something like that to the right.
 
-```{r quadraticFitPlot, echo=F}
+```{r quadraticFitPlot, echo=F, out.width='40%', fig.asp=.5}
 dxy %>% 
-  plot_ly( width='75%') %>% 
+  plot_ly() %>% 
   add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5500')) %>% 
   add_lines(x=~x, y=~fitx2, name='quadratic fit', color=I('#00aaff')) %>% 
@@ -125,12 +126,12 @@ There are still other possible routes we could take. Many are probably familiar 
 
 Take a look at the following figure. For every (sorted) $x_0$ value, we choose a neighborhood around it and, for example, fit a simple regression.  As an example, let's look at $x_0$ = 3.0, and choose a neighborhood of 100 X values below and 100 values above.  
 
-```{r loessgraph1, echo=FALSE}
+```{r loessgraph1, echo=FALSE, out.width='40%', fig.asp=.5}
 # because plotly can't do calculations on the fly for some things
 minx = min(sort(x)[neighborhood])
 maxx = max(sort(x)[neighborhood])
 maxy = max(y) + 2
-plot_ly(width='75%') %>% # marker opacity to 0 to remove idiotic placed endpoints
+plot_ly() %>% # marker opacity to 0 to remove idiotic placed endpoints
   add_lines(x=c(minx,minx), y=c(0, maxy), showlegend=F,
         line=list(color='gray'), opacity=.1) %>% 
   add_lines(x=c(maxx, maxx), y=c(0, maxy), showlegend=F,
@@ -151,8 +152,8 @@ plot_ly(width='75%') %>% # marker opacity to 0 to remove idiotic placed endpoint
 
 Now, for just that range we fit a linear regression model and note the fitted value where $x_0=3.0$. 
 
-```{r loessgraph2, echo=FALSE}
-plot_ly( width='75%') %>% 
+```{r loessgraph2, echo=FALSE, out.width='40%', fig.asp=.5}
+plot_ly() %>% 
   add_markers(data=dxy[neighborhood,], x=~x, y=~y, showlegend=F,
                     marker=list(opacity=.2, color='#B2001D')) %>% 
   add_lines(x=~x, y=neighborfit, name='lm fit', opacity=.5, line=list(color='#00aaff', width=3)) %>% 
@@ -166,9 +167,9 @@ plot_ly( width='75%') %>%
 
 If we now do this for *every* $x_0$ value, we'll have fitted values based on a rolling neighborhood that is relative to each value being considered. Other options we could throw into this process, and usually do, would be to fit a polynomial regression for each neighborhood, and weight observations the closer they are to the value, with less weight given to more distant observations.
 
-```{r loessgraph3, echo=FALSE}
+```{r loessgraph3, echo=FALSE, out.width='45%', fig.asp=.5}
 dxy %>% 
-  plot_ly( width='75%') %>% 
+  plot_ly() %>% 
   add_markers(x=~x, y=~y, mode='markers', showlegend=F,
                     marker=list(opacity=.1, color='#ff5500')) %>% 
   add_lines(x=~x, y=~fitted(loess(y~x)), name='loess fit', line=list(color='#00aaff')) %>% 

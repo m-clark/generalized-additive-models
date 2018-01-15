@@ -1,7 +1,7 @@
 # Application Using R
 
 ```{r setupApplication, include=FALSE}
-knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+# knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 ```
 
 <span class="newthought">We're now ready to do some modeling</span>! We've now seen the relationships of GAM to techniques we know, deficiencies with common approaches, and a little bit about how GAMs work conceptually. The next step is to dive in.
@@ -36,7 +36,7 @@ source('funcs/better_corr.R')
 
 library(GGally)
 p = ggpairs(pisa[,-c(1,3:5)], 
-        lower=list(continuous=wrap(better_smooth,  ptalpha=.25, ptcol='#ff5503', ptsize=1,
+        lower=list(continuous=wrap(better_smooth,  ptalpha=.25, ptcol='#ff5500', ptsize=1,
                                    linecol='#03b3ff', method='loess', se=F, lwd=.5)), 
         diag = list(continuous=wrap('densityDiag', color='gray50', lwd=.5)),
         upper=list(continuous=wrap(better_corr)),
@@ -67,7 +67,7 @@ dmelt = gather(dplyr::select(pisa, -Evidence, -Explain, -Issues), key=Variable, 
 
 #leave the smooth off for now
 scatterwrap = ggplot(aes(x=Value,y=Overall), data=dmelt) +
-  geom_point(color='#FF5503',alpha=.75) +
+  geom_point(color='#ff5500',alpha=.75) +
   #geom_smooth(se=F) +
   geom_text(aes(label=Country), alpha=0, size=1,angle=30, hjust=-.2,   # making transparent so only plotly will show the country
             vjust=-.2) +
@@ -76,6 +76,7 @@ scatterwrap = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   theme_trueMinimal() 
 
 ggplotly(width=600) %>% 
+  config(displayModeBar=F) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -85,7 +86,7 @@ We can see again that linear fits aren't going to do so well for some, though it
 
 ```{r scatterwrapSmooth,  echo=F}
 scatterwrapSmooth = ggplot(aes(x=Value,y=Overall), data=dmelt) +
-  geom_point(color='#FF5503',alpha=.75) +
+  geom_point(color='#ff5500',alpha=.75) +
   geom_smooth(se=F, lwd=.5, color='#00aaff') +
   geom_text(aes(label=Country), alpha=0, size=1,angle=30, hjust=-.2,   # making transparent so only plotly will show the country
             vjust=-.2) +
@@ -94,6 +95,7 @@ scatterwrapSmooth = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   theme_trueMinimal() +
   theme(plot.background=element_rect(color='transparent'))
 ggplotly(width=600) %>% 
+  config(displayModeBar=F) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -181,7 +183,7 @@ At this point we have done nothing we couldn't do in our regular regression appr
 
 In the next figure I show the fit using a 'by-hand' cubic spline basis (see the [Appendix][a detailed example] and p.126-7 in @wood_generalized_2006).  
 
-```{r csbyhand, echo=FALSE}
+```{r csbyhand, echo=FALSE, out.width='40%', fig.asp=.5}
 rk <- function(x,z) {
   ((z-0.5)^2 - 1/12)*((x-0.5)^2 - 1/12)/4-
     ((abs(x-z)-0.5)^4-(abs(x-z)-0.5)^2/2 + 7/240) / 24
@@ -206,13 +208,14 @@ xp <- 40:100/100
 Xp <- spl.X(xp, xk)
 
 csbyhand = ggplot(aes(x=Income, y=Overall), data=pisa)+
-  geom_point(color="#FF5503", alpha=.75) +
+  geom_point(color="#ff5500", alpha=.75) +
   geom_smooth(se=F, method='gam', formula=y~s(x, bs='cs', k=8, xt=list(knots=xk)), color=scales::alpha('darkred',.5), lwd=.5) +
   geom_line(aes(x=xp, y=Xp%*%coef(mod.1)), data=data.frame(xp,Xp), color="#00aaff", lwd=.5) +
   xlim(.4,1) +
   theme_trueMinimal()
 
-ggplotly(width=600) %>% 
+ggplotly() %>% 
+  config(displayModeBar=F) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -248,7 +251,7 @@ The GCV, or <span class="emph">generalized cross validation</span> score can be 
 
 One can get  sense of the form of the fit by simply plotting the model object as follows:
 
-```{r plot_mod_gam1, echo=2, eval=c(1,3:5), fig.width=8, fig.height=5}
+```{r plot_mod_gam1, echo=2, eval=c(1,3:5), out.width='75%', fig.asp=.75}
 par(bg='transparent')
 plot(mod_gam1)
 plot(mod_gam1, bty='n', xaxt='n', yaxt='n', col.lab='gray50', shade.col=scales::alpha('black', .25), shade=T, col='#00aaff')
@@ -258,7 +261,7 @@ axis(2, col='gray50', col.ticks='gray75', lty=1, labels=F)
 mtext(side = 2, text = axTicks(2), at = axTicks(2), col = "gray25", line = 1)
 # visreg(mod_gam1, #scale='response',
 #        line=list(col="#00aaff", lwd=2), 
-#        points=list(cex=.25, col='#ff5503'), 
+#        points=list(cex=.25, col='#ff5500'), 
 #        fill=list(col=scales::alpha('black', .25)), ask=F, bty='n', alpha=.5, ylim=c(275,575),
 #        col.lab='gray50', col.ticks='gray75', col.axis='gray50')
 # axis(1, col='gray50', col.ticks='gray75')
@@ -339,14 +342,14 @@ We can also note that this model accounts for much of the variance in Overall sc
 
 Now we examine the effects of interest visually via component plots[^componentplot]. The following uses the <span class="func">visreg</span> function.
 
-```{r mod_gam2_plot, echo=F, fig.align='center', fig.height=7, fig.width=8}
+```{r mod_gam2_plot, echo=F, fig.align='center', out.width='75%', fig.asp=.75}
 # plot(mod_gam2, pages=1, residuals=T, pch=19, cex=0.25, 
-#      scheme=1, line.col='#FF5503', shade=T,shade.col='gray90')
+#      scheme=1, line.col='#ff5500', shade=T,shade.col='gray90')
 par(mfrow=c(2,2), bg='transparent')
 library(visreg)
 visreg(mod_gam2, #scale='response',
        line=list(col="#00aaff", lwd=2), 
-       points=list(cex=.25, col='#ff5503'), 
+       points=list(cex=.25, col='#ff5500'), 
        fill=list(col='gray90'), ask=F, bty='n', alpha=.5, ylim=c(275,575))
 ```
 
@@ -373,8 +376,9 @@ plot_mod_gam2_response = ggplot(aes(x=Income,y=fit), data=predicts) +
 
 ```
 
-```{r plot_mod_gam2_responseB, echo=F}
+```{r plot_mod_gam2_responseB, echo=F, out.width='40%', fig.asp=.5}
 ggplotly(width=600) %>% 
+  config(displayModeBar=F) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 ```
 
@@ -434,7 +438,10 @@ tt$Overall = t(tt$Overall)
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
 with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap', colors=colfun, width='75%'))  %>% 
   config(displayModeBar=F) %>% 
-  layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+  layout(paper_bgcolor='rgba(0,0,0,0)', 
+         plot_bgcolor='rgba(0,0,0,0)',
+         xaxis=list(title='Income'),
+         yaxis=list(title='Edu'))
 
 with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, 
                                    type='surface', 

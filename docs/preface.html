@@ -136,7 +136,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html"><i class="fa fa-check"></i>Building up to GAMs</a><ul>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#introducing-generalized-additive-models"><i class="fa fa-check"></i>Introducing Generalized Additive Models</a></li>
+<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
 <li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
@@ -178,11 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Conclusion</a></li>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="concluding-remarks.html"><a href="concluding-remarks.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html"><i class="fa fa-check"></i>Technical details</a><ul>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#gam-2"><i class="fa fa-check"></i>GAM</a><ul>
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
@@ -197,6 +193,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
 <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
@@ -220,9 +220,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="preface" class="section level1">
 <h1>Preface</h1>
-<p>The following provides a brief introduction to generalized additive models and some thoughts on getting started within the R environment. It doesn’t assume much more than a basic exposure to regression, and maybe a general idea of R though not necessarily any particular expertise. The presentation is of a very applied nature, and such that the topics build upon the familiar and generalize to the less so, with the hope that one can bring the concepts they are comfortable with to the new material. The audience in mind is a researcher with typical applied science training.</p>
+<p><span class="marginnote">This document was last modified 2018-01-14. Original draft August, 2012.</span> The following provides a brief introduction to generalized additive models and some thoughts on getting started within the R environment. It doesn’t assume much more than a basic exposure to regression, and maybe a general idea of R, though not necessarily any particular expertise. The presentation is of a very applied nature, and such that the topics build upon the familiar and generalize to the less so, with the hope that one can bring the concepts they are comfortable with to the new material. The audience in mind is a researcher with typical applied science training.</p>
 <p>As this document is more conceptual, a basic familiarity with R is all that is needed to follow the code, though there is much to be gained from simple web browsing on R if one needs it. And while it wasn’t the intention starting out, this document could be seen as a vignette for the <span class="pack">mgcv</span> package, which is highly recommended.</p>
-<p>This document was last modified 2018-01-14. Original draft August, 2012.</span></p>
+<p>The content of this document was almost entirely developed before Wood released a second edition of his text in 2017, but otherwise depends heavily on that text. I’ve tried to keep things up to date with both the package and text.</p>
 <p>Color guide:</p>
 <ul>
 <li><span class="emph">important term</span></li>
