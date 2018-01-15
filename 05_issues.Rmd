@@ -18,7 +18,7 @@ Given a matrix of coefficients $S$, we can more formally note a penalized likeli
 
 $$l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta$$
 
-where $l(\beta)$ is the usual GLM likelihood function, and $\lambda_j$ are the smoothing parameters.  The part of the function including $\lambda$ penalizes curvature in the function, where $\lambda$  establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting<span class="marginnote">$\lambda\rightarrow\infty$ would result in a straight line estimate for $f_j$, while $\lambda = 0$ would allow any $f$ that interpolates the data. See p. 128, @wood_generalized_2006.</span>.  Technically we could specify the smoothing parameters explicitly, and the [Appendix][a detailed example] has some 'by-hand' code taken directly from @wood_generalized_2006 with only slight modifications, where the smoothing parameters are chosen and compared.
+where $l(\beta)$ is the usual GLM likelihood function, and $\lambda_j$ are the smoothing parameters.  The part of the function including $\lambda$ penalizes curvature in the function, where $\lambda$  establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As $\lambda\rightarrow\infty$, we'd have a straight line estimate for $f_j$, while $\lambda = 0$ would allow any $f$ that interpolates the data[^lambdaset].  Technically we could specify the smoothing parameters explicitly, and the [Appendix][a detailed example] has some 'by-hand' code taken directly from @wood_generalized_2006 with only slight modifications, where the smoothing parameters are chosen and compared.
 
 Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before.  Smoothing parameters are selected which minimize the GCV score by default, though one has other options, e.g. using REML as with mixed models.  Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.
 
@@ -115,6 +115,8 @@ anova(mod_A,mod_B, test="Chisq")
 Again though, we could have just used the summary output from the second model.
 
 Instances where such a statistical test does not appear to be appropriate within the context of the <span class="mgcv"></span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it's possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical.  Wood suggests that if such model comparison is the ultimate goal an unpenalized approach[^unpenal] would be best to have much confidence in the p-values[^gsspack].
+
+[^lambdaset]: See p. 128, @wood_generalized_2006.
 
 [^selectarg]: See also, the `select` argument to the <span class="func">gam</span> function.
 

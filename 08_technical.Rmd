@@ -370,7 +370,7 @@ lines(income[order(income)], income_term[order(income)])
 plot(mod_gam2, select = 1, se=F, residuals=T, pch=19, rug=F, ylim=c(-200,100), main='mgcv')
 ```
 
-Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to smooth the line, but for our purposes getting the concept is the goal.
+Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal.
 
 ```{r termplot_visreg, dev='svglite', echo=-9, eval=T}
 pred_data = pisa %>% 
