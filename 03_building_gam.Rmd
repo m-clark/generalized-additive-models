@@ -9,6 +9,7 @@
 plot_ly(data=d) %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.1), showlegend=F) %>% 
   add_lines(~x, ~fits, color=~polynomial, data=fits) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly()
 ```
 
@@ -29,6 +30,7 @@ fits = d %>%
 plot_ly(fits) %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5), showlegend=F) %>% 
   add_lines(~x, ~fit, color=I('#00aaff'), showlegend=F) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly()
 ```
 
@@ -84,6 +86,7 @@ d %>%
   plot_ly() %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5), showlegend=F) %>% 
   add_lines(~x, ~pred, color=I('#00aaff'), showlegend=F) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly()
 ```
 

@@ -21,7 +21,7 @@ Finally we can depict the structured additive regression, or STAR, model as a GA
 $$\mathrm{STAR:}\quad g(\mu) = X\beta + Z\gamma + \Upsilon\varpi + \Xi\varrho + \ldots \mathbf{?}\vartheta $$
 
 
-###  Penalized regression
+### Penalized regression
 
 Consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. We can write the <span class="emph">penalized likelihood</span> as follows:
 
@@ -80,12 +80,12 @@ head(bs)
 
 If we plot this against our target variable $y$, it doesn't look like much.
 
-```{r csbsPlot, echo=FALSE}
+```{r csbsPlot, echo=FALSE, out.width='40%', fig.asp=.5}
 bs = data.frame(int=1, bs)
 d2 = data.frame(x, bs) %>% 
   gather(key=bs, value=bsfunc, -x)
 
-plot_ly(d, width='100%') %>% 
+plot_ly(d) %>% 
   add_markers(~x, ~y, marker=list(color='black', opacity=.25), showlegend=F) %>% 
   add_lines(~x, ~bsfunc, color=~bs, colors='Set3', showlegend=F, data=arrange(d2,x)) %>% # colorscale ignored
   theme_plotly() %>% 
@@ -97,7 +97,7 @@ plot_ly(d, width='100%') %>%
 
 If we multiply each basis by it's corresponding regression coefficient we can start to interpret the result. 
 
-```{r csbsScaledPlotData, echo=c(1:4,6)}
+```{r csbsScaledPlotData, echo=c(1:4,6), out.width='45%', fig.asp=.5}
 lmMod = lm(y ~ .-1, data=bs)  # just a regression!
 bscoefs = coef(lmMod)
 bsScaled = sweep(bs, 2, bscoefs,`*`)
@@ -110,14 +110,14 @@ d3 = data.frame(x, y, bsScaled) %>%
   dplyr::filter(bsfunc >= min(y) & bsfunc <= max(y))
 ```
 
-```{r csbsScaledPlot, echo=F}
+```{r csbsScaledPlot, echo=F, out.width='45%', fig.asp=.5}
 # NOTE: you've tried all the easy ways and plotly won't color lines and points the same; it will either do all one color or pick a different scheme.
 # but if you don't care about the markers, just make them black, but use more transparency, because there are replicates due to the data melt.
 cs = RColorBrewer::brewer.pal(nlevels(d$xcut), 'Set3')
 # KEEP this version. Dupes Fahrmeier, but not as desirable in my opinion
 # d3 %>%
 #   group_by(bs) %>% 
-#   plot_ly(width='100%') %>%
+#   plot_ly() %>%
 #   add_markers(~x, ~y, color=I('rgba(0,0,0,.02)'), colors=cs, showlegend=T) %>% #RColorBrewer::brewer.pal(N, "Set3")
 #   add_lines(~x, ~bsfunc, color=~bs, colors=cs, showlegend=F) %>% 
 #   theme_plotly() %>% 
@@ -126,7 +126,7 @@ cs = RColorBrewer::brewer.pal(nlevels(d$xcut), 'Set3')
 # NOTE: if you do want the colors the same, try this
 d3 = bsScaled %>% 
   mutate(x=x, y=y, xcut=as.ordered(d$xcut))
-plot_ly(width='100%') %>%
+plot_ly() %>%
   add_markers(~x, ~y, color=~xcut, colors=cs, alpha=.5, showlegend=T, data=d3) %>% #RColorBrewer::brewer.pal(N, "Set3")
   # add_markers(~x, ~bsfunc, color=I('navy'), data=data.frame(bsfunc=d3$bsfunc[1], x=0), showlegend=F) %>%
   add_lines(~x, ~X1, color=~xcut, data=filter(d3, xcut=='[0,0.1)'), showlegend=F) %>%
@@ -141,6 +141,7 @@ plot_ly(width='100%') %>%
   add_lines(~x, ~X10, color=~xcut, data=filter(d3, xcut=='[0.9,1)'), showlegend=F) %>%
   add_markers(x=0, y=bscoefs[1], color=I('salmon'), size=I(20), alpha=.5, showlegend=F) %>% 
   add_lines(x=~x, y=0, color=I(alpha('black', .25)), data=d3, showlegend=F) %>%
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 ```
@@ -151,16 +152,17 @@ In the plot above, the initial dot represents the global constant ($\gamma_1$, i
 
 Finally if we plot the sum of the basis functions, which is the same as taking our fitted values from a regression on the basis expansion of X, we get the following fit to the data. And we can see the trend our previous plot suggested.
 
-```{r csbsFitPlotDegree1, echo=FALSE}
+```{r csbsFitPlotDegree1, echo=FALSE, out.width='40%', fig.asp=.5}
 plotData = rbind(data.frame(d, sum=fitted(lmMod)),
                  data.frame(x=0, y=bscoefs[1], sum=NA, xcut='Int'))
 
 filter(plotData, xcut!='Int') %>% 
   droplevels %>% 
-  plot_ly(width='100%') %>% 
+  plot_ly() %>% 
   add_markers(~x, ~y, color=~xcut, colors=cs, alpha=.5, showlegend=F) %>% 
   add_lines(~x, ~sum, color=~xcut, colors=cs, showlegend=F) %>% 
   add_markers(x=0, y=bscoefs[1], size=~I(20), color=I('salmon'), alpha=.5, showlegend=F) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 ```
@@ -169,7 +171,7 @@ filter(plotData, xcut!='Int') %>%
 
 One of the more common approaches with GAMs uses a cubic spline fit. So we'll change our polynomial degree from 1 to 3 (i.e. `l = 3`).
 
-```{r csFitPlotDegree3, echo=FALSE}
+```{r csFitPlotDegree3, echo=FALSE, out.width='40%', fig.asp=.5}
 l = 3
 bs = sapply(1:length(knots), function(k) ifelse(x >= knots[k], (x-knots[k])^l, 0))
 lmModCubicSpline = lm(y ~ poly(x,3) + bs)
@@ -179,10 +181,11 @@ d %>%
   # add_predictions(lmModCubicSpline) %>%
   mutate(pred=fitted(lmModCubicSpline)) %>% 
   # data.frame(x, y, pred=fitted(lmModCubicSpline)) %>% 
-  plot_ly(width='100%') %>% 
+  plot_ly() %>% 
   add_markers(~x, ~y, color=I(scales::alpha('black', .1)), colors=cs, showlegend=F) %>% 
   # add_lines(~x, ~pred, color=I('#ff5503'), colors=cs, showlegend=F) %>%
   add_lines(~x, ~pred, color=~xcut, colors=cs, showlegend=F) %>%
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 ```
@@ -191,15 +194,16 @@ d %>%
 
 Now we're getting somewhere.  Let's compare it to the <span class='func'>gam</span> function from the <span class='pack'>mgcv</span> package. We won't usually specify the knots directly, and even as we have set things up similar to the <span class='pack'>mgcv</span> approach, the <span class="func">gam</span> function is still doing some things our by-hand approach is not (penalized regression).  We still get pretty close agreement however.
 
-```{r csFitPlotvsGAM, echo=FALSE}
+```{r csFitPlotvsGAM, echo=FALSE, out.width='45%', fig.asp=.5}
 library(mgcv)
 
 data.frame(x, y, fits=fitted(lmModCubicSpline), fitsGam=fitted(gam(y~s(x, bs='cr'), knots=list(x=knots)))) %>% 
   arrange(x) %>% 
-  plot_ly(width='100%') %>% 
+  plot_ly() %>% 
   add_markers(~x, ~y, color=I(scales::alpha('black', .25)), colors=cs, showlegend=F) %>% 
   add_lines(~x, ~fits, color=I('#ff5503'), line=list(width=5), showlegend=T, name='demo') %>% 
   add_lines(~x, ~fitsGam, color=I('#03b3ff'), colors=cs, showlegend=T, name='gam') %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 ```
@@ -260,7 +264,7 @@ all.equal(sm$X, modelMatrix)
 
 As an example of other types of smooth terms we might use, here are the basis functions for b-splines. They work notably differently, e.g. over intervals of $l+2$ knots.
 
-```{r bSpline, echo=FALSE}
+```{r bSpline, echo=FALSE, out.width='40%', fig.asp=.5}
 bfs = splines::bs(x, knots=knots[-1])
 bsMod = lm(y ~ bfs)
 fits = fitted(bsMod)
@@ -272,15 +276,17 @@ bSplineXmat = data.frame (Int=1, x = x, bfs) %>%
   gather(key=bs, value=bsfunc, -x)
 
 
-plot_ly(width='100%', colors='Set3') %>% 
+plot_ly(colors='Set3') %>% 
   add_markers(~x, ~y, color=I(scales::alpha('black', .25)), showlegend=F, data=d) %>%
   add_lines(~x, ~bsfunc, color=~bs, line=list(width=3), showlegend=F, data=bSplineXmat) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 
-plot_ly(width='100%', colors='Set3') %>% 
+plot_ly(colors='Set3') %>% 
   add_markers(~x, ~y, color=I(scales::alpha('black', .25)), showlegend=F, data=d) %>%
   add_lines(~x, ~bsfunc, color=~bs, line=list(width=3), showlegend=F, data=bSplineXmatsc) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 ```
@@ -291,7 +297,7 @@ plot_ly(width='100%', colors='Set3') %>%
 A natural question may arise as to how many knots to use. More knots potentially means more 'wiggliness', as demonstrated here. Note that these are number of knots, not powers in a polynomial regression as shown in the main section of this document.
 
 
-```{r differentNKnots, echo=FALSE}
+```{r differentNKnots, echo=FALSE, out.width='45%', fig.asp=.5}
 library(dplyr)
 l = 3
 nk = c(3, 6, 9, 15)
@@ -309,9 +315,10 @@ d4 = data.frame(x, y, fits=fits) %>% #arrange(x) %>%
   mutate(knots = factor(knots, labels=nk))
 
 d4 %>% 
-  plot_ly(width='100%', colors='Set3') %>% # have to set colorscale here if you want it to work after point color
+  plot_ly(colors='Set3') %>% # have to set colorscale here if you want it to work after point color
   add_markers(~x, ~y, color=I(scales::alpha('black', .25)), showlegend=F, data=d) %>%
   add_lines(~x, ~value, color=~knots, line=list(width=3), showlegend=T, data=d4) %>% 
+  config(displayModeBar=F) %>% 
   theme_plotly() %>% 
   layout()
 ```
@@ -372,7 +379,7 @@ plot(mod_gam2, select = 1, se=F, residuals=T, pch=19, rug=F, ylim=c(-200,100), m
 
 Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal.
 
-```{r termplot_visreg, dev='svglite', echo=-9, eval=T}
+```{r termplot_visreg, echo=-9, eval=T}
 pred_data = pisa %>% 
   select(Edu, Health) %>%
   summarise_all(median, na.rm=T) %>% 
@@ -401,6 +408,40 @@ graphics::layout(1)
 ```
 
 
+### Examining first derivatives
+
+It may be the case that we'd like to investigate the slopes of the smooth terms at various points to better understand how change is taking place. In standard linear model, the slope is constant, so the regression coefficient for a particular term tells us all we need to know.  For additive models or others with nonlinear effects, the slope changes over the values of the covariate of interest.
+
+We can easily extract this information using the <span class="pack">schoenberg</span> package[^schoenberg], specifically with the <span class="func">fderiv</span> function.  This allows one to get the estimated slope at various points, either by specifying them with the `newdata` argument or specifying the number of values desired along the range of the the model covariate, as below.
+
+```{r fderiv, echo=1:3, out.width='40%', fig.asp=.5}
+library(schoenberg)
+
+fd_inc = confint(fderiv(mod_gam1, n = 500))
+
+fd_inc = fd_inc %>% 
+  mutate(Income = seq(min(mod_gam1$model$Income), max(mod_gam1$model$Income), length.out = 500)) %>% 
+  rename(Estimate = est)
+
+plot_ly(fd_inc) %>% 
+  add_lines(x=~Income,  y=0, color=I('gray92'), showlegend=F) %>% 
+  add_lines(x=~Income, y=~Estimate, showlegend=F) %>% 
+  add_markers(x=~Income, y=~Estimate, 
+              showlegend=F, 
+              color = I('#00aaff'),
+              size=I(10),
+              data = fd_inc %>% filter(Estimate==max(Estimate)|Estimate==min(Estimate))) %>% 
+  config(displayModeBar=F) %>% 
+  theme_plotly()
+```
+
+<br>
+
+While we are getting something we can get a sense by looking at the standard effect plot, we can get more precise with this approach if desired. Here we see that the initial flattening a little after .6 on Income, and both the peak positive slope and sharpest negative slope (blue dots).  Depending on the modeling context, one may see patterns of theoretical importance or what theory would predict.  In other cases it just gives you more to talk about.
+
+
+
+
 [^secondderiv]: More formally, the penalty focuses on the second derivative of the function (i.e. it's curvature): $\lambda \int f''(x)^2dx$
 
 [^Smat]: For example, it would be an identity matrix if we were dealing with random effects, or a neighborhood matrix when dealing with a spatial context.
@@ -408,3 +449,5 @@ graphics::layout(1)
 [^trunc]: This is the truncated power series variant of polynomial splines.
 
 [^allthewaytozero]: You can actually penalize the covariate right out of the model if desired, i.e. edf=0.
+
+[^schoenberg]: Fairly new and still being developed as of this writing, it is [available on GitHub](https://github.com/gavinsimpson/schoenberg).
