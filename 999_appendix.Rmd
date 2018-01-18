@@ -36,7 +36,54 @@
 [VGAM](http://cran.r-project.org/web/packages/VGAM/): Vector generalized linear and additive models, and associated models.
 
 
+## Time and Space
 
+### Time
+
+A natural setting for GAMs is where there are observations over time. Perhaps we want to examine the trend over time. The SLiM would posit a linear trend, but we often would doubt that is the case.  How would we do this with a GAM?  We can incorporate a covariate representing the time component and add it as a smooth term.  There will be some additional issues though as we will see.
+
+Here I use the data and example at [Gavin Simpon's excellent blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
+
+
+```{r gamtime_setup, echo=1:8, out.width='40%', fig.asp=.5}
+## Global temperatures
+gtemp = read.table("https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat", fill = TRUE)
+
+## Drop the even rows
+gtemp = gtemp %>% drop_na()
+
+## Add colnames
+colnames(gtemp) <- c("Year", month.abb, "Annual")
+
+# Create a long format for later; Also set year to start at 0
+gtemp_long = gtemp %>% 
+  mutate(Year0 = Year-1850) %>% 
+  gather(key = Month, value=Anomaly, -Year, -Annual)
+
+gtemp %>% 
+  plot_ly(x=~ Year, y=~ Annual) %>% 
+  add_lines(x=~Year, y=0, color=I('gray92')) %>% 
+  add_lines(color=I('#00aaff'), showlegend=F) %>% 
+  theme_plotly()
+```
+
+Fitting a straight line to this would be disastrous, so let's do a GAM. 
+
+```{r gamtime, out.width='40%', fig.asp=.5, echo=1:2}
+hot_gam = gam(Annual ~ s(Year), data=gtemp)
+summary(hot_gam)
+plotdat = visreg(hot_gam, plot = F)$fit
+plotdat %>% 
+  plot_ly() %>% 
+  add_ribbons(x=~Year, ymin=~visregLwr, ymax =~visregUpr, color=I('#ff5500')) %>% 
+  add_lines(x=~Year, y=~visregFit, color=I('#00aaff')) %>% 
+  theme_plotly() %>% 
+  layout(showlegend=F,
+         yaxis=list(title='Anomaly'))
+```
+
+
+### Space
 
 
 # References
