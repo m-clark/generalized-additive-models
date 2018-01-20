@@ -45,9 +45,11 @@ A natural setting for GAMs is where there are observations over time. Perhaps we
 Here I use the data and example at [Gavin Simpon's excellent blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
 
 
-```{r gamtime_setup, echo=1:8, out.width='40%', fig.asp=.5}
+```{r gamtime_setup, echo=c(1:2, 5:8), eval=-(2:3), out.width='40%', fig.asp=.5}
 ## Global temperatures
 gtemp = read.table("https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat", fill = TRUE)
+save(gtemp, file='data/global_temperatures.RData')
+load('data/global_temperatures.RData')
 
 ## Drop the even rows
 gtemp = gtemp %>% drop_na()
@@ -60,6 +62,7 @@ gtemp_long = gtemp %>%
   mutate(Year0 = Year-1850) %>% 
   gather(key = Month, value=Anomaly, -Year, -Annual)
 
+
 gtemp %>% 
   plot_ly(x=~ Year, y=~ Annual) %>% 
   add_lines(x=~Year, y=0, color=I('gray92')) %>% 
@@ -67,23 +70,139 @@ gtemp %>%
   theme_plotly()
 ```
 
+<br>
+
 Fitting a straight line to this would be disastrous, so let's do a GAM. 
 
-```{r gamtime, out.width='40%', fig.asp=.5, echo=1:2}
+```{r gamtime, out.width='40%', fig.asp=.5, echo=1:2, out.width='40%', fig.asp=.5}
 hot_gam = gam(Annual ~ s(Year), data=gtemp)
 summary(hot_gam)
 plotdat = visreg(hot_gam, plot = F)$fit
 plotdat %>% 
   plot_ly() %>% 
   add_ribbons(x=~Year, ymin=~visregLwr, ymax =~visregUpr, color=I('#ff5500')) %>% 
-  add_lines(x=~Year, y=~visregFit, color=I('#00aaff')) %>% 
+  add_markers(x=~Year, y=~Annual, data=gtemp, color=I('#ff5500'), opacity=.5) %>% 
+  add_lines(x=~Year, y=~visregFit, color=I('#00aaff'), data=plotdat) %>% 
   theme_plotly() %>% 
+  config(displayModeBar=F) %>% 
   layout(showlegend=F,
+         xaxis=list(ticklength=10),
+         yaxis=list(title='Anomaly'))
+
+# library(ggTimeSeries)
+# ggplot_waterfall(dtData = gtemp, 'Year', 'Annual')
+```
+
+<br>
+
+We can see that the trend is generally increasing, and has been more or less since the beginning of the 20th century.  We have a remaining issue though. In general, a time series is autocorrelated, correlated with itself over time. We can see this in the following plot.
+
+```{r ar_raw, eval=FALSE}
+acf(gtemp$Annual)
+```
+
+```{r ar_raw_pretty, echo=FALSE, out.width='40%', fig.asp=.5}
+acfdat = acf(gtemp$Annual, 
+             lag.max = 25,
+             bty='n', 
+             lwd=2,
+             lty=1,
+             ylim=c(-.2,1), 
+             xlim=c(0,25),
+             col='#ff5500CC',
+             ci.col='#00aaff80',
+             main='',
+             ylab='Autocorrelation',
+             col.axis='gray35',
+             col.lab='gray35',
+             col.main='gray50',
+             xaxt='n',
+             yaxt='n')
+axis(side = 1, col='gray75', col.ticks = 'gray50', col.axis='gray35')
+axis(side = 2, col='gray75', col.ticks = 'gray50', col.axis='gray35')
+title(main='Autocorrelation of Annual Temperature Anomalies',col.main='gray25') # bc col.main ignored in acf
+```
+
+<br>
+
+What the plot shows is the correlation of the values with themselves at different <span class="emph">lags</span>, or time spacings.  Lag 0 is it's correlation with itself, so the value is 1.0.  It's correlation with itself at the previous time point, i.e. lag = 1, is `r round(acfdat$acf[2], 2)`, it's correlation with itself at two time points ago is slightly less, `r round(acfdat$acf[3], 2)`, and the decreasing trend continues slowly.  The dotted lines indicate a 95% confidence interval around zero, meaning that the autocorrelation is still significant 25 years apart.
+
+With our model the issue remains in that there is still autocorrelation among the residuals, at least at lag 1.
+
+```{r ar_res, echo=FALSE, out.width='40%', fig.asp=.5}
+acfdat = acf(resid(hot_gam), 
+             lag.max = 10,
+             bty='n', 
+             lwd=2,
+             lty=1,
+             ylim=c(-.2,1), 
+             xlim=c(0,10),
+             col='#ff5500CC',
+             ci.col='#00aaff80',
+             main='',
+             ylab='Autocorrelation',
+             col.axis='gray35',
+             col.lab='gray35',
+             col.main='gray50',
+             xaxt='n',
+             yaxt='n')
+axis(side = 1, col='gray75', col.ticks = 'gray50', col.axis='gray35')
+axis(side = 2, col='gray75', col.ticks = 'gray50', col.axis='gray35')
+title(main='Autocorrelation of Residuals',col.main='gray25') 
+```
+
+The practical implications of autocorrelated residuals is that this positive correlation would result in variance estimates that are too low.  However, we can take this into account with a slight tweaking of our model to incorporate such autocorrelation.  For our purposes we'll switch to the <span class="func">gamm</span> function.  It adds additional functionality for generalized additive *mixed* models, though we can just use it for to incorporate autocorrelation of the residuals.  In running this, two sets of output are provided, one in our familiar <span class="objclass">gam</span> model object, and the other as a <span class="objclass">lme</span> object from the <span class="pack">nlme</span> package.
+
+```{r gam_ar}
+hot_gam_ar = gamm(Annual ~ s(Year), data=gtemp, correlation=corAR1(form = ~Year))
+# summary(hot_gam)
+summary(hot_gam_ar$gam)
+summary(hot_gam_ar$lme)
+```
+
+In the gam output, we see some slight differences but not much (and we wouldn't expect it). From the lme output we can see the estimated autocorrelation value denoted as `Phi`[^Xlme].  Let's see what it does for our fit.
+
+```{r gam_ar_fit, echo=FALSE, fig.show='hide', out.width='40%', fig.asp=.5}
+plotdat1 = predict(gamm(Annual ~ s(Year), data=gtemp)$gam, newdata = plotdat %>% select(Year), type = 'response', se=T)
+plotdat1 = data_frame(Year= plotdat$Year,
+                      fit = plotdat1$fit,
+                      upper=fit+2*plotdat1$se,
+                      lower=fit-2*plotdat1$se
+                      )
+plotdat2 = predict(hot_gam_ar$gam, newdata = plotdat %>% select(Year), type='response', se=T)
+plotdat2 = data_frame(Year= plotdat$Year,
+                      fit = plotdat2$fit,
+                      upper=fit+2*plotdat2$se,
+                      lower=fit-2*plotdat2$se
+                      )
+
+plotdat1 %>% 
+  plot_ly() %>% 
+  add_ribbons(x=~Year, ymin=~lower, ymax =~upper, color=I('gray75'), data=plotdat1) %>% 
+  # add_lines(x=~Year, y=~fit, color=I('gray50'), data=plotdat1) %>% 
+  add_ribbons(x=~Year, ymin=~lower, ymax =~upper, color=I('#ff5500'), data=plotdat2) %>% 
+  add_lines(x=~Year, y=~fit, color=I('#00aaff'), data=plotdat2) %>% 
+  theme_plotly() %>% 
+  config(displayModeBar=F) %>% 
+  layout(showlegend=F,
+         xaxis=list(ticklength=10),
          yaxis=list(title='Anomaly'))
 ```
 
+<br>
+
+We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  Thus in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we'd deal with them in much the same way to get a better sense of the uncertainty in our estimates.
 
 ### Space
 
+```{r data}
+# data available at https://github.com/polygraph-cool/smoothing_tutorial/blob/master/us_county_hs_only.zip
+data('CanWeather', package = 'gamair')
+```
+
+
 
 # References
+
+[^Xlme]: All the same variables in the lme output start with X. This is more to avoid confusion in the functions behind the scenes.
+[^timefits]: I don't show it to keep the plot clean, but the fitted values are essentially the same.

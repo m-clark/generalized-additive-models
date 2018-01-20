@@ -6,7 +6,7 @@
 
 <span class="newthought">This section will discuss</span> some ways to relate GAMs to other forms of nonlinear modeling approaches, some familiar and others perhaps less so.  In addition, I will note some extensions to GAMs to consider.
 
-##Other Nonlinear Modeling Approaches
+## Other Nonlinear Modeling Approaches
 
 
 ### Known Form
