@@ -38,6 +38,8 @@
 
 ## Time and Space
 
+One of the 
+
 ### Time
 
 A natural setting for GAMs is where there are observations over time. Perhaps we want to examine the trend over time. The SLiM would posit a linear trend, but we often would doubt that is the case.  How would we do this with a GAM?  We can incorporate a covariate representing the time component and add it as a smooth term.  There will be some additional issues though as we will see.
@@ -101,7 +103,7 @@ We can see that the trend is generally increasing, and has been more or less sin
 acf(gtemp$Annual)
 ```
 
-```{r ar_raw_pretty, echo=FALSE, out.width='40%', fig.asp=.5}
+```{r ar_raw_pretty, echo=FALSE, out.width='75%', fig.asp=.5}
 acfdat = acf(gtemp$Annual, 
              lag.max = 25,
              bty='n', 
@@ -129,7 +131,7 @@ What the plot shows is the correlation of the values with themselves at differen
 
 With our model the issue remains in that there is still autocorrelation among the residuals, at least at lag 1.
 
-```{r ar_res, echo=FALSE, out.width='40%', fig.asp=.5}
+```{r ar_res, echo=FALSE, out.width='75%', fig.asp=.5}
 acfdat = acf(resid(hot_gam), 
              lag.max = 10,
              bty='n', 
@@ -207,7 +209,7 @@ Our example will use census data from New Zealand and focus on median income.  I
 
 Let's take an initial peek. 
 
-```{r nz_income, eval=T, echo=c(5,8)}
+```{r nz_income, eval=T, echo=c(5,8), out.width='40%', fig.asp=.5}
 # install the nzcensus package (note it is part of the nzelect GitHub repository):
 # devtools::install_github("ellisp/nzelect/pkg2")
 
@@ -223,7 +225,6 @@ nz_census <- AreaUnits2013 %>%
   drop_na()
 
 # create colour palette function
-pal <- colorQuantile("RdBu", NULL, n = 10)
 pal <- colorQuantile(viridis::plasma(n=10, begin = 1, end=0), domain = NULL, n=10)
 
 # create labels for popups
@@ -249,7 +250,7 @@ leaflet() %>%
 
 So we can go ahead and run this predicting median income solely by geography.  We'll use a <span class="emph"></span> smooth. In addition, we'll allow latitude and longitude to interact (bumping up the default wiggliness possible to allow for a little more nuance).  What the GAM will allow us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. 
 
-```{r nz_income_gam, echo=1:2}
+```{r nz_income_gam, echo=1:2, out.width='40%', fig.asp=.5}
 nz_gam = gam(Income ~ s(lon, lat, bs='gp', k=100), data=nz_census)
 summary(nz_gam)
 # 
@@ -318,7 +319,7 @@ nz_map_data %>%
 
 Using the gaussian process smooth produces a result that is akin to a very traditional spatial modeling technique called <span class="emph">kriging</span>.  There are many other covariates to play with, as well as other bases that would be applicable, so you should feel free to play around with models that include those. 
 
-Alternatively, as we did with the time series, we could instead deal with <span class="emph">spatial autocorrelation</span> by specifying a model for the residual structure.  First, we can simply test for spatial autocorrelation in the income variable via the well-worn <span class="emph">Mornan's I</span> statistic.  Given some weight matrix that specifies the neighborhood structure, such that larger values mean points are closer to one another, we can derive an estimate. The following demonstrates this via the <span class="pack">ape</span> package.
+Alternatively, as we did with the time series, we could instead deal with <span class="emph">spatial autocorrelation</span> by specifying a model for the residual structure.  First, we can simply test for spatial autocorrelation in the income variable via the well-worn <span class="emph">Moran's I</span> statistic.  Given some weight matrix that specifies the neighborhood structure, such that larger values mean points are closer to one another, we can derive an estimate. The following demonstrates this via the <span class="pack">ape</span> package.
 
 <span class="marginnote">Using `scaled=T` results in a correlation metric that goes from -1 to 1.</span>
 ```{r morans, eval=-3, echo=-4}
@@ -336,7 +337,9 @@ While statistically significant, there actually isn't too much going on, though 
 
 
 ```{r gamm_spatial, eval=FALSE}
-gamm_spat = gamm(Income ~ s(x, bs='gp'), data=nz_census, correlation = corSpatial(form = ~ lon + lat, type='gaussian'))
+gamm_spat = gamm(Income ~ s(x, bs='gp'), 
+                 data=nz_census, 
+                 correlation = corSpatial(form = ~ lon + lat, type='gaussian'))
 plot(gamm_spat)
 ```
 
@@ -352,40 +355,80 @@ What about the discrete case, where the spatial *random effect* is based on geog
 
 You'll be shocked to know that <span class="pack">mgcv</span> has a smooth construct for this situation as well, `bs='mrf'`, where `mrf` stands for <span class="emph">Markov random field</span>, which is an undirected graph.  Plotting the smooth term is akin to displaying the spatial random effect.
 
-The following shows example code. See the help for `mrf` for more detail.
+<span class="marginnote">This example comes from [Gavin Simpson's blog](https://www.fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/), which itself is based on an article at [The Pudding](https://pudding.cool/process/regional_smoothing/).</span>
+The following will model the percentage of adults with only a high school education.  Unfortunately, when dealing with spatial data,  getting it into a format amenable to modeling, will takes some work. Specifically, <span class="pack">mgcv</span> will need a neighborhood list.  Furthermore, the data we want to use will need to be linked to the data used for mapping.
 
-```{r gamspatdiscrete, eval=F}
-map_data(region='county')
-
-blank_layer <- list(
-  title = "",
-  showgrid = F,
-  showticklabels = F,
-  zeroline = F)
-
-map_data("county") %>%
-  filter(region == 'california') %>%
-  group_by(group) %>%
-  plot_ly(
-    x = ~long,
-    y = ~lat,
-    fillcolor = 'white',
-    hoverinfo = "none") %>%
-  add_polygons(
-    line = list(color = 'black', width = 0.5)) %>%
-  layout(
-    xaxis = blank_layer,
-    yaxis = blank_layer)
+The first step is to read a shapefile that has some county level information. You could get this from census data as well.
 
 
+```{r gamspatdiscrete}
+# from https://github.com/polygraph-cool/smoothing_tutorial/blob/master/us_county_hs_only.zip
+# contiguous states c(1,4:6, 8:13, 16:42, 44:51, 53:56)
+library(sp)
+shp <- rgdal::readOGR('data/us_county_hs_only', 'us_county_hs_only')
 
-
-#### Discrete
-
-```{r data, eval=FALSE}
-# data available at https://github.com/polygraph-cool/smoothing_tutorial/blob/master/us_county_hs_only.zip
-data('CanWeather', package = 'gamair')
+## select michigan, and convert % to proportion
+mich_df <- shp[shp$STATEFP %in% c(26), ] %>%   # add other FIPS codes as desired
+  as.data.frame() %>% 
+  droplevels() %>% 
+  mutate(hsd = hs_pct / 100,
+         county = stringr::str_replace(tolower(NAME), pattern='\\.', ''),
+         county = factor(county))
 ```
+
+The following creates a neighborhood matrix[^usingmaps].  We also need names to match the values in the data, as well as the plotting data to be used later.  I just made them lower case and remove punctuation.  If you use more than one state, you will have to deal with duplicated names in some fashion.
+
+```{r bind_map_data, echo=1:2}
+nb <- spdep::poly2nb(shp[shp$STATEFP %in% c(26), ], row.names = mich_df$county)
+names(nb) <- attr(nb, "region.id")
+
+# mich_map = maps::map('county', 'michigan', fill=T) # fill is required
+# mich_poly =  maptools::map2SpatialPolygons(mich_map, 
+#                                            IDs=stringr::str_sub(mich_map$names, start = 10),
+#                                            proj4string=sp::CRS("+proj=longlat +datum=WGS84")) 
+# mich_nb = spdep::poly2nb(mich_poly)
+# mich_df$county = factor(stringr::str_replace(tolower(mich_df$NAME), pattern='\\.', ''))
+# names(mich_nb) <- attr(mich_nb, "region.id")
+```
+
+With neighborhood in place, we can now finally run the model.  Note that the id used for the smooth, in this case `county`, needs to be a factor variable.  If not you will get an error that doesn't tell you that's that the reason.  There are a couple speed options used, but which would only be required if you're doing many states.
+
+```{r gam_mrf}
+ctrl <- gam.control(nthreads = 6) # use 6 parallel threads, reduce if fewer physical CPU cores
+
+m1 <- gam(hsd ~ s(county, bs = 'mrf', xt = list(nb = nb)), # define MRF smooth
+          data = mich_df,
+          method = 'REML', # fast version of REML smoothness selection
+          family = betar,  # fit a beta regression
+          control = ctrl) 
+summary(m1)
+
+mich_df = mich_df %>% 
+  mutate(fit = predict(m1, type='response'))
+```
+
+Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So we create that and add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
+
+```{r plot_mich, out.width='40%', fig.asp=.5}
+plotdat = map_data("county", 'michigan') %>%
+  left_join(mich_df, by = c('subregion' = 'county')) %>% 
+  mutate(fillcol = cut(fit, breaks=seq(.25, .45, by = .025)))
+
+plotdat %>% 
+  group_by(subregion) %>%
+  plot_ly(x = ~long, y = ~lat, 
+          color = ~fillcol, 
+          colors = viridis::plasma(50, begin=1, end=0),
+          text = ~subregion, hoverinfo = 'text') %>%
+  add_polygons(line = list(width = 0.4)) %>%
+  layout(title = "% with Maximum of HS Education in Michigan") %>% 
+  theme_blank() 
+```
+
+<br>
+
+Be prepared, this will be a notable undertaking to sort out for your given situation, depending on the map objects and structure you're dealing with.
+
 
 
 # References
@@ -393,3 +436,4 @@ data('CanWeather', package = 'gamair')
 [^Xlme]: All the same variables in the lme output start with X. This is more to avoid confusion in the functions behind the scenes.
 [^timefits]: I don't show it to keep the plot clean, but the fitted values are essentially the same.
 [^rforeverything]: Because of course there is an R package just for New Zealand census data.
+[^usingmaps]: If you look at the markdown document for this on GitHub you'll see the code for how to create this using an object from the maps packages rather than needing a shapefile.
