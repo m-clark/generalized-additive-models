@@ -202,12 +202,12 @@ When dealing with space, we may have spatial locations of a continuous sort, suc
 
 #### Continuous
 
-<span class="marginnote">This is based on Peter Ellis' example, which you can find [here](https://ellisp.github.io/blog/2016/08/04/nzcensus-gam-elastic-lm).</span>
+<span class="marginnote">This example is inspired by the post by Peter Ellis, which you can find [here](https://ellisp.github.io/blog/2016/08/04/nzcensus-gam-elastic-lm).</span>
 Our example will use census data from New Zealand and focus on median income.  It uses the <span class="pack">nzcensus</span> package[^rforeverything] which includes median income, latitude, longitude and several dozen other variables.  The latitude and longitude are actually centroids of the area unit, so this technically could also be used as a discrete example based on the unit.
 
-Let's take an initial peek. <span class="marginnote">This visualization uses <span class="pack">leaflet</span>.</span>
+Let's take an initial peek. 
 
-```{r nz_income, eval=T, echo=5:8}
+```{r nz_income, eval=T, echo=c(5,8)}
 # install the nzcensus package (note it is part of the nzelect GitHub repository):
 # devtools::install_github("ellisp/nzelect/pkg2")
 
@@ -242,13 +242,16 @@ leaflet() %>%
       title = "Top Quantile of median<br>household income",
       position = "topleft")
 ```
- 
+
+<span class="marginnote">This visualization uses <span class="pack">leaflet</span>.</span>
+
 <br>
 
-So we can go ahead and run this predicting median income solely by geography.  We'll use a gaussian process smooth. In addition, we'll allow latitude and longitude to interact.  What the GAM allows us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. <span class="marginnote">This visualization uses <span class="pack">plotly</span>. In case you're wondering, this was a major ordeal to figure out how to create this plot.</span>
+So we can go ahead and run this predicting median income solely by geography.  We'll use a <span class="emph"></span> smooth. In addition, we'll allow latitude and longitude to interact (bumping up the default wiggliness possible to allow for a little more nuance).  What the GAM will allow us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. 
 
-```{r nz_income_gam, echo=1}
-nz_gam = gam(Income ~ s(lon, lat, bs='gp'), data=nz_census)
+```{r nz_income_gam, echo=1:2}
+nz_gam = gam(Income ~ s(lon, lat, bs='gp', k=100), data=nz_census)
+summary(nz_gam)
 # 
 # tt = visreg2d(nz_gam, xvar='lon', yvar='lat', scale='response', nn = 200)[1:3] # for some reason 2d doesn't have a plot= argument so is suppressed with 'hide'
 # names(tt) = c('lon', 'lat', 'Income')
@@ -279,47 +282,73 @@ heatvals = data_frame(lon=rep(seq(min(nz_census$lon)-4, max(nz_census$lon)+4, le
   filter(sp::point.in.polygon(.$lon, .$lat, pol.x = nz_map_data$lon, pol.y = nz_map_data$lat)==1) 
 
 
-blank_layer <- list(
-  title = "",
-  showgrid = F,
-  showticklabels = F,
-  zeroline = F)
-g <- list(
-  scope = 'new zealand',
-  showframe = F,
-  showland = T,
-  landcolor = toRGB(NA)
-)
-g1 <- c(
-  g,
-  resolution = 50,
-  showcoastlines = T,
-  countrycolor = toRGB('gray'),
-  coastlinecolor = toRGB('gray'),
-  projection = list(type = 'longlat'),
-  list(lonaxis = list(range = c(min(heatvals$lon), max(heatvals$lon)))),
-  list(lataxis = list(range = c(min(heatvals$lat), max(heatvals$lat)))),
-  list(domain = list(x = c(0, 1), y = c(0, 1)))
-)
+blank_layer <- list(title = "",
+                    showgrid = F,
+                    showticklabels = F,
+                    zeroline = F
+                    )
+
+g <- list(scope = 'new zealand',
+          showframe = F,
+          showland = T,
+          landcolor = toRGB(NA)
+          )
+
+g1 <- c(g,
+        resolution = 50,
+        showcoastlines = T,
+        countrycolor = toRGB('gray'),
+        coastlinecolor = toRGB('gray'),
+        projection = list(type = 'longlat'),
+        list(lonaxis = list(range = c(min(heatvals$lon), max(heatvals$lon)))),
+        list(lataxis = list(range = c(min(heatvals$lat), max(heatvals$lat)))),
+        list(domain = list(x = c(0, 1), y = c(0, 1)))
+        )
 
 nz_map_data %>% 
   plot_geo(x=~lon, y=~lat) %>% 
-  layout(
-    title = 'Expected Income',
-    geo = g1
-  ) %>%
+  layout(title = 'Expected Income',
+         geo = g1) %>%
   add_markers(x=~lon, y=~lat, color =~Income, data=heatvals, opacity=.5, colors=viridis::plasma(50), size=I(3))# %>%
+```
+
+<span class="marginnote">This visualization was created with <span class="pack">plotly</span>. In case you're wondering, it was a notable ordeal to figure out how to make it.</span>
+
+<br>
+
+Using the gaussian process smooth produces a result that is akin to a very traditional spatial modeling technique called <span class="emph">kriging</span>.  There are many other covariates to play with, as well as other bases that would be applicable, so you should feel free to play around with models that include those. 
+
+Alternatively, as we did with the time series, we could instead deal with <span class="emph">spatial autocorrelation</span> by specifying a model for the residual structure.  First, we can simply test for spatial autocorrelation in the income variable via the well-worn <span class="emph">Mornan's I</span> statistic.  Given some weight matrix that specifies the neighborhood structure, such that larger values mean points are closer to one another, we can derive an estimate. The following demonstrates this via the <span class="pack">ape</span> package.
+
+<span class="marginnote">Using `scaled=T` results in a correlation metric that goes from -1 to 1.</span>
+```{r morans, eval=-3, echo=-4}
+inv_dist = with(nz_census, 1/dist(cbind(lat, lon), diag = T, upper = T))
+inv_dist = as.matrix(inv_dist)
+ape::Moran.I(nz_census$Income, weight = inv_dist, scaled=T)
+ape::Moran.I(nz_census$Income, weight = inv_dist, scaled=T) %>% 
+  data.frame() %>% 
+  pander()
 ```
 
 <br>
 
-Using the gaussian process smooth produces a result that is akin to a very traditional spatial modeling technique called <span class="emph">kriging</span>.
+While statistically significant, there actually isn't too much going on, though it may be enough to warrant dealing with in some fashion.  As with the time series, we'll have to use the functionality with <span class="func">gamm</span>, where the underlying nlme package provides functions for spatial correlation structures.  The following shows how this might be done.<span class="marginnote">If you run this be prepared to wait for a few minutes</span>
+
+
+```{r gamm_spatial, eval=FALSE}
+gamm_spat = gamm(Income ~ s(x, bs='gp'), data=nz_census, correlation = corSpatial(form = ~ lon + lat, type='gaussian'))
+plot(gamm_spat)
+```
+
+So whether you choose to deal with the spatial autocorrelation explicitly by using something like coordinates as covariates in the model itself, or via the residual correlation structure, or perhaps both, is up to you.<span class="marginnote">For a nice discussion of this, see the following at [Stack Exchange](https://stats.stackexchange.com/questions/35510/why-does-including-latitude-and-longitude-in-a-gam-account-for-spatial-autocorre), and note the top *two* answers to the question "Why does including latitude and longitude in a GAM account for spatial autocorrelation?"</span>
+
+
 
 
 
 #### Discrete
 
-What about the discrete case, where the spatial *random effect* is based on geographical regions?  This involves a penalty that is based on the adjacency matrix of the regions, where if there are $g$ regions, the adjacency matrix is a $g \times g$ indicator matrix where there is some non-zero value when region i is connected to region j, and 0 otherwise.  In addition an approach similar to that for a random effect is used to incorporate observations belonging to specific regions.  These are sometimes referred to as geoadditive models.
+What about the discrete case, where the spatial *random effect* is based on geographical regions?  This involves a penalty that is based on the adjacency matrix of the regions, where if there are $g$ regions, the adjacency matrix is a $g \times g$ indicator matrix where there is some non-zero value when region i is connected to region j, and 0 otherwise.  In addition, an approach similar to that for a random effect is used to incorporate observations belonging to specific regions.  These are sometimes referred to as geoadditive models.
 
 You'll be shocked to know that <span class="pack">mgcv</span> has a smooth construct for this situation as well, `bs='mrf'`, where `mrf` stands for <span class="emph">Markov random field</span>, which is an undirected graph.  Plotting the smooth term is akin to displaying the spatial random effect.
 
