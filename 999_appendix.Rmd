@@ -38,13 +38,13 @@
 
 ## Time and Space
 
-One of the 
+<span class="newthought">One of the things to know about GAMs is just how flexible they are</span>. Along with all that we have mentioned, they can also be applied to situations where one is interested in temporal trends or the effects of spatial aspects of the data.  The penalized regression approach used by GAMs can easily extend such situations, and the <span class="pack">mgcv</span> package in particular has a lot of options here.
 
 ### Time
 
 A natural setting for GAMs is where there are observations over time. Perhaps we want to examine the trend over time. The SLiM would posit a linear trend, but we often would doubt that is the case.  How would we do this with a GAM?  We can incorporate a covariate representing the time component and add it as a smooth term.  There will be some additional issues though as we will see.
 
-Here I use the data and example at [Gavin Simpon's excellent blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
+Here I use the data and example at [Gavin Simpon's nifty blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
 
 
 ```{r gamtime_setup, echo=c(1:2, 5:8), eval=-(2:3), out.width='40%', fig.asp=.5}
@@ -396,15 +396,15 @@ With neighborhood in place, we can now finally run the model.  Note that the id 
 ```{r gam_mrf}
 ctrl <- gam.control(nthreads = 6) # use 6 parallel threads, reduce if fewer physical CPU cores
 
-m1 <- gam(hsd ~ s(county, bs = 'mrf', xt = list(nb = nb)), # define MRF smooth
-          data = mich_df,
-          method = 'REML', # fast version of REML smoothness selection
-          family = betar,  # fit a beta regression
-          control = ctrl) 
-summary(m1)
+gam_mrf <- gam(hsd ~ s(county, bs = 'mrf', xt = list(nb = nb)), # define MRF smooth
+               data = mich_df,
+               method = 'REML', # fast version of REML smoothness selection
+               family = betar,  # fit a beta regression
+               control = ctrl) 
+summary(gam_mrf)
 
 mich_df = mich_df %>% 
-  mutate(fit = predict(m1, type='response'))
+  mutate(fit = predict(gam_mrf, type='response'))
 ```
 
 Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So we create that and add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
@@ -429,6 +429,82 @@ plotdat %>%
 
 Be prepared, this will be a notable undertaking to sort out for your given situation, depending on the map objects and structure you're dealing with.
 
+#### A Discrete Alternative
+
+One of the things that has puzzled me is just how often people deal with geography while ignoring what would almost always be inherent correlation in discrete geographical or other units.  In the social sciences for example, one will see a standard random effects approach especially, i.e. [a mixed model](https://m-clark.github.io/mixed-models-with-R/), applied in the vast majority of situations where the data comes from multiple regions.  This will allow for region specific effects, which is very useful, but it won't take advantage of the fact that the regions may be highly correlated with one another.  
+
+We've already been using <span class="func">gamm</span>, but haven't been using its typical random effects approach.  We could do so here, but we can also just stick to the usual gam approach, as it has a basis option for random effects.  One thing that distinguishes the mixed model setting is that observations will be clustered within the geographical units.  We'll use the Munich rent data available from the <span class="pack">gamlss</span> family of packages.  It contains the Munich rent data and boundaries files of of 1999 survey. The <span class="objclass">rent99</span> data contains information about rent, year of construction, weather it has central heating, etc. Important for our purposes is the district identifier.
+
+```{r basic_re, echo=FALSE}
+library(gamlss.data)
+rent99 %>% 
+  mutate_if(is.numeric, round, digits=2) %>% 
+  DT::datatable(rownames = F,
+              options = list(dom='tp'))
+```
+
+
+The following shows again a Markov random field smooth, and along with it a mixed model with a random effect for district.  The plots shows that, while close, they don't exactly come to the same conclusions for the district fit.
+
+
+```{r re_vs_mrf, echo=1:10}
+library(gamlss.data)
+
+# prep data
+rent99 = rent99 %>% 
+  mutate(district=factor(district))
+
+rent99.polys[!names(rent99.polys) %in% levels(rent99$district)] = NULL
+
+# run mrf and re models
+gam_rent_mrf = gam(rent ~ s(district, bs = 'mrf', xt = list(polys=rent99.polys)),
+                   data = rent99,
+                   method = 'REML') 
+gam_rent_re = gam(rent ~ s(district, bs = 're'),
+                  data = rent99,
+                  method = 'REML') 
+# summary(gam_rent_mrf)
+# summary(gam_rent_re)
+# plot(gam_rent_mrf)
+data_frame(mrf_fit = fitted(gam_rent_mrf), mm_fit = fitted(gam_rent_re)) %>% 
+  plot_ly() %>% 
+  add_markers(x=~mm_fit, y=~mrf_fit, color=I('#ff550040')) %>% 
+  theme_plotly()
+
+
+# re_coefs = gam_rent_re$coefficients
+# names(re_coefs) = stringr::str_extract(names(re_coefs), pattern='[0-9](.)*')
+# polys.plot(rent99.polys, z=re_coefs)
+# 
+# re_coefs = gam_rent_re$coefficients
+# names(re_coefs) = names(rent99.polys)
+# polys.plot(rent99.polys, z=gam_rent_mrf$coefficients)
+```
+
+<br>
+
+Next we show the plot of the estimated random effects of both models on the map of districts[^munichplot].  Gaps appear because there isn't data for every district available as a polygon, and these are districts without houses like parks, industrial etc.
+
+```{r re_vs_mrf2, echo=FALSE, fig.asp=.4}
+# predict(gam_rent_mrf, type = 'terms')
+gam_rent_mrf2 = gam_rent_mrf
+gam_rent_mrf2$coefficients = gam_rent_re$coefficients
+
+par(mfrow=c(1,2))
+plot.gam(gam_rent_mrf)
+plot(gam_rent_mrf2, main='Mixed Model', ylab='Mixed Model')
+graphics::layout(1)
+
+# fv = fitted(gam_rent_re)
+# names(fv) = as.character(rent99$district)
+# polys.plot(rent99.polys, fv)
+```
+
+
+As expected there appears to be more color coordination with the MRF result, since neighbors are more likely to be similar.
+
+Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn't much similarity among geographical units.  One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.
+
 
 
 # References
@@ -437,3 +513,4 @@ Be prepared, this will be a notable undertaking to sort out for your given situa
 [^timefits]: I don't show it to keep the plot clean, but the fitted values are essentially the same.
 [^rforeverything]: Because of course there is an R package just for New Zealand census data.
 [^usingmaps]: If you look at the markdown document for this on GitHub you'll see the code for how to create this using an object from the maps packages rather than needing a shapefile.
+[^munichplot]: Unfortunately I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and a trick to superimpose the mixed model results onto the MRF data.
