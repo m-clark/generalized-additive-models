@@ -68,7 +68,7 @@ gtemp_long = gtemp %>%
 gtemp %>% 
   plot_ly(x=~ Year, y=~ Annual) %>% 
   add_lines(x=~Year, y=0, color=I('gray92')) %>% 
-  add_lines(color=I('#00aaff'), showlegend=F) %>% 
+  add_lines(color=I('#00aaff'), showlegend=F, opacity=.75) %>% 
   theme_plotly()
 ```
 
@@ -97,7 +97,7 @@ plotdat %>%
 
 <br>
 
-We can see that the trend is generally increasing, and has been more or less since the beginning of the 20th century.  We have a remaining issue though. In general, a time series is autocorrelated, correlated with itself over time. We can see this in the following plot.
+We can see that the trend is generally increasing, and has been more or less since the beginning of the 20th century.  We have a remaining issue though. In general, a time series is autocorrelated, i.e. correlated with itself over time. We can see this in the following plot.
 
 ```{r ar_raw, eval=FALSE}
 acf(gtemp$Annual)
@@ -153,7 +153,7 @@ axis(side = 2, col='gray75', col.ticks = 'gray50', col.axis='gray35')
 title(main='Autocorrelation of Residuals',col.main='gray25') 
 ```
 
-The practical implications of autocorrelated residuals is that this positive correlation would result in variance estimates that are too low.  However, we can take this into account with a slight tweaking of our model to incorporate such autocorrelation.  For our purposes we'll switch to the <span class="func">gamm</span> function.  It adds additional functionality for generalized additive *mixed* models, though we can just use it for to incorporate autocorrelation of the residuals.  In running this, two sets of output are provided, one in our familiar <span class="objclass">gam</span> model object, and the other as a <span class="objclass">lme</span> object from the <span class="pack">nlme</span> package.
+The practical implications of autocorrelated residuals is that this positive correlation would result in variance estimates that are too low.  However, we can take this into account with a slight tweaking of our model to incorporate such autocorrelation.  For our purposes we'll switch to the <span class="func">gamm</span> function.  It adds additional functionality for generalized additive *mixed* models, though we can just use it to incorporate autocorrelation of the residuals.  In running this, two sets of output are provided, one in our familiar <span class="objclass">gam</span> model object, and the other as a <span class="objclass">lme</span> object from the <span class="pack">nlme</span> package.
 
 ```{r gam_ar}
 hot_gam_ar = gamm(Annual ~ s(Year), data=gtemp, correlation=corAR1(form = ~Year))
@@ -162,7 +162,7 @@ summary(hot_gam_ar$gam)
 summary(hot_gam_ar$lme)
 ```
 
-In the gam output, we see some slight differences but not much (and we wouldn't expect it). From the lme output we can see the estimated autocorrelation value denoted as `Phi`[^Xlme].  Let's see what it does for our fit.
+In the gam output, we see some slight differences from the original model, but not much (and we wouldn't expect it). From the lme output we can see the estimated autocorrelation value denoted as `Phi`[^Xlme].  Let's see what it does for our fit.
 
 ```{r gam_ar_fit, echo=FALSE, fig.show='hide', out.width='40%', fig.asp=.5}
 plotdat1 = predict(gamm(Annual ~ s(Year), data=gtemp)$gam, newdata = plotdat %>% select(Year), type = 'response', se=T)
@@ -193,16 +193,16 @@ plotdat1 %>%
 
 <br>
 
-We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  Thus in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we'd deal with them in much the same way to get a better sense of the uncertainty in our estimates.
+We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  Thus in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
 
 ### Space
 
-Consider a data set with latitude and longitude coordinates among other covariates used to model some target variable.  A spatial regression analysis uses an approach to account for spatial covariance among the observation points (e.g. <span class="emph">kriging</span>).  Such an approach is a special case of <span class="emph">Gaussian process</span> which, as we noted, certain types of GAMs can be seen as such also.  As such we can add spatial models to the sorts of models covered by GAMs too.  
+Consider a data set with latitude and longitude coordinates along with other covariates used to model some target variable.  A spatial regression analysis uses an approach to account for spatial covariance among the observation points.  A common technique used is a special case of <span class="emph">Gaussian process</span> which, as we noted, certain types of GAMs can be seen as such also.  In addition, some types of spatial models can be seen similar to random effects models, much like GAMs.  Such connections mean that we can add spatial models to the sorts of models covered by GAMs too.  
 
 When dealing with space, we may have spatial locations of a continuous sort, such as with latitude and longitude, or in a discrete sense, such as regions.  In what follows we'll examine both cases.
 
 
-#### Continuous
+#### Continuous Spatial Setting
 
 <span class="marginnote">This example is inspired by the post by Peter Ellis, which you can find [here](https://ellisp.github.io/blog/2016/08/04/nzcensus-gam-elastic-lm).</span>
 Our example will use census data from New Zealand and focus on median income.  It uses the <span class="pack">nzcensus</span> package[^rforeverything] which includes median income, latitude, longitude and several dozen other variables.  The latitude and longitude are actually centroids of the area unit, so this technically could also be used as a discrete example based on the unit.
@@ -213,7 +213,7 @@ Let's take an initial peek.
 # install the nzcensus package (note it is part of the nzelect GitHub repository):
 # devtools::install_github("ellisp/nzelect/pkg2")
 
-library(leaflet)
+# library(leaflet)
 library(nzcensus)
 
 # remove Chatham Islands 
@@ -225,33 +225,71 @@ nz_census <- AreaUnits2013 %>%
   drop_na()
 
 # create colour palette function
-pal <- colorQuantile(viridis::plasma(n=10, begin = 1, end=0), domain = NULL, n=10)
+# pal <- colorQuantile(viridis::plasma(n=10, begin = 1, end=0), domain = NULL, n=10)
 
 # create labels for popups
-labs <- paste0(nz_census$AU_NAM, " $", format(nz_census$Income, big.mark = ","))
+nz_census$labs <- paste0(nz_census$AU_NAM, " $", format(nz_census$Income, big.mark = ","))
 
 # draw map:
-leaflet() %>%
-   addProviderTiles("CartoDB.Positron") %>%
-   addCircles(lng = nz_census$lon, lat = nz_census$lat,
-              color = pal(-nz_census$Income),
-              popup = labs,
-              radius = 500) %>%
-   addLegend(
-      pal = pal,
-      values = -nz_census$Income,
-      title = "Top Quantile of median<br>household income",
-      position = "topleft")
+# leaflet() %>%
+#    addProviderTiles("CartoDB.Positron") %>%
+#    addCircles(lng = nz_census$lon, lat = nz_census$lat,
+#               color = pal(-nz_census$Income),
+#               popup = labs,
+#               radius = 500) %>%
+#    addLegend(
+#       pal = pal,
+#       values = -nz_census$Income,
+#       title = "Top Quantile of median<br>household income",
+#       position = "topleft")
+
+
+pal <- colorQuantile(viridis::plasma(n=10, begin = 0, end=1), domain = NULL, n=10)
+
+g <- list(scope = 'new zealand',
+          showframe = F,
+          showland = T,
+          landcolor = toRGB(NA))
+
+g1 <- c(g,
+        resolution = 50,
+        showcoastlines = T,
+        countrycolor = toRGB('gray'),
+        coastlinecolor = toRGB('gray'),
+        projection = list(type = 'longlat'),
+        list(lonaxis = list(range = c(165, 179))),
+        list(lataxis = list(range = c(-46.75, -34))),
+        list(domain = list(x = c(0, 1), y = c(0, 1)))
+        )
+
+map_data('nz') %>% 
+  filter(grepl(region, pattern='North|South')) %>%
+  group_by(group) %>% 
+  plot_geo(x = ~nz_census$lon, y = ~nz_census$lat) %>% 
+  add_markers(color=~Income, 
+              colors=pal, 
+              size=I(5), 
+              opacity=.66, 
+              text=~ labs,
+              marker=list(name=NULL),
+              # hoverinfo='text',
+              data=nz_census) %>% 
+  config(displayModeBar=F) %>% 
+  layout(title = '', 
+         geo = g1) %>% 
+  theme_plotly()
 ```
 
-<span class="marginnote">This visualization uses <span class="pack">leaflet</span>.</span>
+<!-- <span class="marginnote">This visualization uses <span class="pack">leaflet</span>.</span> -->
 
 <br>
 
-So we can go ahead and run this predicting median income solely by geography.  We'll use a <span class="emph"></span> smooth. In addition, we'll allow latitude and longitude to interact (bumping up the default wiggliness possible to allow for a little more nuance).  What the GAM will allow us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. 
+So we can go ahead and run a model predicting median income solely by geography.  We'll use a gaussian process basis, and allowing latitude and longitude to interact (bumping up the default wiggliness possible to allow for a little more nuance).  What the GAM will allow us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. 
+
+<span class="marginnote">The `m=` argument allows one to specify different types of covariance functions.</span>
 
 ```{r nz_income_gam, echo=1:2, out.width='40%', fig.asp=.5}
-nz_gam = gam(Income ~ s(lon, lat, bs='gp', k=100), data=nz_census)
+nz_gam = gam(Income ~ s(lon, lat, bs='gp', k=100, m=2), data=nz_census)
 summary(nz_gam)
 # 
 # tt = visreg2d(nz_gam, xvar='lon', yvar='lat', scale='response', nn = 200)[1:3] # for some reason 2d doesn't have a plot= argument so is suppressed with 'hide'
@@ -313,11 +351,11 @@ nz_map_data %>%
   add_markers(x=~lon, y=~lat, color =~Income, data=heatvals, opacity=.5, colors=viridis::plasma(50), size=I(3))# %>%
 ```
 
-<span class="marginnote">This visualization was created with <span class="pack">plotly</span>. In case you're wondering, it was a notable ordeal to figure out how to make it.</span>
+<span class="marginnote">This visualization was created with <span class="pack">plotly</span>. In case you're wondering, it was a notable ordeal to figure out how to make it, but in the end it the code isn't much.</span>
 
 <br>
 
-Using the gaussian process smooth produces a result that is akin to a very traditional spatial modeling technique called <span class="emph">kriging</span>.  There are many other covariates to play with, as well as other bases that would be applicable, so you should feel free to play around with models that include those. 
+Using the gaussian process smooth produces a result that is akin to a traditional spatial modeling technique called <span class="emph">kriging</span>.  There are many other covariates to play with, as well as other bases that would be applicable, so you should feel free to play around with models that include those. 
 
 Alternatively, as we did with the time series, we could instead deal with <span class="emph">spatial autocorrelation</span> by specifying a model for the residual structure.  First, we can simply test for spatial autocorrelation in the income variable via the well-worn <span class="emph">Moran's I</span> statistic.  Given some weight matrix that specifies the neighborhood structure, such that larger values mean points are closer to one another, we can derive an estimate. The following demonstrates this via the <span class="pack">ape</span> package.
 
@@ -333,17 +371,17 @@ ape::Moran.I(nz_census$Income, weight = inv_dist, scaled=T) %>%
 
 <br>
 
-While statistically significant, there actually isn't too much going on, though it may be enough to warrant dealing with in some fashion.  As with the time series, we'll have to use the functionality with <span class="func">gamm</span>, where the underlying nlme package provides functions for spatial correlation structures.  The following shows how this might be done.<span class="marginnote">If you run this be prepared to wait for a few minutes</span>
+While statistically significant, there actually isn't too much going on, though it may be enough to warrant dealing with in some fashion.  As with the time series, we'll have to use the functionality with <span class="func">gamm</span>, where the underlying nlme package provides functions for spatial correlation structures.  The following shows how this might be done.<span class="marginnote">If you run this be prepared to wait for a few minutes.</span>
 
 
 ```{r gamm_spatial, eval=FALSE}
-gamm_spat = gamm(Income ~ s(x, bs='gp'), 
+gamm_spat = gamm(Income ~ s(x) + s(y) + z, 
                  data=nz_census, 
                  correlation = corSpatial(form = ~ lon + lat, type='gaussian'))
 plot(gamm_spat)
 ```
 
-So whether you choose to deal with the spatial autocorrelation explicitly by using something like coordinates as covariates in the model itself, or via the residual correlation structure, or perhaps both, is up to you.<span class="marginnote">For a nice discussion of this, see the following at [Stack Exchange](https://stats.stackexchange.com/questions/35510/why-does-including-latitude-and-longitude-in-a-gam-account-for-spatial-autocorre), and note the top *two* answers to the question "Why does including latitude and longitude in a GAM account for spatial autocorrelation?"</span>
+So whether you choose to deal with the spatial autocorrelation explicitly by using something like coordinates as covariates in the model itself, or via the residual correlation structure, or perhaps both, is up to you.<span class="marginnote">For a nice discussion of this, see the Q & A at [Stack Exchange](https://stats.stackexchange.com/questions/35510/why-does-including-latitude-and-longitude-in-a-gam-account-for-spatial-autocorre), and note the top *two* answers to the question "Why does including latitude and longitude in a GAM account for spatial autocorrelation?"</span>
 
 
 
@@ -353,10 +391,10 @@ So whether you choose to deal with the spatial autocorrelation explicitly by usi
 
 What about the discrete case, where the spatial *random effect* is based on geographical regions?  This involves a penalty that is based on the adjacency matrix of the regions, where if there are $g$ regions, the adjacency matrix is a $g \times g$ indicator matrix where there is some non-zero value when region i is connected to region j, and 0 otherwise.  In addition, an approach similar to that for a random effect is used to incorporate observations belonging to specific regions.  These are sometimes referred to as geoadditive models.
 
-You'll be shocked to know that <span class="pack">mgcv</span> has a smooth construct for this situation as well, `bs='mrf'`, where `mrf` stands for <span class="emph">Markov random field</span>, which is an undirected graph.  Plotting the smooth term is akin to displaying the spatial random effect.
+You'll be shocked to know that <span class="pack">mgcv</span> has a smooth construct for this situation as well, `bs='mrf'`, where `mrf` stands for <span class="emph">Markov random field</span>, which is an undirected graph.
 
 <span class="marginnote">This example comes from [Gavin Simpson's blog](https://www.fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/), which itself is based on an article at [The Pudding](https://pudding.cool/process/regional_smoothing/).</span>
-The following will model the percentage of adults with only a high school education.  Unfortunately, when dealing with spatial data,  getting it into a format amenable to modeling, will takes some work. Specifically, <span class="pack">mgcv</span> will need a neighborhood list.  Furthermore, the data we want to use will need to be linked to the data used for mapping.
+The following will model the percentage of adults with only a high school education.  Unfortunately, when dealing with spatial data,  getting it into a format amenable to modeling will often take some work. Specifically, <span class="pack">mgcv</span> will need a neighborhood list to tell it how the different areas are linked[^nosp].  Furthermore, the data we want to use will need to be linked to the data used for mapping.
 
 The first step is to read a shapefile that has some county level information. You could get this from census data as well.
 
@@ -365,7 +403,7 @@ The first step is to read a shapefile that has some county level information. Yo
 # from https://github.com/polygraph-cool/smoothing_tutorial/blob/master/us_county_hs_only.zip
 # contiguous states c(1,4:6, 8:13, 16:42, 44:51, 53:56)
 library(sp)
-shp <- rgdal::readOGR('data/us_county_hs_only', 'us_county_hs_only')
+shp <- rgdal::readOGR('data/us_county_hs_only')
 
 ## select michigan, and convert % to proportion
 mich_df <- shp[shp$STATEFP %in% c(26), ] %>%   # add other FIPS codes as desired
@@ -376,7 +414,7 @@ mich_df <- shp[shp$STATEFP %in% c(26), ] %>%   # add other FIPS codes as desired
          county = factor(county))
 ```
 
-The following creates a neighborhood matrix[^usingmaps].  We also need names to match the values in the data, as well as the plotting data to be used later.  I just made them lower case and remove punctuation.  If you use more than one state, you will have to deal with duplicated names in some fashion.
+The following creates a neighborhood list[^usingmaps].  We also need names to match the values in the data, as well as the plotting data to be used later.  I just made them lower case and remove punctuation.  If you use more than one state, you will have to deal with duplicated names in some fashion.
 
 ```{r bind_map_data, echo=1:2}
 nb <- spdep::poly2nb(shp[shp$STATEFP %in% c(26), ], row.names = mich_df$county)
@@ -391,14 +429,14 @@ names(nb) <- attr(nb, "region.id")
 # names(mich_nb) <- attr(mich_nb, "region.id")
 ```
 
-With neighborhood in place, we can now finally run the model.  Note that the id used for the smooth, in this case `county`, needs to be a factor variable.  If not you will get an error that doesn't tell you that's that the reason.  There are a couple speed options used, but which would only be required if you're doing many states.
+With neighborhood in place, we can now finally run the model.  Note that the ID used for the smooth, in this case `county`, needs to be a factor variable.  If not, you will get an uninformative error message that doesn't tell you that's the reason.  There are a couple speed options used, but which would only be required if you're doing many states.  Again, for this demonstration we'll not include any other covariates in the model, but normally you would include any relevant ones.
 
 ```{r gam_mrf}
 ctrl <- gam.control(nthreads = 6) # use 6 parallel threads, reduce if fewer physical CPU cores
 
 gam_mrf <- gam(hsd ~ s(county, bs = 'mrf', xt = list(nb = nb)), # define MRF smooth
                data = mich_df,
-               method = 'REML', # fast version of REML smoothness selection
+               method = 'REML', 
                family = betar,  # fit a beta regression
                control = ctrl) 
 summary(gam_mrf)
@@ -407,7 +445,7 @@ mich_df = mich_df %>%
   mutate(fit = predict(gam_mrf, type='response'))
 ```
 
-Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So we create that and add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
+Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So we create some plot-specific data and add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
 
 ```{r plot_mich, out.width='40%', fig.asp=.5}
 plotdat = map_data("county", 'michigan') %>%
@@ -427,27 +465,33 @@ plotdat %>%
 
 <br>
 
-Be prepared, this will be a notable undertaking to sort out for your given situation, depending on the map objects and structure you're dealing with.
+Be prepared, as this potentially will be a notable undertaking to sort out for your given situation, depending on the map objects and structure you're dealing with.
 
 #### A Discrete Alternative
 
-One of the things that has puzzled me is just how often people deal with geography while ignoring what would almost always be inherent correlation in discrete geographical or other units.  In the social sciences for example, one will see a standard random effects approach especially, i.e. [a mixed model](https://m-clark.github.io/mixed-models-with-R/), applied in the vast majority of situations where the data comes from multiple regions.  This will allow for region specific effects, which is very useful, but it won't take advantage of the fact that the regions may be highly correlated with one another.  
+One of the things that has puzzled me is just how often people deal with geography while ignoring what would almost always be inherent correlation in discrete geographical or other units.  In the social sciences for example, one will see a standard random effects approach, i.e. [a mixed model](https://m-clark.github.io/mixed-models-with-R/), applied in the vast majority of situations where the data comes from multiple regions.  This will allow for region specific effects, which is very useful, but it won't take advantage of the fact that the regions may be highly correlated with one another with regard to the target variable of interest.
 
-We've already been using <span class="func">gamm</span>, but haven't been using its typical random effects approach.  We could do so here, but we can also just stick to the usual gam approach, as it has a basis option for random effects.  One thing that distinguishes the mixed model setting is that observations will be clustered within the geographical units.  We'll use the Munich rent data available from the <span class="pack">gamlss</span> family of packages.  It contains the Munich rent data and boundaries files of of 1999 survey. The <span class="objclass">rent99</span> data contains information about rent, year of construction, weather it has central heating, etc. Important for our purposes is the district identifier.
+We've already been using <span class="func">gamm</span>, but haven't been using the typical random effects approach with it.  We could do so here, but we can also just stick to the usual <span class="func">gam</span> function, as it has a basis option for random effects.  One thing that distinguishes the mixed model setting is that observations will be clustered within the geographical units.  So for our example, we'll use the Munich rent data available from the <span class="pack">gamlss</span> family of packages, which contains objects for the Munich rent data and boundaries files of the corresponding districts from the 1999 survey. The <span class="objclass">rent99</span> data contains information about rent, year of construction, weather it has central heating, etc. Important for our purposes is the district identifier.  The following shows the data structure.
 
 ```{r basic_re, echo=FALSE}
+# attempted to get the shapefile, but have no idea what these districts correspond to, and it definitely is not zip
+# see https://gis.stackexchange.com/questions/25060/postal-areas-for-germany
+# g_shp <- rgdal::readOGR('data/plz')
+# munich_df <- g_shp[g_shp@data$PLZ99_N %in% 80000:81999, ]
+
 library(gamlss.data)
 rent99 %>% 
   mutate_if(is.numeric, round, digits=2) %>% 
   DT::datatable(rownames = F,
-              options = list(dom='tp'))
+                options = list(dom='t'))
 ```
 
+<br>
 
-The following shows again a Markov random field smooth, and along with it a mixed model with a random effect for district.  The plots shows that, while close, they don't exactly come to the same conclusions for the district fit.
+Here again we'll use a Markov random field smooth, and for comparison a mixed model with a random effect for district.  The plots shows that, while close, they don't exactly come to the same conclusions for the district fitted values.
 
 
-```{r re_vs_mrf, echo=1:10}
+```{r re_vs_mrf, echo=1:10, out.width='40%', fig.asp=.5}
 library(gamlss.data)
 
 # prep data
@@ -466,11 +510,14 @@ gam_rent_re = gam(rent ~ s(district, bs = 're'),
 # summary(gam_rent_mrf)
 # summary(gam_rent_re)
 # plot(gam_rent_mrf)
-data_frame(mrf_fit = fitted(gam_rent_mrf), mm_fit = fitted(gam_rent_re)) %>% 
+data_frame(mrf_fit = fitted(gam_rent_mrf), 
+           mm_fit = fitted(gam_rent_re)) %>% 
   plot_ly() %>% 
-  add_markers(x=~mm_fit, y=~mrf_fit, color=I('#ff550040')) %>% 
-  theme_plotly()
-
+  add_markers(x=~mm_fit, y=~mrf_fit, color=I('#ff55001A'), size=I(10)) %>% 
+  config(displayModeBar=F) %>% 
+  theme_plotly() %>% 
+  layout(yaxis=list(title='MRF fitted values'),
+         xaxis=list(title='Mixed model fitted values'))
 
 # re_coefs = gam_rent_re$coefficients
 # names(re_coefs) = stringr::str_extract(names(re_coefs), pattern='[0-9](.)*')
@@ -483,15 +530,19 @@ data_frame(mrf_fit = fitted(gam_rent_mrf), mm_fit = fitted(gam_rent_re)) %>%
 
 <br>
 
-Next we show the plot of the estimated random effects of both models on the map of districts[^munichplot].  Gaps appear because there isn't data for every district available as a polygon, and these are districts without houses like parks, industrial etc.
+Next we show the plot of the estimated random effects of both models on the map of districts[^munichplot].  Gaps appear because there isn't data for every district available, as some are districts without houses like parks, industrial areas, etc.
 
 ```{r re_vs_mrf2, echo=FALSE, fig.asp=.4}
 # predict(gam_rent_mrf, type = 'terms')
-gam_rent_mrf2 = gam_rent_mrf
-gam_rent_mrf2$coefficients = gam_rent_re$coefficients
+# gam_rent_mrf2 = gam_rent_mrf
+# gam_rent_mrf2$coefficients = gam_rent_re$coefficients
+
+gam_rent_mrf2 = gam_rent_re
+gam_rent_mrf2$smooth = gam_rent_mrf$smooth
+
 
 par(mfrow=c(1,2))
-plot.gam(gam_rent_mrf)
+plot(gam_rent_mrf)
 plot(gam_rent_mrf2, main='Mixed Model', ylab='Mixed Model')
 graphics::layout(1)
 
@@ -501,7 +552,7 @@ graphics::layout(1)
 ```
 
 
-As expected there appears to be more color coordination with the MRF result, since neighbors are more likely to be similar.
+As we might have expected, there appears to be more color coordination with the MRF result, since neighbors are more likely to be similar.  Meanwhile, the mixed model approach does nothing to correlate one district with the ones it's next to, but may allow for more regularization.
 
 Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn't much similarity among geographical units.  One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.
 
@@ -513,4 +564,5 @@ Either of these models is appropriate, but they ask different questions. The MRF
 [^timefits]: I don't show it to keep the plot clean, but the fitted values are essentially the same.
 [^rforeverything]: Because of course there is an R package just for New Zealand census data.
 [^usingmaps]: If you look at the markdown document for this on GitHub you'll see the code for how to create this using an object from the maps packages rather than needing a shapefile.
-[^munichplot]: Unfortunately I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and a trick to superimpose the mixed model results onto the MRF data.
+[^nosp]: There are actually three different types of objects one could supply here, but unfortunately the one thing <span class="pack">mgcv</span> doesn't do is work with any spatial objects one would already have from the popular R packages used for spatial modeling and visualization.  The fact that this list *is* actually a special class object is of no importance here, it is read simply as a standard list object.
+[^munichplot]: Unfortunately I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and an attempted trick (which may not be entirely accurate) to superimpose the mixed model results onto the MRF data.
