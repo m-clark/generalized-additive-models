@@ -49,7 +49,8 @@ Here I use the data and example at [Gavin Simpon's nifty blog](https://www.fromt
 
 ```{r gamtime_setup, echo=c(1:2, 5:8), eval=-(2:3), out.width='40%', fig.asp=.5}
 ## Global temperatures
-gtemp = read.table("https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat", fill = TRUE)
+gtemp = read.table("https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat", 
+                   fill = TRUE)
 save(gtemp, file='data/global_temperatures.RData')
 load('data/global_temperatures.RData')
 
@@ -396,11 +397,9 @@ You'll be shocked to know that <span class="pack">mgcv</span> has a smooth const
 <span class="marginnote">This example comes from [Gavin Simpson's blog](https://www.fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/), which itself is based on an article at [The Pudding](https://pudding.cool/process/regional_smoothing/).</span>
 The following will model the percentage of adults with only a high school education.  Unfortunately, when dealing with spatial data,  getting it into a format amenable to modeling will often take some work. Specifically, <span class="pack">mgcv</span> will need a neighborhood list to tell it how the different areas are linked[^nosp].  Furthermore, the data we want to use will need to be linked to the data used for mapping.
 
-The first step is to read a shapefile that has some county level information. You could get this from census data as well.
-
+The first step is to read a shapefile that has some county level information. You could get this from census data as well.<span class="marginnote">Data found on [GitHub](https://github.com/polygraph-cool/smoothing_tutorial/blob/master/us_county_hs_only.zip).</span>
 
 ```{r gamspatdiscrete}
-# from https://github.com/polygraph-cool/smoothing_tutorial/blob/master/us_county_hs_only.zip
 # contiguous states c(1,4:6, 8:13, 16:42, 44:51, 53:56)
 library(sp)
 shp <- rgdal::readOGR('data/us_county_hs_only')
