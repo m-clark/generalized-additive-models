@@ -533,27 +533,31 @@ data_frame(mrf_fit = fitted(gam_rent_mrf),
 Next we show the plot of the estimated random effects of both models on the map of districts[^munichplot].  Gaps appear because there isn't data for every district available, as some are districts without houses like parks, industrial areas, etc.
 
 ```{r re_vs_mrf2, echo=FALSE, fig.asp=.5}
-# predict(gam_rent_mrf, type = 'terms')
-# gam_rent_mrf2 = gam_rent_mrf
-# gam_rent_mrf2$coefficients = gam_rent_re$coefficients
+# Basically the procedures is as follows:
+# - reorder data and polys according to district to remove any ordering ambiguity
+# - run models
+# - debug plotting the mrf until the very moment of plotting
+# - save out objects/load objects
+# - switch fits in the mrf pd object with re fits
+# In the end, polys.plot is called on the polys and fitted values, see below
 
-gam_rent_mrf2 = gam_rent_re
-gam_rent_mrf2$smooth = gam_rent_mrf$smooth
-# note, coef = fit for re, slight difference with mrf
-# cbind(sort(P[[1]]$fit[-336]), sort(coef(gam_rent_mrf)[-1])) %>% plot()
-
+load('data/mrf_re_plot.RData')
 par(mfrow=c(1,2))
-plot(gam_rent_mrf)
-plot(gam_rent_mrf2, main='Mixed Model', ylab='Mixed Model')
+plot(gam_rent_mrf_forplot)
+mgcv:::plot.mrf.smooth(x$smooth[[1]], P = pd2[[1]], scheme = 0)
 graphics::layout(1)
 
-# fv = fitted(gam_rent_re)
-# names(fv) = as.character(rent99$district)
+
+# par(mfrow=c(1,2))
+# fv = fitted(gam_rent_mrf)
 # polys.plot(rent99.polys, fv)
+# fv = fitted(gam_rent_re)
+# polys.plot(rent99.polys, fv)
+# graphics::layout(1)
 ```
 
 
-As we might have expected, there appears to be more color coordination with the MRF result (left), since neighbors are more likely to be similar.  Meanwhile, the mixed model approach does nothing to correlate one district with the ones it's next to, but may allow for more regularization.
+As we might have expected, there appears to be more color coordination with the MRF result (left), since neighbors are more likely to be similar.  Meanwhile, the mixed model approach, while showing similar patterning, does nothing inherently to correlate one district with the ones it's next to, but may allow for more regularization.
 
 Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn't much similarity among geographical units.  One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.
 

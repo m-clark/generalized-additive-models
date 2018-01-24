@@ -550,7 +550,7 @@ gam_rent_re =<span class="st"> </span><span class="kw">gam</span>(rent <span cla
 <p><br></p>
 <p>Next we show the plot of the estimated random effects of both models on the map of districts<a href="#fn42" class="footnoteRef" id="fnref42"><sup>42</sup></a>. Gaps appear because there isn’t data for every district available, as some are districts without houses like parks, industrial areas, etc.</p>
 <p><img src="GAM_files/figure-html/re_vs_mrf2-1.svg" width="768" style="display: block; margin: auto;" /></p>
-<p>As we might have expected, there appears to be more color coordination with the MRF result (left), since neighbors are more likely to be similar. Meanwhile, the mixed model approach does nothing to correlate one district with the ones it’s next to, but may allow for more regularization.</p>
+<p>As we might have expected, there appears to be more color coordination with the MRF result (left), since neighbors are more likely to be similar. Meanwhile, the mixed model approach, while showing similar patterning, does nothing inherently to correlate one district with the ones it’s next to, but may allow for more regularization.</p>
 <p>Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn’t much similarity among geographical units. One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.</p>
 </div>
 </div>
