@@ -16,7 +16,7 @@ $$\mathrm{GAM:}\quad g(\mu) = X\beta + Z\gamma$$
 
 Where $Z$ represents the basis functions of some subset of $X$ or other covariates. Thus we can have any number of smooth terms, possibly of different bases, and even combinations of them.
 
-Finally we can depict the structured additive regression, or STAR, model as a GAM + random effects ($\Upsilon$) + spatial effects ($\Xi$) + other fun stuff.
+Finally, we can depict the structured additive regression, or STAR, model as a GAM + random effects ($\Upsilon$) + spatial effects ($\Xi$) + other fun stuff.
 
 $$\mathrm{STAR:}\quad g(\mu) = X\beta + Z\gamma + \Upsilon\varpi + \Xi\varrho + \ldots \mathbf{?}\vartheta $$
 
@@ -32,7 +32,7 @@ Where $S$ is a penalty matrix of known coefficients[^Smat]. If you prefer least 
 
 $$\mathcal{Loss} = \sum (y-X\beta)^2 + \color{darkred}{\lambda B'SB}$$
 
-So if we're maximizing the likelihood will make it lower than it otherwise would have been, and vice versa in terms of a loss function.  What it means for a GAM is that we'll add a penalty for the coefficients associated with the basis functions[^secondderiv].  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly.  As $\lambda \rightarrow \infty$, the result is a linear fit because any wiggliness will add too much to the loss function. As $\lambda \rightarrow 0$, we have the opposite effect, where any wiggliness is incorporated into the model.  In <span class='pack'>mgcv</span>, by default the estimated parameters are chosen via a generalized cross validation, or <span class="emph">GCV</span>, approach, and that statistic is reported in the summary. It modifies the loss function depicted above to approximate leave-one-out cross-validation selection.
+So, if we're maximizing the likelihood will make it lower than it otherwise would have been, and vice versa in terms of a loss function.  What it means for a GAM is that we'll add a penalty for the coefficients associated with the basis functions[^secondderiv].  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly.  As $\lambda \rightarrow \infty$, the result is a linear fit because any wiggliness will add too much to the loss function. As $\lambda \rightarrow 0$, we have the opposite effect, where any wiggliness is incorporated into the model.  In <span class='pack'>mgcv</span>, by default the estimated parameters are chosen via a generalized cross validation, or <span class="emph">GCV</span>, approach, and that statistic is reported in the summary. It modifies the loss function depicted above to approximate leave-one-out cross-validation selection.
 
 
 
@@ -65,7 +65,7 @@ $$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2} + \epsilon$$
 $$\epsilon \sim N(0,.3^2)$$
 </span>
 
-```{r csbs}
+```{r csbs, eval=-6}
 knots = seq(0, 1, by=.1)
 knots = knots[-length(knots)]  # don't need the last value
 l = 1
@@ -77,6 +77,15 @@ head(bs)
 # x2 = seq(0,1, length.out=30)
 # sapply(1:3, function(k) ifelse(x2 >= knots[k], (x2-knots[k])^l, 0))
 ```
+
+```{r csbs_show, echo=FALSE}
+head(bs) %>%
+  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
+# head(bs) %>% 
+#   DT::datatable(options=list(dom='t'))
+```
+
+<br>
 
 If we plot this against our target variable $y$, it doesn't look like much.
 
@@ -95,20 +104,29 @@ plot_ly(d) %>%
 
 <br>
 
-If we multiply each basis by it's corresponding regression coefficient we can start to interpret the result. 
+If we multiply each basis by its corresponding regression coefficient we can start to interpret the result. 
 
-```{r csbsScaledPlotData, echo=c(1:4,6), out.width='45%', fig.asp=.5}
+```{r csbsScaledPlotData, echo=c(1:4,6), out.width='45%', fig.asp=.5, eval=-6}
 lmMod = lm(y ~ .-1, data=bs)  # just a regression!
 bscoefs = coef(lmMod)
 bsScaled = sweep(bs, 2, bscoefs,`*`)
 colnames(bsScaled) = c('int', paste0('X', 1:10))
 # head(bsScaled)
-round(bscoefs, 3)
+bscoefs
 
 d3 = data.frame(x, y, bsScaled) %>% 
   gather(key=bs, value=bsfunc, -x, -y, factor_key = T) %>% 
   dplyr::filter(bsfunc >= min(y) & bsfunc <= max(y))
 ```
+
+```{r csbsScaledPlotData_show, echo=FALSE}
+round(bscoefs, 3) %>% 
+  t() %>% 
+  as_data_frame() %>% 
+  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
+```
+
+<br>
 
 ```{r csbsScaledPlot, echo=F, out.width='45%', fig.asp=.5}
 # NOTE: you've tried all the easy ways and plotly won't color lines and points the same; it will either do all one color or pick a different scheme.
@@ -148,9 +166,9 @@ plot_ly() %>%
 
 <br>
 
-In the plot above, the initial dot represents the global constant ($\gamma_1$, i.e. our intercept). We have a decreasing function starting from that point onward (<span style="color:#8DD3C7">line</span>). Between .1 and .2 (<span style="color:#FFFFB3">line</span>), the coefficient is negative again, furthering the already decreasing slope (i.e. steeper downward). The fourth coefficient is positive, which means that between .2 and .3 our decreasing trend is lessening (<span style="color:#BEBADA">line</span>).  Thus our coefficients $j$ tell us the change in slope for the data from the previous section of data defined by the knots.  The lengths of the lines reflect the size of the coefficient, i.e. how dramatic the change is. If this gets you to thinking about interactions in more common model settings, you're on the right track (e.g. adding a quadratic term is just letting x have an interaction with itself; same thing is going on here).
+In the plot above, the initial dot represents the global constant ($\gamma_1$, i.e. our intercept). We have a decreasing function starting from that point onward (<span style="color:#8DD3C7">line</span>). Between .1 and .2 (<span style="color:#FFFFB3">line</span>), the coefficient is negative again, furthering the already decreasing slope (i.e. steeper downward). The fourth coefficient is positive, which means that between .2 and .3 our decreasing trend is lessening (<span style="color:#BEBADA">line</span>).  Thus, our coefficients $j$ tell us the change in slope for the data from the previous section of data defined by the knots.  The lengths of the lines reflect the size of the coefficient, i.e. how dramatic the change is. If this gets you to thinking about interactions in more common model settings, you're on the right track (e.g. adding a quadratic term is just letting x have an interaction with itself; same thing is going on here).
 
-Finally if we plot the sum of the basis functions, which is the same as taking our fitted values from a regression on the basis expansion of X, we get the following fit to the data. And we can see the trend our previous plot suggested.
+Finally, if we plot the sum of the basis functions, which is the same as taking our fitted values from a regression on the basis expansion of X, we get the following fit to the data. And we can see the trend our previous plot suggested.
 
 ```{r csbsFitPlotDegree1, echo=FALSE, out.width='40%', fig.asp=.5}
 plotData = rbind(data.frame(d, sum=fitted(lmMod)),
@@ -212,7 +230,7 @@ data.frame(x, y, fits=fitted(lmModCubicSpline), fitsGam=fitted(gam(y~s(x, bs='cr
 
 We can see that we're on the right track by using the constructor function within <span class="pack">mgcv</span> and a custom function for truncated power series like what we're using above. See the example in the help file for <span class='func'>smooth.construct</span> for the underlying truncated power series function.  I only show a few of the columns, but our by-hand construction and that used by gam are identical. 
 
-```{r gamDatavsByhandData, echo=-1}
+```{r gamDatavsByhandData, echo=-1, eval=-6}
 smooth.construct.tr.smooth.spec = function(object,data,knots)
 ## a truncated power spline constructor method function
 ## object$p.order = null space dimension
@@ -258,6 +276,12 @@ head(sm$X[,1:6])
 modelMatrix = cbind(1, xs, xs^2, xs^3, bs)
 all.equal(sm$X, modelMatrix)
 ```
+
+```{r gamDatavsByhandData_show, echo=FALSE}
+head(sm$X[,1:6]) %>% 
+  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
+```
+
 
 
 ### Preview of other bases
@@ -332,7 +356,7 @@ However, we don't really have to worry about this except in the conceptual sense
 
 ### Effective degrees of freedom
 
-In interpreting the output from <span class="pack">mgcv</span>, we'll start with the <span class="emph">effective degrees of freedom</span>, or edf. In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure. In this example there are actually 9 terms associated with this smooth, but their corresponding parameters are each penalized to some extent and thus the *effective* degrees of freedom does not equal 9. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result (Ref.df).  For more on this see `?summary.gam` and `?anova.gam`. 
+In interpreting the output from <span class="pack">mgcv</span>, we'll start with the <span class="emph">effective degrees of freedom</span>, or edf. In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure. In this example, there are actually 9 terms associated with this smooth, but their corresponding parameters are each penalized to some extent and thus the *effective* degrees of freedom does not equal 9. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result (Ref.df).  For more on this see `?summary.gam` and `?anova.gam`. 
 
 At this point you might be thinking these p-values are a bit fuzzy, and you'd be right.   As is the case with mixed models, machine learning approaches, etc., p-values are not straightforward. The gist is that in the GAM setting they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level, but then standard p-values shouldn't be used that way either.  If they are pretty low you can feel comfortable claiming statistical significance, but if you want a tight p-value you'll need to go back to using a GLM. 
 
@@ -363,7 +387,7 @@ As noted above, the GCV, or generalized cross validation score, can be taken as 
 
 The following reproduces the plots produced by <span class="pack">mgcv</span> and <span class="pack">visreg</span>.  I'll even use base R plotting to 'keep it real'.
 
-First we'll start with the basic GAM plot. First we get the term for year, i.e. the linear combination of the basis functions for year.  The <span class="pack">mgcv</span> package provides this for you via the <span class="func">predict</span> function with `type='terms'`. For non-smooth components this is just the original covariate times its corresponding coefficient.  Next we need the partial residuals, which are just the basic residuals plus the term of interest added. With the original predictor variable, we're ready to proceed.
+First we'll start with the basic GAM plot. First we get the term for year, i.e. the linear combination of the basis functions for year.  The <span class="pack">mgcv</span> package provides this for you via the <span class="func">predict</span> function with `type='terms'`. For non-smooth components, this is just the original covariate times its corresponding coefficient.  Next we need the partial residuals, which are just the basic residuals plus the term of interest added. With the original predictor variable, we're ready to proceed.
 
 
 ```{r termplot_gam, dev='svglite', eval=T}
@@ -377,7 +401,7 @@ lines(income[order(income)], income_term[order(income)])
 plot(mod_gam2, select = 1, se=F, residuals=T, pch=19, rug=F, ylim=c(-200,100), main='mgcv')
 ```
 
-Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal.
+Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default, these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal.
 
 ```{r termplot_visreg, echo=-9, eval=T}
 pred_data = pisa %>% 
@@ -437,7 +461,7 @@ plot_ly(fd_inc) %>%
 
 <br>
 
-While we are getting something we can get a sense by looking at the standard effect plot, we can get more precise with this approach if desired. Here we see that the initial flattening a little after .6 on Income, and both the peak positive slope and sharpest negative slope (blue dots).  Depending on the modeling context, one may see patterns of theoretical importance or what theory would predict.  In other cases it just gives you more to talk about.
+While we we can start to make sense of things by looking at the standard effect plot, we can get more precise with this approach if desired. Here we see that the initial flattening a little after .6 on Income, and both the peak positive slope and sharpest negative slope (blue dots).  Depending on the modeling context, one may see patterns of theoretical importance or what theory would predict.  In other cases, it just gives you more to talk about.
 
 
 

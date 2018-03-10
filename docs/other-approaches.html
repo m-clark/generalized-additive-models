@@ -7,12 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Generalized Additive Models</title>
   <meta name="description" content="Generalized Additive Models">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="Generalized Additive Models" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://m-clark.github.io/" />
-  <meta property="og:image" content="https://m-clark.github.io/img/nineteeneightyR.png" />
+  <meta property="og:url" content="https://m-clark.github.io/generalized-additive-models" />
+  <meta property="og:image" content="https://m-clark.github.io/generalized-additive-modelsimg/nineteeneightyR.png" />
   <meta property="og:description" content="Generalized Additive Models" />
   <meta name="github-repo" content="m-clark/" />
 
@@ -20,11 +20,11 @@
   <meta name="twitter:title" content="Generalized Additive Models" />
   
   <meta name="twitter:description" content="Generalized Additive Models" />
-  <meta name="twitter:image" content="https://m-clark.github.io/img/nineteeneightyR.png" />
+  <meta name="twitter:image" content="https://m-clark.github.io/generalized-additive-modelsimg/nineteeneightyR.png" />
 
 
 
-<meta name="date" content="2018-01-24">
+<meta name="date" content="2018-03-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,17 +46,13 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <script src="libs/plotly-binding-4.7.1/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <link href="libs/plotlyjs-1.29.2/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="libs/plotlyjs-1.29.2/plotly-latest.min.js"></script>
-<script src="libs/datatables-binding-0.2/datatables.js"></script>
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
@@ -112,7 +108,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://m-clark.github.io/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#0085A1; font-family:Roboto">Generalized Additive Models</span></a></li>
+<li class='before'><a href="https://m-clark.github.io/">Generalized Additive Models</a></li>
 
 <li class="divider"></li>
 <li><a href="index.html#section"></a></li>
@@ -207,8 +203,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
+<li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
+<li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
 
 </ul>
 
@@ -240,7 +236,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="response-transformation" class="section level3">
 <h3>Response Transformation</h3>
 <p>As noted, it is common practice, perhaps too common, to manually transform the response and go about things with a typical linear model. While there might be specific reasons for doing so, the primary reason applied researchers seem to do so is to make the distribution ‘more normal’ so that regular regression methods can be applied, which stems from a misunderstanding of the assumptions of standard regression. As an example, a typical transformation is to take the log, particularly to tame ‘outliers’ or deal with heteroscedasticity.</p>
-<p>While it was a convenience ‘back in the day’ because we didn’t have software or computing power to deal with a lot of data situations aptly, this is definitely not the case now. In many situations it would be better to, for example, conduct a generalized linear model with a log link or perhaps assume a different distribution for the response directly (e.g. log- or skew-normal), and many tools allow researchers to do this with ease<span class="marginnote">A lot of ‘outliers’ tend to magically go away with an appropriate choice of distribution for the data generating process.</span>.</p>
+<p>While it was a convenience ‘back in the day’ because we didn’t have software or computing power to deal with a lot of data situations aptly, this is definitely not the case now. In many situations, it would be better to, for example, conduct a generalized linear model with a log link or perhaps assume a different distribution for the response directly (e.g. log- or skew-normal), and many tools allow researchers to do this with ease<span class="marginnote">A lot of ‘outliers’ tend to magically go away with an appropriate choice of distribution for the data generating process.</span>.</p>
 <p>There are still cases where one might focus on response transformation, just not so one can overcome some particular nuisance in trying to fit a linear regression. An example might be in some forms of <span>functional data analysis</span>, where we are concerned with some function of the response that has been measured on many occasions over time. Another example would be in economics where one wishes to speak in terms of elasticities.</p>
 </div>
 <div id="the-black-box" class="section level3">
@@ -261,11 +257,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="spatial-modeling" class="section level4">
 <h4>Spatial Modeling</h4>
-<p>Additive models also provide a framework for dealing with spatially correlated data as well. As an example, a <span class="emph">Markov Random Field</span> smooth can be implemented for discrete spatial structure, such as countries or states<span class="marginnote">Incidentally, this same approach would potentially be applicable to network data as well, e.g. social networks.</span>. For the continuous spatial domain, one can use the 2d smooth as was demonstrated previously, e.g. with latitude and longitude. See also the gaussian process paragraph.</p>
+<p>Additive models also provide a framework for dealing with spatially correlated data as well. As an example, a <span class="emph">Markov Random Field</span> smooth can be implemented for discrete spatial structure, such as countries or states<span class="marginnote">Incidentally, this same approach would potentially be applicable to network data as well, e.g. social networks.</span>. For the continuous spatial domain, one can use the 2d smooth as was demonstrated previously, e.g. with latitude and longitude. See also the Gaussian process paragraph.</p>
 </div>
 <div id="structured-additive-regression-models" class="section level4">
 <h4>Structured Additive Regression Models</h4>
-<p>The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- <span class="emph">structured additive regression models</span>, or STARs. It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix. With those two components we can specify the models in almost identical fashion, and combine such effects within a single model. This results in a very powerful regression modeling strategy. Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling<span class="marginnote">The <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the mgcv package’s syntax style.</span>.</p>
+<p>The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- <span class="emph">structured additive regression models</span>, or STARs. It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix. With those two components, we can specify the models in almost identical fashion, and combine such effects within a single model. This results in a very powerful regression modeling strategy. Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling<span class="marginnote">The <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the mgcv package’s syntax style.</span>.</p>
 </div>
 <div id="gamlss" class="section level4">
 <h4>GAMLSS</h4>
@@ -278,15 +274,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="reproducing-kernel-hilbert-space" class="section level3">
 <h3>Reproducing Kernel Hilbert Space</h3>
-<p>Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>. I won’t pretend to be able to get into it here, but the idea is that the some forms of additive models can be represented in the inner product form used in RKHS approaches<a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a>. This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods. For the interested, I have an example of RKHS regression <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md">here</a>.</p>
+<p>Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>. I won’t pretend to be able to get into it here, but the idea is that some forms of additive models can be represented in the inner product form used in RKHS approaches<a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a>. This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods. For the interested, I have an example of RKHS regression <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md">here</a>.</p>
 </div>
 <div id="gaussian-processes" class="section level3">
 <h3>Gaussian Processes</h3>
 <p>We can also approach modeling by using generalizations of the Gaussian distribution. Where the Gaussian distribution is over vectors and defined by a mean vector and covariance matrix, a <span class="emph">Gaussian Process</span> is a <em>distribution over functions</em>. A function <span class="math inline">\(f\)</span> is distributed as a Gaussian Process defined by a mean function <span class="math inline">\(m\)</span> and covariance function <span class="math inline">\(k\)</span>. They have a close tie to RKHS methods, and generalize commonly used models in spatial modeling.</p>
 <p><span class="marginnote"><img src='img/gp.png' style="display:block; margin: 0 auto;"> <br> <span style="text-align:center; display:block;">Gaussian Process</span> <br>The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.</span></p>
 <p><span class="math display">\[f\sim \mathcal{GP}(m,k)\]</span></p>
-<p>In the Bayesian context we can define a prior distribution over functions and make draws from a posterior predictive distribution of <span class="math inline">\(f\)</span> once we have observed data. The reader is encouraged to consult <span class="citation">Rasmussen and Williams (<a href="#ref-rasmussen_gaussian_2006">2006</a>)</span> for the necessary detail. The <a href="http://www.gaussianprocess.org/gpml/">text</a> is free for download, and Rasmussen also provides a nice and brief <a href="http://link.springer.com/chapter/10.1007/978-3-540-28650-9_4">intro</a>. I also have some R code for <a href="https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/gp%20Examples/">demonstration</a> based on his Matlab code, as well as Bayesian examples in Stan.</p>
-<p>Suffice it to say in this context, it turns out that generalized additive models with a tensor product or cubic spline smooth are maximum a posteriori (MAP) estimates of gaussian processes with specific covariance functions and a zero mean function. In that sense one might segue nicely to gaussian processes if familiar with additive models. The <span class="pack">mgcv</span> package also allows one to use a spline form of gaussian process.</p>
+<p>In the Bayesian context, we can define a prior distribution over functions and make draws from a posterior predictive distribution of <span class="math inline">\(f\)</span> once we have observed data. The reader is encouraged to consult <span class="citation">Rasmussen and Williams (<a href="#ref-rasmussen_gaussian_2006">2006</a>)</span> for the necessary detail. The <a href="http://www.gaussianprocess.org/gpml/">text</a> is free for download, and Rasmussen also provides a nice and brief <a href="http://link.springer.com/chapter/10.1007/978-3-540-28650-9_4">intro</a>. I also have some R code for <a href="https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/gp%20Examples/">demonstration</a> based on his Matlab code, as well as Bayesian examples in Stan.</p>
+<p>Suffice it to say in this context, it turns out that generalized additive models with a tensor product or cubic spline smooth are maximum a posteriori (MAP) estimates of Gaussian processes with specific covariance functions and a zero mean function. In that sense, one might segue nicely to Gaussian processes if familiar with additive models. The <span class="pack">mgcv</span> package also allows one to use a spline form of Gaussian process.</p>
 
 </div>
 </div>
@@ -335,6 +331,7 @@ gitbook.start({
 "facebook": false,
 "twitter": false,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
@@ -363,9 +360,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

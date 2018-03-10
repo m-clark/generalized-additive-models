@@ -30,14 +30,14 @@ $$g(\mu) = \eta = X\beta$$
 $$E(y) = \mu = g^{-1}(\eta)$$
 </span>
 
-Consider again the typical linear regression.  In that situation we assume a Gaussian (i.e. normal) distribution for the response, we assume equal variance for all observations, and that there is a direct link of the linear predictor and the expected value $\mu$, i.e. $\mu = X\beta$. As such, the typical linear regression model is a generalized linear model with a Gaussian distribution and 'identity' link function.
+Consider again the typical linear regression.  In that situation, we assume a Gaussian (i.e. normal) distribution for the response, we assume equal variance for all observations, and that there is a direct link of the linear predictor and the expected value $\mu$, i.e. $\mu = X\beta$. As such, the typical linear regression model is a generalized linear model with a Gaussian distribution and 'identity' link function.
 
 To further illustrate the generalization, we consider a distribution other than the Gaussian.  <span class="marginnote">
 $$y \sim \mathcal{P}(\mu)$$
 $$\ln(\mu) = b_0+b_1X_1+b_2X_2...+b_pX_p$$
 $$\mu = e^{b_0+b_1X_1+b_2X_2...+b_pX_p}$$
 </span> 
-In the example to the right, we examine a Poisson distribution for some vector of count data.  There is only one parameter to be considered, $\mu$, since for the Poisson the mean and variance are equal.  For the Poisson, the (canonical) link function $g(.)$, is the natural log, and so relates the log of $\mu$ to the linear predictor.  As such we could also write it in terms of exponentiating the right hand side.
+In the example to the right, we examine a Poisson distribution for some vector of count data.  There is only one parameter to be considered, $\mu$, since for the Poisson the mean and variance are equal.  For the Poisson, the (canonical) link function $g(.)$, is the natural log, and so relates the log of $\mu$ to the linear predictor.  As such we could also write it in terms of exponentiating the right-hand side.
 
 While there is a great deal to further explore with regard to generalized linear models, the point here is to simply to note them as a generalization of the typical linear model with which all would be familiar after an introductory course in statistics. As we eventually move to generalized additive models, we can see them as a subsequent step in the  generalization.
 
@@ -60,7 +60,7 @@ So what's the difference?  In short, we are using smooth functions of our predic
 
 ### Fitting the Standard Linear Model
 
-In many data situations the relationship between some covariate(s) $X$ and response $y$ is not so straightforward. Consider the following plot. Attempting to fit a standard OLS regression results in the blue line, which doesn't capture the relationship very well. 
+In many data situations, the relationship between some covariate(s) $X$ and response $y$ is not so straightforward. Consider the following plot. Attempting to fit a standard OLS regression results in the blue line, which doesn't capture the relationship very well. 
 
 ```{r fitPlotsDataSetup, echo=F}
 library(dplyr); library(lazerhawk)
@@ -122,7 +122,7 @@ We haven't really moved from the standard linear model in this case, but we have
 
 ### Scatterplot Smoothing
 
-There are still other possible routes we could take. Many are probably familiar with <span class="emph">loess</span> (or lowess) regression, if only in the sense that often statistical packages may, either by default or with relative ease, add a nonparametric fit line to a scatterplot[^scattercar]. By default this is typically *lowess*, or *locally weighted scatterplot smoothing*.  
+There are still other possible routes we could take. Many are probably familiar with <span class="emph">loess</span> (or lowess) regression, if only in the sense that often statistical packages may, either by default or with relative ease, add a nonparametric fit line to a scatterplot[^scattercar]. By default, this is typically *lowess*, or *locally weighted scatterplot smoothing*.  
 
 Take a look at the following figure. For every (sorted) $x_0$ value, we choose a neighborhood around it and, for example, fit a simple regression.  As an example, let's look at $x_0$ = 3.0, and choose a neighborhood of 100 X values below and 100 values above.  
 
@@ -183,7 +183,7 @@ dxy %>%
 
 <br>
 
-The above plot shows the result from such a fitting process.  For comparison the regular regression fit is also provided. Even without using a lowess approach, we could have fit have fit a model assuming a quadratic relationship,  $y = x + x^2$, and it would result in a far better fit than the simpler model[^yquad].  While polynomial regression might suffice in some cases, the issue is that nonlinear relationships are generally not specified so easily, as we'll see next[^popcrash].
+The above plot shows the result from such a fitting process.  For comparison, the regular regression fit is also provided. Even without using a lowess approach, we could have fit have fit a model assuming a quadratic relationship,  $y = x + x^2$, and it would result in a far better fit than the simpler model[^yquad].  While polynomial regression might suffice in some cases, the issue is that nonlinear relationships are generally not specified so easily, as we'll see next[^popcrash].
 
 ```{r mcycleDataSetup, echo=FALSE, cache.rebuild=T}
 library(splines)

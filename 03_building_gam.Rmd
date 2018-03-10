@@ -54,7 +54,7 @@ Now we are dealing with some specific (additive) function of inputs, which will 
 
 $$y = f(x) + \epsilon = \sum_{j=1}^{d}B_j(x)\gamma_j + \epsilon$$
 
-Above, each $B_j$ is a <span class="emph">[basis function](https://en.wikipedia.org/wiki/Basis_function)</span> that is the transformed $x$ depending on the type of basis considered, and the $\gamma$ are the corresponding regression coefficients.  This might sound complicated, *until you realise you've done this before*.  Let's go back to the quadratic polynomial, which uses the polynomial basis.
+Above, each $B_j$ is a <span class="emph">[basis function](https://en.wikipedia.org/wiki/Basis_function)</span> that is the transformed $x$ depending on the type of basis considered, and the $\gamma$ are the corresponding regression coefficients.  This might sound complicated, *until you realize you've done this before*.  Let's go back to the quadratic polynomial, which uses the polynomial basis.
 
 $$f(x) = \gamma_0 + \gamma_1\cdot x^1 \ldots +\gamma_d\cdot x^d$$
 

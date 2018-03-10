@@ -62,7 +62,7 @@ axis(1, col='gray75', col.axis='gray33')
 graphics::layout(1)
 ```
 
-Some issues might be present, as we might be getting a little more variance with some, especially higher, fitted values. We're also a little loose in the tails of the distribution of the residuals.  Let's compare our predictions to the data.  With a strong model we might see a cigar shaped cloud converging to a line with slope 1 as the fit gets better.  We seem to be having some issues here, as the residual plot noted above.
+Some issues might be present, as we might be getting a little more variance with some, especially higher, fitted values. We're also a little loose in the tails of the distribution of the residuals.  Let's compare our predictions to the data.  With a strong model, we might see a cigar shaped cloud converging to a line with slope 1 as the fit gets better.  We seem to be having some issues here, as the residual plot noted above.
 
 
 ```{r plotlmfit, echo=FALSE, out.width='75%', fig.asp=.75}
@@ -221,7 +221,7 @@ newdat %>%
 Part of the reason is that, outside of deterministic relationships due to known physical or other causes, you are unlikely to discover a quadratic relationship between variables among found data.  Even when it appears to fit, without a lot of data it is almost certainly <span class="emph">overfit</span> due to this reason.  Fitting a polynomial is more akin to enforcing our vision of how the data should be, rather than letting the data speak for itself. Sure, it might be a good approximation some of the time, just as assuming a linear relationship is, but often it's just wishful thinking.
 
 
-Compare the previous result to the following fit from a generalized additive model.  GAMs are susceptible to extrapolation, as is every statistical model ever created.  However, the original fit (in red) is much better. Notice how it was better able to follow the straightened out data points at the high end, rather than continuing the bend that the quadratic approach enforced.
+Compare the previous result to the following fit from a generalized additive model.  GAMs are susceptible to extrapolation, as is every statistical model ever created.  However, the original fit (in red) is much better. Notice how it was better able to follow the straightened-out data points at the high end, rather than continuing the bend that the quadratic approach enforced.
 
 ```{r polyplusgam, echo=FALSE, out.width='45%', fig.asp=.5}
 newdat %>% 
@@ -276,7 +276,7 @@ plot_ly(data=d) %>%
 
 #### Polynomial regression is problematic
 
-A standard linear regression is definitely not going to capture this relationship.  As above, we could try and use polynomial regression here, e.g. fitting a quadratic or cubic function within the standard regression framework.  However, this is unrealistic at best and at worst isn't useful for complex relationships. In the following even with a polynomial of degree 15 the fit is fairly poor in many areas, and 'wiggles' in some places where there doesn't appear to be a need to.
+A standard linear regression is definitely not going to capture this relationship.  As above, we could try and use polynomial regression here, e.g. fitting a quadratic or cubic function within the standard regression framework.  However, this is unrealistic at best and at worst isn't useful for complex relationships. In the following, even with a polynomial of degree 15 the fit is fairly poor in many areas, and 'wiggles' in some places where there doesn't appear to be a need to.
 
 ```{r polyreg, echo=FALSE, out.width='45%', fig.asp=.5}
 fits = sapply(seq(3,15, 3), function(p) fitted(lm(y~poly(x,p)))) %>% 

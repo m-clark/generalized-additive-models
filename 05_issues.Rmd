@@ -18,14 +18,14 @@ Given a matrix of coefficients $S$, we can more formally note a penalized likeli
 
 $$l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta$$
 
-where $l(\beta)$ is the usual GLM likelihood function, and $\lambda_j$ are the smoothing parameters.  The part of the function including $\lambda$ penalizes curvature in the function, where $\lambda$  establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As $\lambda\rightarrow\infty$, we'd have a straight line estimate for $f_j$, while $\lambda = 0$ would allow any $f$ that interpolates the data[^lambdaset].  Technically we could specify the smoothing parameters explicitly, and the [Appendix][a detailed example] has some 'by-hand' code taken directly from @wood_generalized_2006 with only slight modifications, where the smoothing parameters are chosen and compared.
+where $l(\beta)$ is the usual GLM likelihood function, and $\lambda_j$ are the smoothing parameters.  The part of the function including $\lambda$ penalizes curvature in the function, where $\lambda$  establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As $\lambda\rightarrow\infty$, we'd have a linear estimate for $f_j$, while $\lambda = 0$ would allow any $f$ that interpolates the data[^lambdaset].  Technically we could specify the smoothing parameters explicitly, and the [Appendix][a detailed example] has some 'by-hand' code taken directly from @wood_generalized_2006 with only slight modifications, where the smoothing parameters are chosen and compared.
 
 Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before.  Smoothing parameters are selected which minimize the GCV score by default, though one has other options, e.g. using REML as with mixed models.  Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.
 
 
 ### Shrinkage & Variable Selection
 
-Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions.  An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available[^selectarg].  In this manner one can assess whether a predictor is adding anything to the model, i.e. if it's effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.
+Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions.  An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available[^selectarg].  In this manner, one can assess whether a predictor is adding anything to the model, i.e. if it's effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.
 
 
 ### Effective degrees of freedom again
@@ -44,7 +44,7 @@ the diagonal elements of $F$ are where the effective degrees of freedom for each
 
 ## Choice of Smoothing Function
 
-A number of smooths are available with the <span class="pack">mgcv</span> package, and one can learn more via the help file for <span class="func">smooth.terms</span> ([link](http://www.inside-r.org/r-doc/mgcv/smooth.terms)). In our models we have used cubic regression splines and thin plate regression splines (TPRS), the latter being the default for a GAM in this package.  As a brief summary, TPRS work well in general in terms of performance and otherwise has some particular advantages, and has a shrinkage alternative available.  One should still feel free to play around, particularly when dealing with multiple smooths, where the tensor product smooths would be better for covariates of different scales.
+A number of smooths are available with the <span class="pack">mgcv</span> package, and one can learn more via the help file for <span class="func">smooth.terms</span> ([link](http://www.inside-r.org/r-doc/mgcv/smooth.terms)). In our models, we have used cubic regression splines and thin plate regression splines (TPRS), the latter being the default for a GAM in this package.  As a brief summary, TPRS work well in general in terms of performance and otherwise has some particular advantages, and has a shrinkage alternative available.  One should still feel free to play around, particularly when dealing with multiple smooths, where the tensor product smooths would be better for covariates of different scales.
 
 
 ## Diagnostics
@@ -81,36 +81,54 @@ Given the penalization process, the exact choice of $k$ isn't too big of a deal,
 
 Wood provides three indices related to concurvity via the concurvity function, all range from 0 to 1 with 0 suggesting no problem, and 1 indicating that the function lies entirely in the space of one or more of the other smooth terms.  See `?concurvity` for details.
 
-```{r concurvity}
+```{r concurvity, eval=FALSE}
 concurvity(mod_gam2)
 ```
 
-It should probably come as little surprise that we may have an issue here given the nature of the covariates.  We can certainly make assumptions about wealthier nations' education and health status, for example.  What can we do?  Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data.  We certainly can't do that here as we are dealing with country level data.  That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores).  In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique.  For example, if it is the result of having several time- or spatially- covarying predictors, one might be able retain only those that best capture that effect.  However, the <span class="pack">mgcv</span> estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See @wood2008.
+```{r concurvity_show, echo=FALSE}
+concurvity(mod_gam2) %>% 
+  pander()
+```
+
+<br>
+
+It should probably come as little surprise that we may have an issue here given the nature of the covariates.  We can certainly make assumptions about wealthier nations' education and health status, for example.  What can we do?  Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data.  We certainly can't do that here as we are dealing with country level data.  That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores).  In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique.  For example, if it is the result of having several [time- or spatially- covarying predictors](time-and-space), one might be able retain only those that best capture that effect.  However, the <span class="pack">mgcv</span> estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See @wood2008.
 
 
 ## Prediction
 
-A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale.  Typically we'd use this on new data.  I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that.  It is worth noting again that there is an option, `type='lpmatrix'`, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values.  This can be particularly useful towards opening the [black box][The Black Box] as one learns the technique.
+A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale.  We'd typically use this on new data.  I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that.  It is worth noting again that there is an option, `type='lpmatrix'`, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values.  This can be particularly useful towards opening the [black box][The Black Box] as one learns the technique.
 
 
 ## Model Comparison Revisited
 
 We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter.  Using an extra penalty to allow coefficients to tend toward zero with the argument `select=TRUE` is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores[^gcvdifffam], and in general either of these would be viable approaches. Consider the following comparison:
 
-```{r mod_comparison}
+```{r mod_comparison, eval=-3}
 mod_1d = gam(Overall ~ s(Income) + s(Edu), data=pisa)
 mod_2d = gam(Overall ~ te(Income, Edu, bs="tp"), data=pisa)
 AIC(mod_1d, mod_2d)
 ```
 
-In some cases we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance.  We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function.  While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place.  The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.
+```{r mod_comparison_show, echo=FALSE}
+AIC(mod_1d, mod_2d) %>% pander()
+```
 
-```{r anova_nest}
+<br>
+
+In some cases, we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance.  We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function.  While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place.  The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.
+
+```{r anova_nest, eval=-4}
 mod_A = gam(Overall ~ s(Income, bs="cr", k=5) + s(Edu, bs="cr", k=5), data=pisa)
 mod_B = gam(Overall ~ ti(Income, bs="cr", k=5) + ti(Edu, bs="cr", k=5) + ti(Income, Edu, bs='cr'), data=pisa)
 
 anova(mod_A,mod_B, test="Chisq")
 ```
+```{r anova_nest_show, echo=FALSE}
+AIC(mod_1d, mod_2d) %>% pander()
+```
+
+<br>
 
 Again though, we could have just used the summary output from the second model.
 

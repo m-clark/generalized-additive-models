@@ -20,17 +20,23 @@ The data set has been constructed using average Science scores by country from t
 - **Edu**cation Index
 - **H**uman **D**evelopment **I**ndex (composed of the Income index, Health Index, and Education Index)
 
-But even before we get too far, it would be good to know our options in the world of GAMs. The [appendix][appendix] of this document has a list of some packages to be aware of, and there is quite a bit of GAM functionality available within R, even for just plotting<span class="marginnote"><span class="pack">ggplot2</span> has basic gam functionality for scatterplot smoothing.  Examples are further in the text.</span>.  For our purposes we will use <span class="pack">mgcv</span>. 
+But even before we get too far, it would be good to know our options in the world of GAMs. The [appendix][appendix] of this document has a list of some packages to be aware of, and there is quite a bit of GAM functionality available within R, even for just plotting<span class="marginnote"><span class="pack">ggplot2</span> has basic gam functionality for scatterplot smoothing.  Examples are further in the text.</span>.  We will use <span class="pack">mgcv</span> for our purposes. 
 
 The first thing to do is get the data in and do some initial inspections.
 
-```{r initial_inspection_of_pisa, echo=1, eval=T, cache=TRUE, fig.width=6, dev.args = list(bg = 'transparent')}
+```{r initial_inspection_of_pisa, echo=1}
 pisa = read.csv('data/pisasci2006.csv')
 # psych::describe(pisa)[-1,1:9]  #univariate
 pisa %>% 
   lazerhawk::num_by(vars(-Country)) %>% 
-  slice(c(9,8,3,2,7,10,6,5,1,4))  # overturn alpha order
+  slice(c(9,8,3,2,7,10,6,5,1,4))  %>% # overturn alpha order
+  pander()
+```
 
+<br>
+<br>
+
+```{r initial_inspection_of_pisa_visual, echo=FALSE, fig.width=6}
 source('funcs/better_smooth.R')
 source('funcs/better_corr.R')
 
@@ -55,7 +61,7 @@ p
 
 <br>
 
-The scatterplot matrix has quite a bit of information to spend some time with- univariate density, loess curves,  and correlations.  For our purposes we will ignore the issue regarding the haves vs. have-nots on the science scale and save that for another day. Note the surprising negative correlation between interest and overall score for science, which might remind us of [Simpson's paradox](http://en.wikipedia.org/wiki/Simpson_paradox), namely, that what occurs for the individual may not be the same for the group. One will also note that while there is a positive correlation between Income and Overall science scores, it flattens out after an initial rise. Linear fits might be difficult to swallow for some of these, but let's take a closer look.
+The scatterplot matrix has quite a bit of information to spend some time with- univariate density, loess curves,  and correlations.  For our purposes, we will ignore the issue regarding the haves vs. have-nots on the science scale and save that for another day. Note the surprising negative correlation between interest and overall score for science, which might remind us of [Simpson's paradox](http://en.wikipedia.org/wiki/Simpson_paradox), namely, that what occurs for the individual may not be the same for the group. One will also note that while there is a positive correlation between Income and Overall science scores, it flattens out after an initial rise. Linear fits might be difficult to swallow for some of these, but let's take a closer look.
 
 
 ```{r scatterwrap, echo=F}
@@ -82,7 +88,7 @@ ggplotly(width=600) %>%
 
 <br>
 
-We can see again that linear fits aren't going to do so well for some, though it might be a close approximation for interest in science and support for science.  Now let's run the smooth.  By default <span class="pack">ggplot2</span> will use a loess smoother for small data sets (i.e. < 1000 observations), but one can use the <span class="pack">mgcv</span> <span class="function">gam</span> function as a smoother via the `method` argument.
+We can see again that linear fits aren't going to do so well for some, though it might be a close approximation for interest in science and support for science.  Now let's run the smooth.  By default, <span class="pack">ggplot2</span> will use a loess smoother for small data sets (i.e. < 1000 observations), but one can use the <span class="pack">mgcv</span> <span class="function">gam</span> function as a smoother via the `method` argument.
 
 ```{r scatterwrapSmooth,  echo=F}
 scatterwrapSmooth = ggplot(aes(x=Value,y=Overall), data=dmelt) +
@@ -118,7 +124,7 @@ summary(mod_lm)
 # pander(summary(mod_lm))
 ```
 
-What are we getting here?  The same thing you get from a regular linear model, because you just ran one.  However there are a couple things to look at.  The coefficient is statistically significant, but serves as a reminder that it usually a good idea to scale predictor variables so that the effect is more meaningful.  Here, moving one unit on Income is akin from going broke to being the richest country.  But in a more meaningful sense, if we moved from say, .7 to .8, we'd expect an increase of about 35 points on the science score.  We also see the deviance explained[^devianceexplained], which serves as a generalization of R-squared, and in this case, it actually is equivalent to the unadjusted R-squared.  Likewise there is the familiar adjusted version of it to account for small sample size and model complexity.  The scale estimate is the scaled deviance, which here is equivalent to the residual sums of squares.  The GCV score we will save for when we run a GAM.
+What are we getting here?  The same thing you get from a regular linear model, because you just ran one.  However, there are a couple things to look at.  The coefficient is statistically significant, but serves as a reminder that it usually a good idea to scale predictor variables so that the effect is more meaningful.  Here, moving one unit on Income is akin from going broke to being the richest country.  But in a more meaningful sense, if we moved from say, .7 to .8, we'd expect an increase of about 35 points on the science score.  We also see the deviance explained[^devianceexplained], which serves as a generalization of R-squared, and in this case, it actually is equivalent to the unadjusted R-squared.  Likewise, there is the familiar adjusted version of it to account for small sample size and model complexity.  The scale estimate is the scaled deviance, which here is equivalent to the residual sums of squares.  The GCV score we will save for when we run a GAM.
 
 ### GAM
 
@@ -238,7 +244,7 @@ summary(mod_gam1)
 The first thing to note is that, aside from the smooth part, our model code is similar to what we're used to with core R functions such as <span class="func">lm</span> and <span class="func">glm</span>.  In the summary, we first see the distribution assumed, as well as the link function used, in this case normal and identity, respectively, which to iterate, had we had no smoothing, would result in a SLiM.  After that we see that the output is separated into <span class="emph">parametric</span> and <span class="emph">smooth</span>, or nonparametric parts.<span class="marginnote">As an aside, the term *nonparametric* has at least two general uses in the statistical world. [Wikipedia](https://en.wikipedia.org/wiki/Nonparametric_statistics) has a nice delineation.</span>  In this case, the only parametric component is the intercept, but it's good to remember that you are not bound to smooth every effect of interest, and indeed, as we will discuss in more detail later, part of the process may involve refitting the model with terms that were found to be linear for the most part anyway.  The smooth component of our model regarding a country's income and its relationship with overall science score suggests it is statistically significant, but there are a couple of things in the model summary that would be unfamiliar.  
 
 <span class="marginnote">This part regarding effective degrees of freedom should ring a bell for those who use the <span class="pack">lme4</span> package for mixed models. All of this applies there too, and may provide more insight as to why they don't even provide p-values as a default. See the [Other Approaches][Categorical variables] section.</span>
-We'll start with the <span class="emph">effective degrees of freedom</span>, or `edf`.  In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure, something that will be discussed more later[^edfinit]. In this situation, we are still trying to minimize the residual sums of squares, but we also have a built in penalty for 'wiggliness' of the fit, where in general we try to strike a balance between an undersmoothed fit and an oversmoothed fit. The default p-value for the test is based on the effective degrees of freedom and the rank $r$ of the covariance matrix for the coefficients for a particular smooth, so here, *conceptually*, it is the p-value associated with the $F(r, n-edf)$.  However there are still other issues to be concerned about, and `?summary.gam` will provide your first step down that particular rabbit hole. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result[^refdf].  At this point you might be thinking these p-values are a bit fuzzy, and you'd be right. The gist is, they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level[^p05], but if they are pretty low you can feel comfortable claiming statistical significance, which of course is the end all, be all, of the scientific endeavor- right?
+We'll start with the <span class="emph">effective degrees of freedom</span>, or `edf`.  In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure, something that will be discussed more later[^edfinit]. In this situation, we are still trying to minimize the residual sums of squares, but we also have a built-in penalty for 'wiggliness' of the fit, where in general we try to strike a balance between an undersmoothed fit and an oversmoothed fit. The default p-value for the test is based on the effective degrees of freedom and the rank $r$ of the covariance matrix for the coefficients for a particular smooth, so here, *conceptually*, it is the p-value associated with the $F(r, n-edf)$.  However, there are still other issues to be concerned about, and `?summary.gam` will provide your first step down that particular rabbit hole. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result[^refdf].  At this point you might be thinking these p-values are a bit fuzzy, and you'd be right. The gist is, they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level[^p05], but if they are pretty low you can feel comfortable claiming statistical significance, which of course is the end all, be all, of the scientific endeavor- right?
 
 ```{r pvalue, echo=FALSE, eval=FALSE}
 # pf(fval5, mod_gam1$smooth[[1]]$df,mod_gam1$df.res,lower=F)
@@ -267,7 +273,7 @@ mtext(side = 2, text = axTicks(2), at = axTicks(2), col = "gray25", line = 1)
 # axis(1, col='gray50', col.ticks='gray75')
 ```
 
-Note that this will only plot the smooth terms in the model<span class="marginnote">A more visually appealing alternative can be found with the <span class="pack">visreg</span> package, which will plot all effects, and by default be nicer looking and easier to customize. You can simply feed the model to the <span class="func">visreg</span> function. It also has 2 and 3d capabilities like the corresponding <span class="pack">mgcv</span> functions.</span>. The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single predictor case one can also revisit the previous graph.  
+Note that this will only plot the smooth terms in the model<span class="marginnote">A more visually appealing alternative can be found with the <span class="pack">visreg</span> package, which will plot all effects, and by default be nicer looking and easier to customize. You can simply feed the model to the <span class="func">visreg</span> function. It also has 2 and 3d capabilities like the corresponding <span class="pack">mgcv</span> functions.</span>. The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single predictor case, one can also revisit the previous graph.  
 
 
 ### Model Comparison
@@ -416,7 +422,7 @@ with(lapply(tt, round, 2),
 
 <br>
 
-First and foremost the figure reflects the individual plots, and we can see that middling to high on Education and high on Income generally produces the highest scores.  Conversely, being low on both the Education and Income indices are associated with poor Overall science scores. However, while interesting, these respective smooths were created separately of one another, and there is another way we might examine how these two effects work together in predicting the response.  
+First and foremost, the figure reflects the individual plots, and we can see that middling to high on Education and high on Income generally produces the highest scores.  Conversely, being low on both the Education and Income indices are associated with poor Overall science scores. However, while interesting, these respective smooths were created separately of one another, and there is another way we might examine how these two effects work together in predicting the response.  
 
 So let's take a look at another approach, continuing the focus on visual display. It may not be obvious at all, but one can utilize smooths of more than one variable, in effect, a smooth of the smooths of the variables that go into it.  This is akin to an interaction in typical model settings[^ti]. Let's create a new model to play around with this feature. After fitting the model, I provide a visualization for comparison to the previous, as well as a 3D view one can rotate to their liking.
 
@@ -469,7 +475,7 @@ One can also, for example, examine interactions between a smooth and a linear te
 
 ### Model Comparison
 
-As before, we can examine indices such as GCV or perhaps adjusted R-squared, which both suggest our GAM performs considerably better. Statistically we can compare the two models with the anova function as before.  
+As before, we can examine indices such as GCV or perhaps adjusted R-squared, which both suggest our GAM performs considerably better. Statistically we can compare the two models with <span class="func">anova</span> as before.  
 
 ```{r mod_lm2_mod_gam2_anova}
 anova(mod_lm2, mod_gam2, test="Chisq")
@@ -486,9 +492,9 @@ One can verify this by running the same model via the <span class="func">glm</sp
 
 [^polyreg]: See <span class="func">poly</span> for how to fit a polynomial in R.
 
-[^edfinit]: In this example there are actually 9 terms associated with this smooth, but they are each 'penalized' to some extent and thus the edf does not equal 9.
+[^edfinit]: In this example, there are actually 9 terms associated with this smooth, but they are each 'penalized' to some extent and thus the edf does not equal 9.
 
-[^refdf]: Here it is noted `Ref.df`. In the past there were four or five p-values to choose from, but now the option has settled to Bayesian-esque vs. frequentist approaches.  The full story of edf, p-values and related is scattered throughout Wood's text. See also `?anova.gam`.
+[^refdf]: Here it is noted `Ref.df`. In the past, there were four or five p-values to choose from, but now the option has settled to Bayesian-esque vs. frequentist approaches.  The full story of edf, p-values and related is scattered throughout Wood's text. See also `?anova.gam`.
 
 [^p05]: But then, standard p-values shouldn't be used that way either.
 

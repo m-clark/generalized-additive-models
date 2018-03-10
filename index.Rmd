@@ -31,11 +31,12 @@ output:
 always_allow_html: yes
 documentclass: book
 # bibliography: refs.bib
+font-import: http://fonts.googleapis.com/css?family=Roboto|Open+Sans|Stalemate|Alex+Brush
 biblio-style: apalike
 link-citations: yes
 description: "Generalized Additive Models"    # leaving this blank will actually screw things up in the same way as the url issue; even commenting will
 cover-image: img/nineteeneightyR.png
-url: 'https\://m-clark.github.io/'  # evidently the \: is required or you'll get text in the title/toc area
+url: 'https\://m-clark.github.io/generalized-additive-models'  # evidently the \: is required or you'll get text in the title/toc area
 favicon: 'img/R.ico'
 github-repo:  m-clark/
 bibliography: refs.bib
@@ -62,8 +63,8 @@ knitr::include_graphics('img/nineteeneightyR.png', dpi = NA)
 
 
 ```{r ccimg, fig.align='center',  out.width=0, fig.show='hide', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
-knitr::include_graphics('img/ccbysa.png', dpi = NA)
-knitr::include_graphics('img/mc.png', dpi = NA)
+# knitr::include_graphics('img/ccbysa.png', dpi = NA)
+# knitr::include_graphics('img/mc.png', dpi = NA)
 ```
 
 

@@ -20,5 +20,5 @@ better, and can spread the word**.
 <br>
 
 <div style="text-align:center">
-<span class="" style="font-size:150%">Best of luck with your research!</span>
+<span class="" style="font-size:200%; font-family:'Alex Brush'">Best of luck with your research!</span>
 </div>

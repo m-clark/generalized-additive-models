@@ -130,7 +130,7 @@ title(main='Autocorrelation of Annual Temperature Anomalies',col.main='gray25') 
 
 What the plot shows is the correlation of the values with themselves at different <span class="emph">lags</span>, or time spacings.  Lag 0 is it's correlation with itself, so the value is 1.0.  It's correlation with itself at the previous time point, i.e. lag = 1, is `r round(acfdat$acf[2], 2)`, it's correlation with itself at two time points ago is slightly less, `r round(acfdat$acf[3], 2)`, and the decreasing trend continues slowly.  The dotted lines indicate a 95% confidence interval around zero, meaning that the autocorrelation is still significant 25 years apart.
 
-With our model the issue remains in that there is still autocorrelation among the residuals, at least at lag 1.
+With our model, the issue remains in that there is still autocorrelation among the residuals, at least at lag 1.
 
 ```{r ar_res, echo=FALSE, out.width='75%', fig.asp=.5}
 acfdat = acf(resid(hot_gam), 
@@ -154,7 +154,7 @@ axis(side = 2, col='gray75', col.ticks = 'gray50', col.axis='gray35')
 title(main='Autocorrelation of Residuals',col.main='gray25') 
 ```
 
-The practical implications of autocorrelated residuals is that this positive correlation would result in variance estimates that are too low.  However, we can take this into account with a slight tweaking of our model to incorporate such autocorrelation.  For our purposes we'll switch to the <span class="func">gamm</span> function.  It adds additional functionality for generalized additive *mixed* models, though we can just use it to incorporate autocorrelation of the residuals.  In running this, two sets of output are provided, one in our familiar <span class="objclass">gam</span> model object, and the other as a <span class="objclass">lme</span> object from the <span class="pack">nlme</span> package.
+The practical implications of autocorrelated residuals is that this positive correlation would result in variance estimates that are too low.  However, we can take this into account with a slight tweaking of our model to incorporate such autocorrelation.  For our purposes, we'll switch to the <span class="func">gamm</span> function.  It adds additional functionality for generalized additive *mixed* models, though we can just use it to incorporate autocorrelation of the residuals.  In running this, two sets of output are provided, one in our familiar <span class="objclass">gam</span> model object, and the other as a <span class="objclass">lme</span> object from the <span class="pack">nlme</span> package.
 
 ```{r gam_ar}
 hot_gam_ar = gamm(Annual ~ s(Year), data=gtemp, correlation=corAR1(form = ~Year))
@@ -194,7 +194,7 @@ plotdat1 %>%
 
 <br>
 
-We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  Thus in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
+We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  Thus, in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
 
 ### Space
 
@@ -285,7 +285,7 @@ map_data('nz') %>%
 
 <br>
 
-So we can go ahead and run a model predicting median income solely by geography.  We'll use a gaussian process basis, and allowing latitude and longitude to interact (bumping up the default wiggliness possible to allow for a little more nuance).  What the GAM will allow us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. 
+So we can go ahead and run a model predicting median income solely by geography.  We'll use a Gaussian process basis, and allowing latitude and longitude to interact (bumping up the default wiggliness possible to allow for a little more nuance).  What the GAM will allow us to do is smooth our predictions beyond the points we have in the data to get a more complete picture of income distribution across the whole area. 
 
 <span class="marginnote">The `m=` argument allows one to specify different types of covariance functions.</span>
 
@@ -349,6 +349,7 @@ nz_map_data %>%
   plot_geo(x=~lon, y=~lat) %>% 
   layout(title = 'Expected Income',
          geo = g1) %>%
+  config(displayModeBar=FALSE) %>% 
   add_markers(x=~lon, y=~lat, color =~Income, data=heatvals, opacity=.5, colors=viridis::plasma(50), size=I(3))# %>%
 ```
 
@@ -356,7 +357,7 @@ nz_map_data %>%
 
 <br>
 
-Using the gaussian process smooth produces a result that is akin to a traditional spatial modeling technique called <span class="emph">kriging</span>.  There are many other covariates to play with, as well as other bases that would be applicable, so you should feel free to play around with models that include those. 
+Using the Gaussian process smooth produces a result that is akin to a traditional spatial modeling technique called <span class="emph">kriging</span>.  There are many other covariates to play with, as well as other bases that would be applicable, so you should feel free to play around with models that include those. 
 
 Alternatively, as we did with the time series, we could instead deal with <span class="emph">spatial autocorrelation</span> by specifying a model for the residual structure.  First, we can simply test for spatial autocorrelation in the income variable via the well-worn <span class="emph">Moran's I</span> statistic.  Given some weight matrix that specifies the neighborhood structure, such that larger values mean points are closer to one another, we can derive an estimate. The following demonstrates this via the <span class="pack">ape</span> package.
 
@@ -444,14 +445,14 @@ mich_df = mich_df %>%
   mutate(fit = predict(gam_mrf, type='response'))
 ```
 
-Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So we create some plot-specific data and add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
+Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So, we create some plot-specific data, and then add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
 
-```{r plot_mich, out.width='40%', fig.asp=.5}
+```{r plot_mich, out.width='40%', fig.asp=.5, echo=-4}
 plotdat = map_data("county", 'michigan') %>%
   left_join(mich_df, by = c('subregion' = 'county')) %>% 
   mutate(fillcol = cut(fit, breaks=seq(.25, .45, by = .025)))
 
-plotdat %>% 
+p = plotdat %>% 
   group_by(subregion) %>%
   plot_ly(x = ~long, y = ~lat, 
           color = ~fillcol, 
@@ -460,6 +461,8 @@ plotdat %>%
   add_polygons(line = list(width = 0.4)) %>%
   layout(title = "% with Maximum of HS Education in Michigan") %>% 
   theme_blank() 
+p %>% 
+  config(displayModeBar=FALSE)
 ```
 
 <br>
@@ -481,13 +484,15 @@ We've already been using <span class="func">gamm</span>, but haven't been using 
 library(gamlss.data)
 rent99 %>% 
   mutate_if(is.numeric, round, digits=2) %>% 
-  DT::datatable(rownames = F,
-                options = list(dom='t'))
+  head(15) %>% 
+  pander(split.table=Inf)
+  # DT::datatable(rownames = F,
+  #               options = list(dom='t'))
 ```
 
 <br>
 
-Here again we'll use a Markov random field smooth, and for comparison a mixed model with a random effect for district.  The plots shows that, while close, they don't exactly come to the same conclusions for the district fitted values.
+Here again we'll use a Markov random field smooth, and for comparison a mixed model with a random effect for district.  The plots show that, while close, they don't exactly come to the same conclusions for the district fitted values.
 
 
 ```{r re_vs_mrf, echo=1:10, out.width='40%', fig.asp=.5}
@@ -569,4 +574,4 @@ Either of these models is appropriate, but they ask different questions. The MRF
 [^rforeverything]: Because of course there is an R package just for New Zealand census data.
 [^usingmaps]: If you look at the markdown document for this on GitHub you'll see the code for how to create this using an object from the maps packages rather than needing a shapefile.
 [^nosp]: There are actually three different types of objects one could supply here, but unfortunately the one thing <span class="pack">mgcv</span> doesn't do is work with any spatial objects one would already have from the popular R packages used for spatial modeling and visualization.  The fact that this list *is* actually a special class object is of no importance here, it is read simply as a standard list object.
-[^munichplot]: Unfortunately I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and an attempted trick (which may not be entirely accurate) to superimpose the mixed model results onto the MRF data.
+[^munichplot]: Unfortunately, I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and an attempted trick (which may not be entirely accurate) to superimpose the mixed model results onto the MRF data.
