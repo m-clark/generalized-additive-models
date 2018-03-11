@@ -34,11 +34,11 @@ documentclass: book
 font-import: http://fonts.googleapis.com/css?family=Roboto|Open+Sans|Stalemate|Alex+Brush
 biblio-style: apalike
 link-citations: yes
-description: "Generalized Additive Models"    # leaving this blank will actually screw things up in the same way as the url issue; even commenting will
-cover-image: img/nineteeneightyR.png
-url: 'https\://m-clark.github.io/generalized-additive-models'  # evidently the \: is required or you'll get text in the title/toc area
+description: "An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R.  Discussion includes common approaches, standard extensions, and relations to other techniques.  More technical modeling details are described and demonstrated as well."
+cover-image: 'img/nineteeneightyR.png'
+url: 'https\://m-clark.github.io/generalized-additive-models/'  # evidently the \: is required or you'll get text in the title/toc area
 favicon: 'img/R.ico'
-github-repo:  m-clark/
+github-repo:  'm-clark/generalized-additive-models/'
 bibliography: refs.bib
 nocite: | 
   @wood_generalized_2006,  @wood_generalized_2017, @venables_modern_2002, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
