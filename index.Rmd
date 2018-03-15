@@ -51,8 +51,11 @@ knitr::opts_chunk$set(cache.rebuild=F, cache = T, message = F, warning = F, R.op
                       fig.width=8, fig.align = 'center', comment=NA, dev='svglite', dev.args = list(bg = 'transparent'))
 ```
 
-```{r loadpacks, include=FALSE, cache=FALSE}
+```{r loadpacks, include=FALSE, cache=FALSE, results='hide'}
 library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk); library(broom)
+mapply(function(o, v) panderOptions(o, v),
+       c('keep.trailing.zeros', 'round', 'table.split.table', 'table.split.cells'), 
+       c(TRUE, 2, Inf, Inf))
 ```
 
 #
