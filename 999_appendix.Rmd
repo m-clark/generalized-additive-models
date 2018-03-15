@@ -36,6 +36,58 @@
 [VGAM](http://cran.r-project.org/web/packages/VGAM/): Vector generalized linear and additive models, and associated models.
 
 
+## A comparison to mixed models
+
+We noted previously that there were ties between generalized additive and mixed models.  Aside from the identical matrix representation noted in the [technical section][technical details], one of the key ideas is that the penalty parameter for the smooth coefficients reflects the ratio of the residual variance to the variance components for the random effects (see Fahrmeier et al., 2013, p. 483).  Conversely, we can recover the variance components by dividing the scale by the penalty parameter.
+
+To demonstrate this, we can set things up by running what will amount to equivalent models in both <span class="pack">mgcv</span> and <span class="pack">lme4</span> using the <span class="objclass">sleepstudy</span> data set that comes from the latter.<span class="marginnote">See `?sleepstudy` for details.</span>  I'll run a model with random intercepts and slopes, and for this comparison the two random effects will not be correlated. We will use the standard smoothing approach in <span class="pack">mgcv</span>, just with the basis specification for random effects - `bs='re'`.  In addition, we'll use restricted maximum likelihood as is the typical default in mixed models. 
+
+```{r mixed_vs_gam}
+library(lme4)
+mixed_model = lmer(Reaction ~ Days + (1|Subject) + (0+Days|Subject), 
+                   data=sleepstudy)
+ga_model = gam(Reaction ~  Days + s(Subject, bs='re') + s(Days, Subject, bs='re'), 
+               data=sleepstudy, method = 'REML')
+```
+
+<br>
+
+We can see they agree on the fixed effects, but our output for the GAM is in the usual, albeit, uninterpretable form. So, we'll have to translate the smooth terms from the GAM to variance components as in the mixed model.
+
+<br>
+
+```{r mixed_vs_gam_summaries}
+summary(mixed_model)
+summary(ga_model)
+```
+
+<br>
+
+Conceptually, we can demonstrate the relationship with the following code that divides the scale by the penalty parameters, one for each of the smooth terms.  However, there has been some rescaling behind the scenes regarding the Days effect, so we have to rescale it to get what we need.
+
+<br>
+
+```{r mixed_vs_gam_est_vcomp, results='hide'}
+rescaled_results = c(ga_model$reml.scale/ga_model$sp[1],
+                     ga_model$reml.scale/(ga_model$sp[2]/ga_model$smooth[[2]]$S.scale), 
+                     NA)
+lmer_vcov = VarCorr(mixed_model) %>% data.frame()
+gam_vcov = data.frame(var=rescaled_results, gam.vcomp(ga_model))
+```
+```{r mixed_vs_gam_est_vcomp_pretty, echo=FALSE}
+lmer_vcov %>% 
+  select(-var2) %>% 
+  pander(justify='lrrr')
+gam_vcov %>% 
+  pander(justify='lrrrr')
+br()
+```
+
+Think about it this way.  Essentially what is happening behind the scenes is that effect interactions with the grouping variable are added to the model matrix (e.g. `~ ... + Days:Subject - 1`)[^gam_modmat].  The coefficients pertaining to the interaction terms are then penalized in the typical GAM estimation process.  A smaller estimated penalty parameter suggests more variability in the random effects. A larger penalty means more shrinkage of the random intercepts and slopes toward the population level (fixed) effects.
+
+Going further, we can think of smooth terms as adding random effects to the linear component[^gpreg].  A large enough penalty and the result is simply the linear part of the model. In this example here, that would be akin to relatively little random effect variance.
+
+
 ## Time and Space
 
 <span class="newthought">One of the things to know about GAMs is just how flexible they are</span>. Along with all that we have mentioned, they can also be applied to situations where one is interested in temporal trends or the effects of spatial aspects of the data.  The penalized regression approach used by GAMs can easily extend such situations, and the <span class="pack">mgcv</span> package in particular has a lot of options here.
@@ -570,8 +622,17 @@ Either of these models is appropriate, but they ask different questions. The MRF
 # References
 
 [^Xlme]: All the same variables in the lme output start with X. This is more to avoid confusion in the functions behind the scenes.
+
 [^timefits]: I don't show it to keep the plot clean, but the fitted values are essentially the same.
+
 [^rforeverything]: Because of course there is an R package just for New Zealand census data.
+
 [^usingmaps]: If you look at the markdown document for this on GitHub you'll see the code for how to create this using an object from the maps packages rather than needing a shapefile.
+
 [^nosp]: There are actually three different types of objects one could supply here, but unfortunately the one thing <span class="pack">mgcv</span> doesn't do is work with any spatial objects one would already have from the popular R packages used for spatial modeling and visualization.  The fact that this list *is* actually a special class object is of no importance here, it is read simply as a standard list object.
+
 [^munichplot]: Unfortunately, I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and an attempted trick (which may not be entirely accurate) to superimpose the mixed model results onto the MRF data.
+
+[^gam_modmat]: You can verify this by running `model.matrix(ga_model)`.
+
+[^gpreg]: Much like with Gaussian process regression, where it's perhaps a bit more explicit.

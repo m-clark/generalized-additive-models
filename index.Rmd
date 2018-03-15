@@ -52,7 +52,7 @@ knitr::opts_chunk$set(cache.rebuild=F, cache = T, message = F, warning = F, R.op
 ```
 
 ```{r loadpacks, include=FALSE, cache=FALSE, results='hide'}
-library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk); library(broom)
+library(magrittr); library(pander); library(plotly); library(tidyverse); library(lazerhawk); library(broom); library(htmltools)
 mapply(function(o, v) panderOptions(o, v),
        c('keep.trailing.zeros', 'round', 'table.split.table', 'table.split.cells'), 
        c(TRUE, 2, Inf, Inf))
