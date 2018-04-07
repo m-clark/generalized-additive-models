@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-03-14">
+<meta name="date" content="2018-04-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -890,9 +890,15 @@ gam_rent_re =<span class="st"> </span><span class="kw">gam</span>(rent <span cla
 <p>Next we show the plot of the estimated random effects of both models on the map of districts<a href="#fn44" class="footnoteRef" id="fnref44"><sup>44</sup></a>. Gaps appear because there isn’t data for every district available, as some are districts without houses like parks, industrial areas, etc.</p>
 <p><img src="GAM_files/figure-html/re_vs_mrf2-1.svg" width="768" style="display: block; margin: auto;" /></p>
 <p>As we might have expected, there appears to be more color coordination with the MRF result (left), since neighbors are more likely to be similar. Meanwhile, the mixed model approach, while showing similar patterning, does nothing inherently to correlate one district with the ones it’s next to, but may allow for more regularization.</p>
-<p>Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn’t much similarity among geographical units. One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.</p>
+<p>Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn’t much similarity among geographical units. One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly. In addition, there are recent approaches that would allow for a mix of both the unstructured and spatial random effects. See <span class="citation">Riebler et al. (<a href="#ref-riebler2016intuitive">2016</a>)</span><a href="#fn45" class="footnoteRef" id="fnref45"><sup>45</sup></a>.</p>
 </div>
 </div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-riebler2016intuitive">
+<p>Riebler, Andrea, Sigrunn H Sørbye, Daniel Simpson, and Håvard Rue. 2016. “An Intuitive Bayesian Spatial Model for Disease Mapping That Accounts for Scaling.” <em>Statistical Methods in Medical Research</em> 25 (4). SAGE Publications Sage UK: London, England: 1145–65.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -906,6 +912,7 @@ gam_rent_re =<span class="st"> </span><span class="kw">gam</span>(rent <span cla
 <li id="fn42"><p>There are actually three different types of objects one could supply here, but unfortunately the one thing <span class="pack">mgcv</span> doesn’t do is work with any spatial objects one would already have from the popular R packages used for spatial modeling and visualization. The fact that this list <em>is</em> actually a special class object is of no importance here, it is read simply as a standard list object.<a href="appendix.html#fnref42">↩</a></p></li>
 <li id="fn43"><p>If you look at the markdown document for this on GitHub you’ll see the code for how to create this using an object from the maps packages rather than needing a shapefile.<a href="appendix.html#fnref43">↩</a></p></li>
 <li id="fn44"><p>Unfortunately, I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and an attempted trick (which may not be entirely accurate) to superimpose the mixed model results onto the MRF data.<a href="appendix.html#fnref44">↩</a></p></li>
+<li id="fn45"><p>Stan developer Mitzi Morris provided an example of the model in Stan to the Ann Arbor R Users Group, but it wasn’t yet available at the time I last updated this document. See the <a href="http://annarborrusergroup.github.io/">A2RUG site</a> for April 2018 in case it is posted there.<a href="appendix.html#fnref45">↩</a></p></li>
 </ol>
 </div>
             </section>

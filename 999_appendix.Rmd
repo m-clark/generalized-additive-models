@@ -615,7 +615,7 @@ graphics::layout(1)
 
 As we might have expected, there appears to be more color coordination with the MRF result (left), since neighbors are more likely to be similar.  Meanwhile, the mixed model approach, while showing similar patterning, does nothing inherently to correlate one district with the ones it's next to, but may allow for more regularization.
 
-Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn't much similarity among geographical units.  One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.
+Either of these models is appropriate, but they ask different questions. The MRF approach may produce better results since it takes into account the potential similarity among neighbors, but also may not be necessary if there isn't much similarity among geographical units.  One should also think about whether the other covariates in the model may account spatial autocorrelation or not, or unspecified unit effects, and proceed accordingly.  In addition, there are recent approaches that would allow for a mix of both the unstructured and spatial random effects. See @riebler2016intuitive[^mitzi].
 
 
 
@@ -636,3 +636,5 @@ Either of these models is appropriate, but they ask different questions. The MRF
 [^gam_modmat]: You can verify this by running `model.matrix(ga_model)`.
 
 [^gpreg]: Much like with Gaussian process regression, where it's perhaps a bit more explicit.
+
+[^mitzi]: Stan developer Mitzi Morris provided an example of the model in Stan to the Ann Arbor R Users Group, but it wasn't yet available at the time I last updated this document. See the [A2RUG site](http://annarborrusergroup.github.io/) for April 2018 in case it is posted there.

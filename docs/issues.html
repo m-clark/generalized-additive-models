@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-03-14">
+<meta name="date" content="2018-04-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -321,7 +321,7 @@ s(Health) 9.00 1.00    0.90    0.18</code></pre>
 </tbody>
 </table>
 <p><br></p>
-<p>It should probably come as little surprise that we may have an issue here given the nature of the covariates. We can certainly make assumptions about wealthier nations’ education and health status, for example. What can we do? Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data. We certainly can’t do that here as we are dealing with country level data. That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores). In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique. For example, if it is the result of having several <a href="time-and-space">time- or spatially- covarying predictors</a>, one might be able retain only those that best capture that effect. However, the <span class="pack">mgcv</span> estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See <span class="citation">Wood (<a href="#ref-wood2008">2008</a>)</span>.</p>
+<p>It should probably come as little surprise that we may have an issue here given the nature of the covariates. We can certainly make assumptions about wealthier nations’ education and health status, for example. What can we do? Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data. We certainly can’t do that here as we are dealing with country level data. That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores). In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique. For example, if it is the result of having several <a href="appendix.html#time-and-space">time- or spatially- covarying predictors</a>, one might be able retain only those that best capture that effect. However, the <span class="pack">mgcv</span> estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See <span class="citation">Wood (<a href="#ref-wood2008">2008</a>)</span>.</p>
 </div>
 </div>
 <div id="prediction" class="section level2">
