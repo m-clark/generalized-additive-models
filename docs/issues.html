@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-04-07">
+<meta name="date" content="2018-07-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -56,41 +56,69 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/tufte.css" type="text/css" />
@@ -234,18 +262,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math display">\[f_j = \tilde{X}_j \tilde{\beta}_j\]</span></p>
 <p>Given a matrix of coefficients <span class="math inline">\(S\)</span>, we can more formally note a penalized likelihood function:</p>
 <p><span class="math display">\[l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta\]</span></p>
-<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As <span class="math inline">\(\lambda\rightarrow\infty\)</span>, we’d have a linear estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>. Technically we could specify the smoothing parameters explicitly, and the <a href="technical-details.html#a-detailed-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
+<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As <span class="math inline">\(\lambda\rightarrow\infty\)</span>, we’d have a linear estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>. Technically we could specify the smoothing parameters explicitly, and the <a href="technical-details.html#a-detailed-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
 <p>Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before. Smoothing parameters are selected which minimize the GCV score by default, though one has other options, e.g. using REML as with mixed models. Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.</p>
 <div id="shrinkage-variable-selection" class="section level3">
 <h3>Shrinkage &amp; Variable Selection</h3>
-<p>Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions. An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>. In this manner, one can assess whether a predictor is adding anything to the model, i.e. if it’s effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.</p>
+<p>Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions. An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a>. In this manner, one can assess whether a predictor is adding anything to the model, i.e. if it’s effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.</p>
 </div>
 <div id="effective-degrees-of-freedom-again" class="section level3">
 <h3>Effective degrees of freedom again</h3>
 <p>If we define a matrix <span class="math inline">\(F\)</span> that maps the unpenalized estimates of <span class="math inline">\(\beta\)</span> to the penalized estimates such that</p>
 <p><span class="math display">\[F = (X^T X + S)^{-1} X^T X\]</span></p>
 <p>and note</p>
-<p><span class="math display">\[\tilde{\beta} = (X^T X)^{-1} X^T y\]</span> <span class="math display">\[\hat{\beta} = F\tilde{\beta}\]</span></p>
+<p><span class="math display">\[\tilde{\beta} = (X^T X)^{-1} X^T y\]</span>
+<span class="math display">\[\hat{\beta} = F\tilde{\beta}\]</span></p>
 <p>the diagonal elements of <span class="math inline">\(F\)</span> are where the effective degrees of freedom for each covariate come from.</p>
 </div>
 </div>
@@ -256,7 +285,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="diagnostics" class="section level2">
 <h2>Diagnostics</h2>
 <p>We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## gam.check(mod_gam2, k.rep=1000)</code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">## gam.check(mod_gam2, k.rep=1000)</a></code></pre></div>
 <p><img src="GAM_files/figure-html/gam_check-1.svg" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>
 Method: GCV   Optimizer: magic
@@ -272,20 +301,20 @@ indicate that k is too low, especially if edf is close to k&#39;.
 s(Income) 9.00 7.59    1.26    0.98
 s(Edu)    9.00 6.20    1.01    0.49
 s(Health) 9.00 1.00    0.90    0.18</code></pre>
-<p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><span class="marginnote"> The <code>k</code> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a>.</p>
+<p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><span class="marginnote"> The <code>k</code> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a>.</p>
 <p>Given the penalization process, the exact choice of <span class="math inline">\(k\)</span> isn’t too big of a deal, and can be seen as an upper limit to the flexibility of the term. The actual flexibility is determined via the penalization process. However, the defaults are arbitrary. You want to set it large enough to get at the true effect as best as possible, but in some cases computational efficiency will also be of concern. For example, in fairly complex models with many predictors, interactions, etc., it might be worthwhile to reduce <span class="math inline">\(k\)</span> at the outset. The help file for the function <span class="func">choose.k</span> provides another approach to examining <span class="math inline">\(k\)</span> based on the residuals from the model under consideration, and provides other useful information.</p>
 <div id="concurvity" class="section level3">
 <h3>Concurvity</h3>
-<p><span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting<a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a>. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem as elsewhere, i.e. unstable estimates.</p>
+<p><span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a>. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem as elsewhere, i.e. unstable estimates.</p>
 <p>Wood provides three indices related to concurvity via the concurvity function, all range from 0 to 1 with 0 suggesting no problem, and 1 indicating that the function lies entirely in the space of one or more of the other smooth terms. See <code>?concurvity</code> for details.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">concurvity</span>(mod_gam2)</code></pre></div>
-<table style="width:82%;">
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">concurvity</span>(mod_gam2)</a></code></pre></div>
+<table style="width:83%;">
 <colgroup>
 <col width="20%" />
 <col width="16%" />
 <col width="16%" />
 <col width="12%" />
-<col width="15%" />
+<col width="16%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -330,10 +359,10 @@ s(Health) 9.00 1.00    0.90    0.18</code></pre>
 </div>
 <div id="model-comparison-revisited" class="section level2">
 <h2>Model Comparison Revisited</h2>
-<p>We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select=TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a>, and in general either of these would be viable approaches. Consider the following comparison:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)
-mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)
-## AIC(mod_1d, mod_2d)</code></pre></div>
+<p>We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select=TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>, and in general either of these would be viable approaches. Consider the following comparison:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb37-3" data-line-number="3">## AIC(mod_1d, mod_2d)</a></code></pre></div>
 <table style="width:40%;">
 <colgroup>
 <col width="18%" />
@@ -362,10 +391,10 @@ mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class
 </table>
 <p><br></p>
 <p>In some cases, we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance. We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function. While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place. The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)
-mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)
-
-## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</a></code></pre></div>
 <table style="width:40%;">
 <colgroup>
 <col width="18%" />
@@ -394,7 +423,7 @@ mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class=
 </table>
 <p><br></p>
 <p>Again though, we could have just used the summary output from the second model.</p>
-<p>Instances where such a statistical test does not appear to be appropriate within the context of the <span class="mgcv"></span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it’s possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical. Wood suggests that if such model comparison is the ultimate goal an unpenalized approach<a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> would be best to have much confidence in the p-values<a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a>.</p>
+<p>Instances where such a statistical test does not appear to be appropriate within the context of the <span class="mgcv"></span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it’s possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical. Wood suggests that if such model comparison is the ultimate goal an unpenalized approach<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a> would be best to have much confidence in the p-values<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a>.</p>
 
 </div>
 </div>
@@ -410,13 +439,13 @@ mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class=
 <div class="footnotes">
 <hr />
 <ol start="19">
-<li id="fn19"><p>See p. 128, <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span>, or p. 168 in <span class="citation">Wood (<a href="#ref-wood_generalized_2017">2017</a>)</span>.<a href="issues.html#fnref19">↩</a></p></li>
-<li id="fn20"><p>See also, the <code>select</code> argument to the <span class="func">gam</span> function.<a href="issues.html#fnref20">↩</a></p></li>
-<li id="fn21"><p>I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.<a href="issues.html#fnref21">↩</a></p></li>
-<li id="fn22"><p>The topic is strangely absent in Wood’s text.<a href="issues.html#fnref22">↩</a></p></li>
-<li id="fn23"><p>GCV scores are not useful for comparing fits of different families; AIC is still okay though.<a href="issues.html#fnref23">↩</a></p></li>
-<li id="fn24"><p>This can be achieved with the argument <code>s(..., fx=T)</code>, although now one has to worry more about the k value used, as very high k will lead to low power.<a href="issues.html#fnref24">↩</a></p></li>
-<li id="fn25"><p>One might also examine the <span class="pack">gss</span> package for an ANOVA based approach to generalized smoothing splines.<a href="issues.html#fnref25">↩</a></p></li>
+<li id="fn19"><p>See p. 128, <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span>, or p. 168 in <span class="citation">Wood (<a href="#ref-wood_generalized_2017">2017</a>)</span>.<a href="issues.html#fnref19" class="footnote-back">↩</a></p></li>
+<li id="fn20"><p>See also, the <code>select</code> argument to the <span class="func">gam</span> function.<a href="issues.html#fnref20" class="footnote-back">↩</a></p></li>
+<li id="fn21"><p>I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.<a href="issues.html#fnref21" class="footnote-back">↩</a></p></li>
+<li id="fn22"><p>The topic is strangely absent in Wood’s text.<a href="issues.html#fnref22" class="footnote-back">↩</a></p></li>
+<li id="fn23"><p>GCV scores are not useful for comparing fits of different families; AIC is still okay though.<a href="issues.html#fnref23" class="footnote-back">↩</a></p></li>
+<li id="fn24"><p>This can be achieved with the argument <code>s(..., fx=T)</code>, although now one has to worry more about the k value used, as very high k will lead to low power.<a href="issues.html#fnref24" class="footnote-back">↩</a></p></li>
+<li id="fn25"><p>One might also examine the <span class="pack">gss</span> package for an ANOVA based approach to generalized smoothing splines.<a href="issues.html#fnref25" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -472,7 +501,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

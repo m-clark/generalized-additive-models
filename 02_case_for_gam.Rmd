@@ -13,8 +13,6 @@
 knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 ```
 
-The standard linear model is ubiquitous in statistical training and application, and for good reason.  It is simple to do and easy to understand. Let's go ahead and do one to get things started.
-
 ```{r demolmdat, echo=F}
 set.seed(123)
 library(mgcv)

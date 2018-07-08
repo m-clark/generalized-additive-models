@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-04-07">
+<meta name="date" content="2018-07-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -56,41 +56,69 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/tufte.css" type="text/css" />
@@ -231,7 +259,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Other Nonlinear Modeling Approaches</h2>
 <div id="known-form" class="section level3">
 <h3>Known Form</h3>
-<p><span class="marginnote">A general form for linear and nonlinear models: <span class="math display">\[y = f(X,\beta)+\epsilon\]</span></span>It should be noted that one can place generalized additive models under a general heading of <em>nonlinear models</em> whose focus may be on transformations of the outcome (as with generalized linear models), the predictor variables (polynomial regression and GAMs), or both (GAMs), in addition to those whose effects are nonlinear in the parameters<a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a>. A primary difference between GAMs and those models is that we don’t specify the functional form beforehand with GAMs.</p>
+<p><span class="marginnote">A general form for linear and nonlinear models: <span class="math display">\[y = f(X,\beta)+\epsilon\]</span></span>It should be noted that one can place generalized additive models under a general heading of <em>nonlinear models</em> whose focus may be on transformations of the outcome (as with generalized linear models), the predictor variables (polynomial regression and GAMs), or both (GAMs), in addition to those whose effects are nonlinear in the parameters<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a>. A primary difference between GAMs and those models is that we don’t specify the functional form beforehand with GAMs.</p>
 <p>In cases where the functional form may be known, one can use an approach such as nonlinear least squares, and there is inherent functionality within a standard R installation, such as the <span class="func">nls</span> function. As is the usual case, such functionality is readily extendable to a great many other analytic situations, e.g. the <span class="pack">gnm</span> for generalized nonlinear models or <span class="pack">nlme</span> for nonlinear mixed effects models.</p>
 </div>
 <div id="response-transformation" class="section level3">
@@ -242,10 +270,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="the-black-box" class="section level3">
 <h3>The Black Box</h3>
-<p><span class="citation">Venables and Ripley (<a href="#ref-venables_modern_2002">2002</a>, Section 11.5)</span> make an interesting delineation of nonlinear models into those that are less flexible but under full user control (fully parametric)<span class="marginnote">One could probably make the case that most modeling is ‘black box’ for a great many researchers.</span>, and those that are <span class="emph">black box</span> techniques that are highly flexible and fully automatic: stuff goes in, stuff comes out, but we’re not privy to the specifics<a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a>.</p>
+<p><span class="citation">Venables and Ripley (<a href="#ref-venables_modern_2002">2002</a>, Section 11.5)</span> make an interesting delineation of nonlinear models into those that are less flexible but under full user control (fully parametric)<span class="marginnote">One could probably make the case that most modeling is ‘black box’ for a great many researchers.</span>, and those that are <span class="emph">black box</span> techniques that are highly flexible and fully automatic: stuff goes in, stuff comes out, but we’re not privy to the specifics<a href="#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a>.</p>
 <p>Two examples of the latter that they provide are <span class="emph">projection pursuit</span> and <span class="emph">neural net</span> models, though a great many would fall into such a heading. Projection pursuit models are well suited to high dimensional data where dimension reduction is a concern. One may think of an example where one uses a technique such as principal components analysis on the predictor set and then examines smooth functions of <span class="math inline">\(M\)</span> principal components.</p>
 <p>In the case of neural net models<span class="marginnote"><img src='img/nnet.png' style="display:block; margin: 0 auto;" width=50%></img> <br> <span style="text-align:center; display:block; width:300px">A Neural Net Model</span><br><br></span>, which have found a resurgence of interest of late to say the least, one can imagine a model where the input units (predictor variables) are weighted and summed to create hidden layer units, which are then transformed and put through the same process to create outputs (see a simple example to the right). One can see projection pursuit models as an example where a smooth function is taken of the components which make up the hidden layer. Neural networks are highly flexible in that there can be any number of inputs, hidden layers, and outputs. However, such models are very explicit in the black box approach.</p>
-<p>Such models are usually found among data mining/machine learning techniques, any number of which might be utilized in a number of disciplines. Other more algorithmic/black box approaches include <span class="emph">k-nearest-neighbors</span>, <span class="emph">networks</span>, <span class="emph">random forests</span>, <span class="emph">support vector machines</span>, and various tweaks or variations thereof including boosting, bagging, bragging and other alliterative shenanigans<a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a>. As Venables and Ripley note, generalized additive models might be thought of as falling somewhere in between the fully parametric and interpretable models of linear regression and black box techniques. Indeed, there are algorithmic approaches which utilize GAMs as part of their approach.</p>
+<p>Such models are usually found among data mining/machine learning techniques, any number of which might be utilized in a number of disciplines. Other more algorithmic/black box approaches include <span class="emph">k-nearest-neighbors</span>, <span class="emph">networks</span>, <span class="emph">random forests</span>, <span class="emph">support vector machines</span>, and various tweaks or variations thereof including boosting, bagging, bragging and other alliterative shenanigans<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a>. As Venables and Ripley note, generalized additive models might be thought of as falling somewhere in between the fully parametric and interpretable models of linear regression and black box techniques. Indeed, there are algorithmic approaches which utilize GAMs as part of their approach.</p>
 </div>
 </div>
 <div id="extensions" class="section level2">
@@ -254,7 +282,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>Other GAMs</h3>
 <div id="categorical-variables" class="section level4">
 <h4>Categorical variables</h4>
-<p>Note that just as generalized additive models are an extension of the generalized linear model, there are generalizations of the basic GAM beyond the settings described. In particular, <span class="emph">random effects</span> can be dealt with in this context as they can with linear and generalized linear models, and there is an interesting connection between smooths and random effects in general.<a href="#fn29" class="footnoteRef" id="fnref29"><sup>29</sup></a> This allowance for categorical variables, i.e. factors, works also to allow separate smooths for each level of the factor. This amounts to an interaction of the sort we demonstrated with two continuous variables.</p>
+<p>Note that just as generalized additive models are an extension of the generalized linear model, there are generalizations of the basic GAM beyond the settings described. In particular, <span class="emph">random effects</span> can be dealt with in this context as they can with linear and generalized linear models, and there is an interesting connection between smooths and random effects in general.<a href="#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a> This allowance for categorical variables, i.e. factors, works also to allow separate smooths for each level of the factor. This amounts to an interaction of the sort we demonstrated with two continuous variables.</p>
 </div>
 <div id="spatial-modeling" class="section level4">
 <h4>Spatial Modeling</h4>
@@ -266,7 +294,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="gamlss" class="section level4">
 <h4>GAMLSS</h4>
-<p>Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a>, and modeling different parameters besides the mean. <span class="pack">mgcv</span> has recently added several options in this regard as well.</p>
+<p>Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>, and modeling different parameters besides the mean. <span class="pack">mgcv</span> has recently added several options in this regard as well.</p>
 </div>
 <div id="other" class="section level4">
 <h4>Other</h4>
@@ -275,7 +303,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="reproducing-kernel-hilbert-space" class="section level3">
 <h3>Reproducing Kernel Hilbert Space</h3>
-<p>Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>. I won’t pretend to be able to get into it here, but the idea is that some forms of additive models can be represented in the inner product form used in RKHS approaches<a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a>. This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods. For the interested, I have an example of RKHS regression <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md">here</a>.</p>
+<p>Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>. I won’t pretend to be able to get into it here, but the idea is that some forms of additive models can be represented in the inner product form used in RKHS approaches<a href="#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a>. This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods. For the interested, I have an example of RKHS regression <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md">here</a>.</p>
 </div>
 <div id="gaussian-processes" class="section level3">
 <h3>Gaussian Processes</h3>
@@ -300,12 +328,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="footnotes">
 <hr />
 <ol start="26">
-<li id="fn26"><p>For example, various theoretically motivated models in economics and ecology. A common model example is the logistic growth curve.<a href="other-approaches.html#fnref26">↩</a></p></li>
-<li id="fn27"><p>For an excellent discussion of these different approaches to understanding data see <span class="citation">Breiman (<a href="#ref-breiman_statistical_2001">2001</a>)</span> and associated commentary. For some general packages outside of R that incorporate a more algorithmic approach to modeling, you might check out the <span class="pack">scikit-learn</span> module for Python as a starting point.<a href="other-approaches.html#fnref27">↩</a></p></li>
-<li id="fn28"><p>See <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-hastie_elements_2009">2009</a>)</span> for an overview of such approaches. A more recent and very applied version of that text is also <a href="http://link.springer.com/book/10.1007/978-1-4614-7138-7?no-access=true">available</a>. I have an R oriented intro <a href="https://m-clark.github.io/introduction-to-machine-learning/">here</a>.<a href="other-approaches.html#fnref28">↩</a></p></li>
-<li id="fn29"><p><span class="citation">Wood (<a href="#ref-wood_generalized_2017">2017</a>)</span> has a whole chapter devoted to the subject, though <span class="citation">Fahrmeir et al. (<a href="#ref-fahrmeir2013regression">2013</a>)</span> provides an even fuller treatment. I also have a document on <a href="http://m-clark.github.io/docs/mixedModels/mixedModelML.html">mixed models</a> that goes into it some. In addition, Wood also provides a complementary package, <span class="pack">gamm4</span>, for adding random effects to GAMs via <span class="pack">lme4</span>.<a href="other-approaches.html#fnref29">↩</a></p></li>
-<li id="fn30"><p>See <span class="citation">Rigby and Stasinopoulos (<a href="#ref-rigby_generalized_2005">2005</a>)</span> and the <span class="pack">gamlss</span> package.<a href="other-approaches.html#fnref30">↩</a></p></li>
-<li id="fn31"><p>You might note that the function used in the spline example in the technical section is called <em>rk</em>.<a href="other-approaches.html#fnref31">↩</a></p></li>
+<li id="fn26"><p>For example, various theoretically motivated models in economics and ecology. A common model example is the logistic growth curve.<a href="other-approaches.html#fnref26" class="footnote-back">↩</a></p></li>
+<li id="fn27"><p>For an excellent discussion of these different approaches to understanding data see <span class="citation">Breiman (<a href="#ref-breiman_statistical_2001">2001</a>)</span> and associated commentary. For some general packages outside of R that incorporate a more algorithmic approach to modeling, you might check out the <span class="pack">scikit-learn</span> module for Python as a starting point.<a href="other-approaches.html#fnref27" class="footnote-back">↩</a></p></li>
+<li id="fn28"><p>See <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-hastie_elements_2009">2009</a>)</span> for an overview of such approaches. A more recent and very applied version of that text is also <a href="http://link.springer.com/book/10.1007/978-1-4614-7138-7?no-access=true">available</a>. I have an R oriented intro <a href="https://m-clark.github.io/introduction-to-machine-learning/">here</a>.<a href="other-approaches.html#fnref28" class="footnote-back">↩</a></p></li>
+<li id="fn29"><p><span class="citation">Wood (<a href="#ref-wood_generalized_2017">2017</a>)</span> has a whole chapter devoted to the subject, though <span class="citation">Fahrmeir et al. (<a href="#ref-fahrmeir2013regression">2013</a>)</span> provides an even fuller treatment. I also have a document on <a href="http://m-clark.github.io/docs/mixedModels/mixedModelML.html">mixed models</a> that goes into it some. In addition, Wood also provides a complementary package, <span class="pack">gamm4</span>, for adding random effects to GAMs via <span class="pack">lme4</span>.<a href="other-approaches.html#fnref29" class="footnote-back">↩</a></p></li>
+<li id="fn30"><p>See <span class="citation">Rigby and Stasinopoulos (<a href="#ref-rigby_generalized_2005">2005</a>)</span> and the <span class="pack">gamlss</span> package.<a href="other-approaches.html#fnref30" class="footnote-back">↩</a></p></li>
+<li id="fn31"><p>You might note that the function used in the spline example in the technical section is called <em>rk</em>.<a href="other-approaches.html#fnref31" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -361,7 +389,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
