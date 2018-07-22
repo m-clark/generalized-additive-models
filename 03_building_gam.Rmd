@@ -81,8 +81,9 @@ In summary, you're doing a GLM, but a slightly modified one.  You could have alw
 Let's get things started by demonstrating the results from a GAM that uses a <span class="emph">polynomial spline</span> for the basis.  The brave may refer to the [technical details][a detailed example] section for additional insights.  Conceptually, it is useful to continue to think of the piece-wise approach we talked about before.  However, we'll end up with a smoother and connected result when all is said and done.
 
 ```{r polysplinedemo, echo=FALSE, out.width='40%', fig.asp=.5}
-d %>% 
-  add_predictions(model = gam(y ~ s(x, bs='cr', k=12), data=d)) %>% 
+d %>%
+  add_predictions(model = gam(y ~ s(x, bs='cr', k=12))) %>% 
+  arrange(x) %>% 
   plot_ly() %>% 
   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5), showlegend=F) %>% 
   add_lines(~x, ~pred, color=I('#00aaff'), showlegend=F) %>% 

@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-07">
+<meta name="date" content="2018-07-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,13 +46,13 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
-<script src="libs/plotly-binding-4.7.1/plotly.js"></script>
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.8.0/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs-1.29.2/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs-1.29.2/plotly-latest.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.39.2/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -272,7 +272,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>The Black Box</h3>
 <p><span class="citation">Venables and Ripley (<a href="#ref-venables_modern_2002">2002</a>, Section 11.5)</span> make an interesting delineation of nonlinear models into those that are less flexible but under full user control (fully parametric)<span class="marginnote">One could probably make the case that most modeling is ‘black box’ for a great many researchers.</span>, and those that are <span class="emph">black box</span> techniques that are highly flexible and fully automatic: stuff goes in, stuff comes out, but we’re not privy to the specifics<a href="#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a>.</p>
 <p>Two examples of the latter that they provide are <span class="emph">projection pursuit</span> and <span class="emph">neural net</span> models, though a great many would fall into such a heading. Projection pursuit models are well suited to high dimensional data where dimension reduction is a concern. One may think of an example where one uses a technique such as principal components analysis on the predictor set and then examines smooth functions of <span class="math inline">\(M\)</span> principal components.</p>
-<p>In the case of neural net models<span class="marginnote"><img src='img/nnet.png' style="display:block; margin: 0 auto;" width=50%></img> <br> <span style="text-align:center; display:block; width:300px">A Neural Net Model</span><br><br></span>, which have found a resurgence of interest of late to say the least, one can imagine a model where the input units (predictor variables) are weighted and summed to create hidden layer units, which are then transformed and put through the same process to create outputs (see a simple example to the right). One can see projection pursuit models as an example where a smooth function is taken of the components which make up the hidden layer. Neural networks are highly flexible in that there can be any number of inputs, hidden layers, and outputs. However, such models are very explicit in the black box approach.</p>
+<p>In the case of neural net models<span class="marginnote"><img class='zoom' src='img/nnet.png' style="display:block; margin: 0 auto;" width=50%></img> <br> <span style="text-align:center; display:block; width:300px">A Neural Net Model</span><br><br></span>, which have found a resurgence of interest of late to say the least, one can imagine a model where the input units (predictor variables) are weighted and summed to create hidden layer units, which are then transformed and put through the same process to create outputs (see a simple example to the right). One can see projection pursuit models as an example where a smooth function is taken of the components which make up the hidden layer. Neural networks are highly flexible in that there can be any number of inputs, hidden layers, and outputs. However, such models are very explicit in the black box approach.</p>
 <p>Such models are usually found among data mining/machine learning techniques, any number of which might be utilized in a number of disciplines. Other more algorithmic/black box approaches include <span class="emph">k-nearest-neighbors</span>, <span class="emph">networks</span>, <span class="emph">random forests</span>, <span class="emph">support vector machines</span>, and various tweaks or variations thereof including boosting, bagging, bragging and other alliterative shenanigans<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a>. As Venables and Ripley note, generalized additive models might be thought of as falling somewhere in between the fully parametric and interpretable models of linear regression and black box techniques. Indeed, there are algorithmic approaches which utilize GAMs as part of their approach.</p>
 </div>
 </div>
@@ -308,7 +308,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="gaussian-processes" class="section level3">
 <h3>Gaussian Processes</h3>
 <p>We can also approach modeling by using generalizations of the Gaussian distribution. Where the Gaussian distribution is over vectors and defined by a mean vector and covariance matrix, a <span class="emph">Gaussian Process</span> is a <em>distribution over functions</em>. A function <span class="math inline">\(f\)</span> is distributed as a Gaussian Process defined by a mean function <span class="math inline">\(m\)</span> and covariance function <span class="math inline">\(k\)</span>. They have a close tie to RKHS methods, and generalize commonly used models in spatial modeling.</p>
-<p><span class="marginnote"><img src='img/gp.png' style="display:block; margin: 0 auto;"> <br> <span style="text-align:center; display:block;">Gaussian Process</span> <br>The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.</span></p>
+<p><span class="marginnote"><img class='zoom' src='img/gp.png' style="display:block; margin: 0 auto;"> <br> <span style="text-align:center; display:block;">Gaussian Process</span> <br>The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.</span></p>
 <p><span class="math display">\[f\sim \mathcal{GP}(m,k)\]</span></p>
 <p>In the Bayesian context, we can define a prior distribution over functions and make draws from a posterior predictive distribution of <span class="math inline">\(f\)</span> once we have observed data. The reader is encouraged to consult <span class="citation">Rasmussen and Williams (<a href="#ref-rasmussen_gaussian_2006">2006</a>)</span> for the necessary detail. The <a href="http://www.gaussianprocess.org/gpml/">text</a> is free for download, and Rasmussen also provides a nice and brief <a href="http://link.springer.com/chapter/10.1007/978-3-540-28650-9_4">intro</a>. I also have some R code for <a href="https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/gp%20Examples/">demonstration</a> based on his Matlab code, as well as Bayesian examples in Stan.</p>
 <p>Suffice it to say in this context, it turns out that generalized additive models with a tensor product or cubic spline smooth are maximum a posteriori (MAP) estimates of Gaussian processes with specific covariance functions and a zero mean function. In that sense, one might segue nicely to Gaussian processes if familiar with additive models. The <span class="pack">mgcv</span> package also allows one to use a spline form of Gaussian process.</p>

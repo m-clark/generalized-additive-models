@@ -1,5 +1,9 @@
 # Appendix
 
+```{r appendix_setup, echo=F}
+# knitr::opts_chunk$set(cache.rebuild=F)
+```
+
 ## R packages
 <span class="newthought">The following is</span> a non-exhaustive list of R packages which contain GAM functionality. Each is linked to the CRAN page for the package.  Note also that several build upon the <span class="pack">mgcv</span> package used for this document.
 
@@ -297,7 +301,7 @@ nz_census$labs <- paste0(nz_census$AU_NAM, " $", format(nz_census$Income, big.ma
 #       position = "topleft")
 
 
-pal <- colorQuantile(viridis::plasma(n=10, begin = 0, end=1), domain = NULL, n=10)
+pal <- leaflet::colorQuantile(scico::scico(n=100, begin = 0, end=1,palette = 'tokyo'), domain = NULL, n=10)
 
 g <- list(scope = 'new zealand',
           showframe = F,
@@ -314,24 +318,28 @@ g1 <- c(g,
         list(lataxis = list(range = c(-46.75, -34))),
         list(domain = list(x = c(0, 1), y = c(0, 1)))
         )
+```
 
+
+```{r nz_income_plot, cache=FALSE}
 map_data('nz') %>% 
   filter(grepl(region, pattern='North|South')) %>%
   group_by(group) %>% 
   plot_geo(x = ~nz_census$lon, y = ~nz_census$lat) %>% 
-  add_markers(color=~Income, 
-              colors=pal, 
-              size=I(5), 
-              opacity=.66, 
+  add_markers(color=~Income,
+              colors=pal,
+              # size=I(5),  # plotlys special bug
+              opacity=.66,
               text=~ labs,
               marker=list(name=NULL),
-              # hoverinfo='text',
-              data=nz_census) %>% 
+              hoverinfo='text',
+              data=as_tibble(nz_census)) %>%
   config(displayModeBar=F) %>% 
   layout(title = '', 
          geo = g1) %>% 
   theme_plotly()
 ```
+
 
 <!-- <span class="marginnote">This visualization uses <span class="pack">leaflet</span>.</span> -->
 
@@ -341,7 +349,7 @@ So we can go ahead and run a model predicting median income solely by geography.
 
 <span class="marginnote">The `m=` argument allows one to specify different types of covariance functions.</span>
 
-```{r nz_income_gam, echo=1:2, out.width='40%', fig.asp=.5}
+```{r nz_income_gam, echo=1:2}
 nz_gam = gam(Income ~ s(lon, lat, bs='gp', k=100, m=2), data=nz_census)
 summary(nz_gam)
 # 
@@ -397,12 +405,26 @@ g1 <- c(g,
         list(domain = list(x = c(0, 1), y = c(0, 1)))
         )
 
+heatvals = heatvals %>% mutate(Size=.5)
+
+```
+
+
+```{r nz_income_gam_plot, out.width='40%', fig.asp=.5, cache=FALSE}
 nz_map_data %>% 
-  plot_geo(x=~lon, y=~lat) %>% 
+  mutate(Size=.3) %>% 
+  plot_geo(x=~lon, y=~lat, mode='markers', marker=list(size=~Size)) %>% 
   layout(title = 'Expected Income',
          geo = g1) %>%
   config(displayModeBar=FALSE) %>% 
-  add_markers(x=~lon, y=~lat, color =~Income, data=heatvals, opacity=.5, colors=viridis::plasma(50), size=I(3))# %>%
+  add_markers(x=~lon, 
+              y=~lat, 
+              color =~Income, 
+              opacity=.5, 
+              # size=~Size,
+              data=heatvals,
+              colors=scico::scico(100, palette = 'tokyo'), inherit = F
+              )# %>%
 ```
 
 <span class="marginnote">This visualization was created with <span class="pack">plotly</span>. In case you're wondering, it was a notable ordeal to figure out how to make it, but in the end it the code isn't much.</span>
@@ -508,7 +530,7 @@ p = plotdat %>%
   group_by(subregion) %>%
   plot_ly(x = ~long, y = ~lat, 
           color = ~fillcol, 
-          colors = viridis::plasma(50, begin=1, end=0),
+          colors = scico::scico(100, palette = 'tokyo'),
           text = ~subregion, hoverinfo = 'text') %>%
   add_polygons(line = list(width = 0.4)) %>%
   layout(title = "% with Maximum of HS Education in Michigan") %>% 
@@ -547,7 +569,7 @@ rent99 %>%
 Here again we'll use a Markov random field smooth, and for comparison a mixed model with a random effect for district.  The plots show that, while close, they don't exactly come to the same conclusions for the district fitted values.
 
 
-```{r re_vs_mrf, echo=1:10, out.width='40%', fig.asp=.5}
+```{r re_vs_mrf, echo=1:10}
 library(gamlss.data)
 
 # prep data
@@ -566,14 +588,7 @@ gam_rent_re = gam(rent ~ s(district, bs = 're'),
 # summary(gam_rent_mrf)
 # summary(gam_rent_re)
 # plot(gam_rent_mrf)
-data_frame(mrf_fit = fitted(gam_rent_mrf), 
-           mm_fit = fitted(gam_rent_re)) %>% 
-  plot_ly() %>% 
-  add_markers(x=~mm_fit, y=~mrf_fit, color=I('#ff55001A'), size=I(10)) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout(yaxis=list(title='MRF fitted values'),
-         xaxis=list(title='Mixed model fitted values'))
+
 
 # re_coefs = gam_rent_re$coefficients
 # names(re_coefs) = stringr::str_extract(names(re_coefs), pattern='[0-9](.)*')
@@ -582,6 +597,27 @@ data_frame(mrf_fit = fitted(gam_rent_mrf),
 # re_coefs = gam_rent_re$coefficients
 # names(re_coefs) = names(rent99.polys)
 # polys.plot(rent99.polys, z=gam_rent_mrf$coefficients)
+```
+
+
+```{r re_vs_mrf_plot, echo=FALSE, fig.asp=.5, cache=FALSE}
+data_frame(mrf_fit = fitted(gam_rent_mrf), 
+           mm_fit = fitted(gam_rent_re)) %>% 
+  ggplot(aes(x=mm_fit, y=mrf_fit)) +
+  geom_point(color=I('#ff55001A'), size=3) +
+  theme_trueMinimal()
+  # seriously, avoid plotly for anything not necessary until they fix it; the
+  # below won't plot at all even with no size arguement
+  # plot_ly() %>%
+  # add_markers(x=~mm_fit,
+  #             y=~mrf_fit,
+  #             # size=I(10),
+  #             color=I('#ff55001A')
+  #             ) %>%
+  # config(displayModeBar=F) %>%
+  # theme_plotly() %>%
+  # layout(yaxis=list(title='MRF fitted values'),
+  #        xaxis=list(title='Mixed model fitted values'))
 ```
 
 <br>

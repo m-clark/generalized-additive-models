@@ -42,10 +42,10 @@ source('funcs/better_corr.R')
 
 library(GGally)
 p = ggpairs(pisa[,-c(1,3:5)], 
-        lower=list(continuous=wrap(better_smooth,  ptalpha=.25, ptcol='#ff5500', ptsize=1,
-                                   linecol='#03b3ff', method='loess', se=F, lwd=.5)), 
-        diag = list(continuous=wrap('densityDiag', color='gray50', lwd=.5)),
-        upper=list(continuous=wrap(better_corr)),
+        lower=list(continuous=GGally::wrap(better_smooth,  ptalpha=.25, ptcol='#ff5500', ptsize=1,
+        linecol='#03b3ff', method='loess', se=F, lwd=.5)),
+        diag = list(continuous=GGally::wrap('densityDiag', color='gray50', lwd=.5)),
+        # upper=list(continuous=GGally::wrap(better_corr)),
         axisLabels="none") + 
   theme_trueMinimal() +
   theme(axis.text.x=element_text(color='gray50')) +
@@ -258,13 +258,18 @@ The GCV, or <span class="emph">generalized cross validation</span> score can be 
 One can get  sense of the form of the fit by simply plotting the model object as follows:
 
 ```{r plot_mod_gam1, echo=2, eval=c(1,3:5), out.width='75%', fig.asp=.75}
-par(bg='transparent')
-plot(mod_gam1)
-plot(mod_gam1, bty='n', xaxt='n', yaxt='n', col.lab='gray50', shade.col=scales::alpha('black', .25), shade=T, col='#00aaff')
-axis(1, col='gray50', col.ticks='gray75', lty=1, labels=F)
-mtext(side = 1, text = axTicks(1), at = axTicks(1), col = "gray25", line = 1)
-axis(2, col='gray50', col.ticks='gray75', lty=1, labels=F)
-mtext(side = 2, text = axTicks(2), at = axTicks(2), col = "gray25", line = 1)
+plot_gam(mod_gam1) +
+  ylab('s(Income, 6.9)') +
+  theme(axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+# par(bg='transparent')
+# plot(mod_gam1)
+# plot(mod_gam1, bty='n', xaxt='n', yaxt='n', col.lab='gray50', shade.col=scales::alpha('black', .25), shade=T, col='#00aaff')
+# axis(1, col='gray50', col.ticks='gray75', lty=1, labels=F)
+# mtext(side = 1, text = axTicks(1), at = axTicks(1), col = "gray25", line = 1)
+# axis(2, col='gray50', col.ticks='gray75', lty=1, labels=F)
+# mtext(side = 2, text = axTicks(2), at = axTicks(2), col = "gray25", line = 1)
 # visreg(mod_gam1, #scale='response',
 #        line=list(col="#00aaff", lwd=2), 
 #        points=list(cex=.25, col='#ff5500'), 
@@ -273,7 +278,7 @@ mtext(side = 2, text = axTicks(2), at = axTicks(2), col = "gray25", line = 1)
 # axis(1, col='gray50', col.ticks='gray75')
 ```
 
-Note that this will only plot the smooth terms in the model<span class="marginnote">A more visually appealing alternative can be found with the <span class="pack">visreg</span> package, which will plot all effects, and by default be nicer looking and easier to customize. You can simply feed the model to the <span class="func">visreg</span> function. It also has 2 and 3d capabilities like the corresponding <span class="pack">mgcv</span> functions.</span>. The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single predictor case, one can also revisit the previous graph.  
+Note that this will only plot the smooth terms in the model<span class="marginnote">A more visually appealing alternative can be found with the <span class="pack">visreg</span> package, which will plot all effects, and by default be nicer looking and easier to customize. You can simply feed the model to the <span class="func">visreg</span> function. It also has 2 and 3d capabilities like the corresponding <span class="pack">mgcv</span> functions.  In most places, I'm using my own function from <span class="pack">visibly</span>.</span>, which you can get from [GitHub](https://m-clark.github.io/visibly/). The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single predictor case, one can also revisit the previous graph.  
 
 
 ### Model Comparison
@@ -346,17 +351,19 @@ We can also note that this model accounts for much of the variance in Overall sc
 
 ### Graphical Display
 
-Now we examine the effects of interest visually via component plots[^componentplot]. The following uses the <span class="func">visreg</span> function.
+Now we examine the effects of interest visually via component plots[^componentplot]. The following uses my own function from <span class="pack">visibly</span> but you can also use the <span class="func">visreg</span> function.
 
 ```{r mod_gam2_plot, echo=F, fig.align='center', out.width='75%', fig.asp=.75}
 # plot(mod_gam2, pages=1, residuals=T, pch=19, cex=0.25, 
 #      scheme=1, line.col='#ff5500', shade=T,shade.col='gray90')
-par(mfrow=c(2,2), bg='transparent')
-library(visreg)
-visreg(mod_gam2, #scale='response',
-       line=list(col="#00aaff", lwd=2), 
-       points=list(cex=.25, col='#ff5500'), 
-       fill=list(col='gray90'), ask=F, bty='n', alpha=.5, ylim=c(275,575))
+# par(mfrow=c(2,2), bg='transparent')
+# library(visreg)
+# visreg(mod_gam2, #scale='response',
+#        line=list(col="#00aaff", lwd=2),
+#        points=list(cex=.25, col='#ff5500'),
+#        fill=list(col='gray90'), ask=F, bty='n', alpha=.05, ylim=c(275,575)) 
+plot_gam(mod_gam2, ncol = 2) +
+  ylim(c(225,575))
 ```
 
 Here we can see the effects of interest<span class="marginnote">One will notice that for the default gam plot in <span class="pack">mgcv</span>, the y-axis scale is on that of the linear predictor, but due to identifiability constraints, the smooths must sum to zero, and thus are presented in a mean-centered fashion.</span>, and again one might again note the penalized-to-linear effect of Health.  As before, we see the tapering off of Income's effect at its highest levels, and in addition, a kind of sweet spot for a positive effect of Education in the mid-range values, with a slight positive effect overall.  Health, as noted, has been reduced to a linear, surprisingly negative effect, but again this is not statistically significant. 
@@ -393,7 +400,7 @@ ggplotly(width=600) %>%
 
 The GAM gives us a sense for one predictor, but let's now take a gander at Income and Education at the same time.  Previously, we saw how to use the <span class="func">plot</span> method for a GAM class object. There is another plotting function, <span class="func">vis.gam</span>, that will give us a bit more to play with, and specifically to display 2d smooths.  It has a corresponding version from <span class="pack">visreg</span> which will look a bit better by default, <span class="func">visreg2d</span>. The following code will produce a contour plot with Income on the x axis, Education on the y axis, with values on the response scale given by the contours, with lighter color indicating higher values.  The actual plot provided instead depicts a heatmap<span class="marginnote">I'm actually using the data from such plots and <span class="pack">plotly</span> to produce a more web-oriented version.  For example, contour lines are unnecessary when you can get the values by hovering.</span>.
 
-```{r contour, echo=1:2, fig.show='hide', results='hold'}
+```{r contour, echo=1:2, fig.show='hide', results='hold', cache=FALSE}
 vis.gam(mod_gam2, type='response', plot.type='contour')
 visreg2d(mod_gam2, xvar='Income', yvar='Edu', scale='response')
 tt = visreg2d(mod_gam2, xvar='Income', yvar='Edu', scale='response')[1:3] # for some reason 2d doesn't have a plot= argument so is suppressed with 'hide'
@@ -401,7 +408,7 @@ names(tt) = c('Income', 'Edu', 'Overall')
 tt$Overall = t(tt$Overall)
 # because of a lack of  sense, x is y in plotting
 ```
-```{r contourheat, echo=FALSE}
+```{r contourheat, echo=FALSE, cache=FALSE}
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
 # contour plot; note with isn't necessary, can use tt$
 # with(tt, 
@@ -411,7 +418,8 @@ colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
 with(lapply(tt, round, 2),
      plot_ly(x=Income, y=Edu,  z=Overall, 
              type='heatmap', 
-             colors=colfun, 
+             # colors=viridis::inferno(1000),
+             colors=scico::scico(1000, palette = 'tokyo'),
              width='75%'))  %>%
   config(displayModeBar=F) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', 
@@ -435,14 +443,17 @@ vis.gam(mod_gam3, type='response', plot.type='persp',
 visreg2d(mod_gam3, xvar='Income', yvar='Edu', scale='response')
 ```
 
-```{r mod_gam3_plot, fig.show='hide', echo=F}
+```{r mod_gam3_plot, fig.show='hide', echo=F, cache=FALSE}
 tt = visreg2d(mod_gam3, xvar='Income', yvar='Edu', scale='response')[1:3]
 names(tt) = c('Income', 'Edu', 'Overall')
 tt$Overall = t(tt$Overall)
 # because of a lack of  sense, x is y in plotting
 
 colfun = rev(colorRampPalette(RColorBrewer::brewer.pal(9, 'RdBu'))(100))
-with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap', colors=colfun, width='75%'))  %>% 
+with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, 
+                                   type='heatmap', 
+                                   colors=scico::scico(1000, palette = 'tokyo'), 
+                                   width='75%'))  %>% 
   config(displayModeBar=F) %>% 
   layout(paper_bgcolor='rgba(0,0,0,0)', 
          plot_bgcolor='rgba(0,0,0,0)',
@@ -452,7 +463,7 @@ with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, type='heatmap'
 with(lapply(tt, round, 2), plot_ly(x=Income, y=Edu,  z = Overall, 
                                    type='surface', 
                                    hoverinfo='none', 
-                                   colors=colfun, 
+                                   colors=scico::scico(1000, palette = 'tokyo'),
                                    width='75%',
                                    lighting=list(roughness=.01, ambient=.9), 
                                    contours=list(Income=list(highlightcolor=toRGB('gray90'), width=1),

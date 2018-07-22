@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-07">
+<meta name="date" content="2018-07-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,13 +46,13 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
-<script src="libs/plotly-binding-4.7.1/plotly.js"></script>
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.8.0/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs-1.29.2/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs-1.29.2/plotly-latest.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.39.2/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -285,33 +285,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="diagnostics" class="section level2">
 <h2>Diagnostics</h2>
 <p>We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">## gam.check(mod_gam2, k.rep=1000)</a></code></pre></div>
-<p><img src="GAM_files/figure-html/gam_check-1.svg" width="768" style="display: block; margin: auto;" /></p>
-<pre><code>
-Method: GCV   Optimizer: magic
-Smoothing parameter selection converged after 21 iterations.
-The RMS GCV score gradient at convergence was 2.499332e-05 .
-The Hessian was positive definite.
-Model rank =  28 / 28 
-
-Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
-indicate that k is too low, especially if edf is close to k&#39;.
-
-            k&#39;  edf k-index p-value
-s(Income) 9.00 7.59    1.26    0.98
-s(Edu)    9.00 6.20    1.01    0.49
-s(Health) 9.00 1.00    0.90    0.18</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">gam.check</span>(mod_gam2, <span class="dt">k.rep=</span><span class="dv">1000</span>)</a></code></pre></div>
+<p><span class="marginnote">This visualization is from <span class="pack">visibly</span>::<span class="func">plot_gam_check</span>.</span></p>
+<p><img src="gam_files/figure-html/gam_check_show-1.svg" width="75%" style="display: block; margin: auto;" /></p>
 <p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><span class="marginnote"> The <code>k</code> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a>.</p>
 <p>Given the penalization process, the exact choice of <span class="math inline">\(k\)</span> isn’t too big of a deal, and can be seen as an upper limit to the flexibility of the term. The actual flexibility is determined via the penalization process. However, the defaults are arbitrary. You want to set it large enough to get at the true effect as best as possible, but in some cases computational efficiency will also be of concern. For example, in fairly complex models with many predictors, interactions, etc., it might be worthwhile to reduce <span class="math inline">\(k\)</span> at the outset. The help file for the function <span class="func">choose.k</span> provides another approach to examining <span class="math inline">\(k\)</span> based on the residuals from the model under consideration, and provides other useful information.</p>
 <div id="concurvity" class="section level3">
 <h3>Concurvity</h3>
 <p><span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a>. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem as elsewhere, i.e. unstable estimates.</p>
 <p>Wood provides three indices related to concurvity via the concurvity function, all range from 0 to 1 with 0 suggesting no problem, and 1 indicating that the function lies entirely in the space of one or more of the other smooth terms. See <code>?concurvity</code> for details.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">concurvity</span>(mod_gam2)</a></code></pre></div>
-<table style="width:83%;">
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">concurvity</span>(mod_gam2)</a></code></pre></div>
+<table style="width:76%;">
 <colgroup>
 <col width="20%" />
-<col width="16%" />
+<col width="9%" />
 <col width="16%" />
 <col width="12%" />
 <col width="16%" />
@@ -328,24 +315,24 @@ s(Health) 9.00 1.00    0.90    0.18</code></pre>
 <tbody>
 <tr class="odd">
 <td align="center"><strong>worst</strong></td>
-<td align="center">2.698e-24</td>
-<td align="center">0.9839</td>
-<td align="center">0.9651</td>
-<td align="center">0.9746</td>
+<td align="center">0</td>
+<td align="center">0.98</td>
+<td align="center">0.97</td>
+<td align="center">0.97</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>observed</strong></td>
-<td align="center">2.698e-24</td>
-<td align="center">0.7968</td>
-<td align="center">0.6116</td>
-<td align="center">0.8682</td>
+<td align="center">0</td>
+<td align="center">0.80</td>
+<td align="center">0.61</td>
+<td align="center">0.87</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>estimate</strong></td>
-<td align="center">2.698e-24</td>
-<td align="center">0.7611</td>
-<td align="center">0.6471</td>
-<td align="center">0.7971</td>
+<td align="center">0</td>
+<td align="center">0.76</td>
+<td align="center">0.65</td>
+<td align="center">0.80</td>
 </tr>
 </tbody>
 </table>
@@ -360,9 +347,9 @@ s(Health) 9.00 1.00    0.90    0.18</code></pre>
 <div id="model-comparison-revisited" class="section level2">
 <h2>Model Comparison Revisited</h2>
 <p>We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select=TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>, and in general either of these would be viable approaches. Consider the following comparison:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3">## AIC(mod_1d, mod_2d)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">## AIC(mod_1d, mod_2d)</a></code></pre></div>
 <table style="width:40%;">
 <colgroup>
 <col width="18%" />
@@ -391,10 +378,10 @@ s(Health) 9.00 1.00    0.90    0.18</code></pre>
 </table>
 <p><br></p>
 <p>In some cases, we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance. We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function. While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place. The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb38-2" data-line-number="2">mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb38-4" data-line-number="4">## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb37-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb37-4" data-line-number="4">## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</a></code></pre></div>
 <table style="width:40%;">
 <colgroup>
 <col width="18%" />

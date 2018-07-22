@@ -51,24 +51,31 @@ A number of smooths are available with the <span class="pack">mgcv</span> packag
 
 We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.
 
-```{r gam_check, echo=1, eval=2:3, fig.height=6, fig.width=8}
+```{r gam_check, echo=1, eval=F, fig.height=6, fig.width=8}
 gam.check(mod_gam2, k.rep=1000)
-par(bg='transparent')
-gam.check(mod_gam2, 
-          k.rep=1000, 
-          bty='n', 
-          pch=20, 
-          cex=1, 
-          col=scales::alpha('#ff5500',.75), 
-          cex.main=.75, 
-          cex.lab=.75, 
-          rl.col=scales::alpha('#00aaff', .5), 
-          border='gray90', 
-          breaks=20, 
-          col.axis='gray50', 
-          col.lab='gray25', 
-          col.main='gray10')
+# par(bg='transparent')
+# gam.check(mod_gam2, 
+#           k.rep=1000, 
+#           bty='n', 
+#           pch=20, 
+#           cex=1, 
+#           col=scales::alpha('#ff5500',.75), 
+#           cex.main=.75, 
+#           cex.lab=.75, 
+#           rl.col=scales::alpha('#00aaff', .5), 
+#           border='gray90', 
+#           breaks=20, 
+#           col.axis='gray50', 
+#           col.lab='gray25', 
+#           col.main='gray10')
 ```
+
+<span class="marginnote">This visualization is from <span class="pack">visibly</span>::<span class="func">plot_gam_check</span>.</span>
+
+```{r gam_check_show, echo=FALSE, out.width='75%'}
+plot_gam_check(mod_gam2, scatter = T)
+```
+
 
 The plots are of the sort we're used to from a typical regression setting, though it's perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low.  The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue.  However, if there were a potential problem, it is suggested to double $k$<span class="marginnote"> The `k` can be set as an argument to `s(var1, k=?)`.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model[^incK].  
 

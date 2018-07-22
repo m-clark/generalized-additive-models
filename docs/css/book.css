@@ -234,16 +234,18 @@ div.sourceCode {
   font-size: 90%;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal .marginnote { float: right;
-                         clear: right;
-                         margin-right: -45%;
-                         width: 40%;
-                         margin-top: 0;
-                         margin-bottom: 0;
-                         font-size: 75%;
-                         line-height: 1;
-                         vertical-align: baseline;
-                         position: relative; }
+.book .book-body .page-wrapper .page-inner section.normal .marginnote {
+  float: right;
+  clear: right;
+  margin-right: -45%;
+  width: 40%;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 75%;
+  line-height: 1;
+  vertical-align: baseline;
+  position: relative;
+}
 
 /* all dt things will be ignored */
 .datatables  {
@@ -251,4 +253,20 @@ div.sourceCode {
   margin-left: 10%;
   margin-right: 100%;  /*not sure this does anything*/
   font-size: 75%;
+}
+
+/* override pygments setting code to a tag */
+.book .book-body .page-wrapper .page-inner section.normal pre code a {
+  color: #585858;
+}
+
+
+/* zoom for img*/
+.zoom {
+    transition: all .3s;
+}
+
+
+.zoom:hover {
+    transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
 }

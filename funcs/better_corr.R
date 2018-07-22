@@ -137,10 +137,15 @@ better_corr = function (data, mapping, alignPercent = 0.6, method = "pearson",
     ymax <- max(yVal, na.rm = TRUE)
     yrange <- c(ymin - 0.01 * (ymax - ymin), ymax + 0.01 * (ymax - ymin))
     cval = cor_fn(xVal, yVal)
-    p <- ggally_text(label = paste(signif(cval, 3), sep = "", collapse = ""), mapping, xP = 0.5,
+    p <- ggally_text(label = paste(signif(cval, 3), sep = "", collapse = ""),
+                     mapping,
+                     xP = 0.5,
                      color=I(ifelse(cval>0,
                                     scales::alpha(scales::muted("blue"), alpha=abs(cval)),
-                                    scales::alpha(scales::muted("red"), alpha=abs(cor_fn(xVal, yVal))))), yP = 0.5, xrange = xrange, yrange = yrange, ...) +
+                                    scales::alpha(scales::muted("red"), alpha=abs(cval)))),
+                     yP = 0.5,
+                     xrange = xrange,
+                     yrange = yrange, ...) +
       theme(legend.position = "none",
             panel.grid.major = element_blank())
     p

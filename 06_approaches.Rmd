@@ -1,7 +1,7 @@
 # Other Approaches
 
 ```{r setupApproaches, include=FALSE}
-# knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 ```
 
 <span class="newthought">This section will discuss</span> some ways to relate GAMs to other forms of nonlinear modeling approaches, some familiar and others perhaps less so.  In addition, I will note some extensions to GAMs to consider.
@@ -31,7 +31,7 @@ There are still cases where one might focus on response transformation, just not
 
 Two examples of the latter that they provide are <span class="emph">projection pursuit</span> and <span class="emph">neural net</span> models, though a great many would fall into such a heading.  Projection pursuit models are well suited to high dimensional data where dimension reduction is a concern.  One may think of an example where one uses a technique such as principal components analysis on the predictor set and then examines smooth functions of $M$ principal components. 
 
-In the case of neural net models<span class="marginnote"><img src='img/nnet.png' style="display:block; margin: 0 auto;" width=50%></img> <br> <span style="text-align:center; display:block; width:300px">A Neural Net Model</span><br><br></span>, which have found a resurgence of interest of late to say the least, one can imagine a model where the input units (predictor variables) are  weighted and summed to create hidden layer units, which are then transformed and put through the same process to create outputs (see a simple example to the right). One can see projection pursuit models as an example where a smooth function is taken of the components which make up the hidden layer.  Neural networks are highly flexible in that there can be any number of inputs, hidden layers, and outputs.  However, such models are very explicit in the black box approach.
+In the case of neural net models<span class="marginnote"><img class='zoom' src='img/nnet.png' style="display:block; margin: 0 auto;" width=50%></img> <br> <span style="text-align:center; display:block; width:300px">A Neural Net Model</span><br><br></span>, which have found a resurgence of interest of late to say the least, one can imagine a model where the input units (predictor variables) are  weighted and summed to create hidden layer units, which are then transformed and put through the same process to create outputs (see a simple example to the right). One can see projection pursuit models as an example where a smooth function is taken of the components which make up the hidden layer.  Neural networks are highly flexible in that there can be any number of inputs, hidden layers, and outputs.  However, such models are very explicit in the black box approach.
 
 Such models are usually found among data mining/machine learning techniques, any number of which might be utilized in a number of disciplines. Other more algorithmic/black box approaches include <span class="emph">k-nearest-neighbors</span>, <span class="emph">networks</span>, <span class="emph">random forests</span>, <span class="emph">support vector machines</span>, and various tweaks or variations thereof including boosting, bagging, bragging and other alliterative shenanigans[^esl]. As Venables and Ripley note, generalized additive models might be thought of as falling somewhere in between the fully parametric and interpretable models of linear regression and black box techniques.  Indeed, there are algorithmic approaches which utilize GAMs as part of their approach.
 
@@ -70,7 +70,7 @@ Generalized smoothing splines are built on the theory of <span class="emph">repr
 
 We can also approach modeling by using generalizations of the Gaussian distribution.  Where the Gaussian distribution is over vectors and defined by a mean vector and covariance matrix, a <span class="emph">Gaussian Process</span> is a *distribution over functions*. A function $f$ is distributed as a Gaussian Process defined by a mean function $m$ and covariance function $k$. They have a close tie to RKHS methods, and generalize commonly used models in spatial modeling.
 
-<span class="marginnote"><img src='img/gp.png' style="display:block; margin: 0 auto;"> <br> <span style="text-align:center; display:block;">Gaussian Process</span> <br>The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.</span>
+<span class="marginnote"><img class='zoom' src='img/gp.png' style="display:block; margin: 0 auto;"> <br> <span style="text-align:center; display:block;">Gaussian Process</span> <br>The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.</span>
 
 $$f\sim \mathcal{GP}(m,k)$$
 
