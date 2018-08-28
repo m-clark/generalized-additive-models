@@ -1,0 +1,298 @@
+# The case for GAMs
+
+
+```{r setupCase, include=FALSE}
+# knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+```
+
+## Why not just use standard methods?
+
+<span class="newthought">We have seen that GAMs generalize our typical approaches, but can they really help?</span>  The standard linear model is ubiquitous in statistical training and application, and for good reason.  It is simple to do and easy to understand. Let's go ahead and do one to get things started.
+
+```{r setupIntroducingGAM, include=FALSE}
+knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+```
+
+```{r demolmdat, echo=F}
+set.seed(123)
+library(mgcv)
+dat = gamSim(1, n=400, dist="normal", scale=1, verbose=F)
+b = gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data=dat)
+```
+
+```{r demolm, eval=FALSE}
+mod = lm(y ~ x1 + x2, data=dat)
+summary(mod)
+```
+
+```{r lmsummary_clean, echo=FALSE, fig.align='center'}
+mod = lm(y ~ x1 + x2, data=dat)
+# tidy(mod) %>% 
+#   mutate_if(is.numeric, round, digits=2) %>% 
+#   pander(justify='lcccc')
+# glance(mod) %>% 
+#   select(r.squared) %>% 
+#   round(2) %>% 
+#   pander(justify='c')
+
+pander(summary(mod), justify='lrrrr', caption = '', round=1)
+```
+
+<br>
+
+Everything is nice and tidy. We have straightforward information, positive effect of `x1`, negative for `x2`, and familiar output.  Depending on your context, the R^2^ may or may not be something exciting. Let's look at some diagnostics[^basergraphics].
+
+```{r lmdiag, echo=FALSE, out.width='75%', fig.asp=.75}
+# total defeat of base R graphics 
+par(mfrow=c(1,2))
+plot(mod, which=1, bty='n', pch=19, col=scales::alpha('#ff5500', .1), 
+     col.smooth='#00aaff', lwd=2, cex=1.25, col.lab='gray25', col.axis='gray50', col.sub='gray50',
+     cex.caption = 1, cex.oma.main = 1.25, yaxt='n')
+axis(2, col='gray75', col.axis='gray33')
+axis(1, col='gray75', col.axis='gray33')
+title(col.caption=.2)
+plot(mod, which=2, bty='n', pch=19, col=scales::alpha('#ff5500', .1), 
+     col.smooth='#00aaff', lwd=2, cex=1.25, col.lab='gray25', col.axis='gray75', col.sub='gray50',
+     cex.caption = 1, cex.oma.main = 1.25, yaxt='n')
+axis(2, col='gray75', col.axis='gray33')
+axis(1, col='gray75', col.axis='gray33')
+# axis(2, col='red')
+graphics::layout(1)
+```
+
+Some issues might be present, as we might be getting a little more variance with some, especially higher, fitted values. We're also a little loose in the tails of the distribution of the residuals.  Let's compare our predictions to the data.  With a strong model, we might see a cigar shaped cloud converging to a line with slope 1 as the fit gets better.  We seem to be having some issues here, as the residual plot noted above.
+
+
+```{r plotlmfit, echo=FALSE, out.width='75%', fig.asp=.75}
+augment(mod) %>% 
+  ggplot(aes(x=.fitted, y=y)) +
+  geom_point(alpha=.25, color='#ff5500') + 
+  geom_smooth(se=F, color='#00aaff') +
+  labs(title='Fitted vs. Observed') +
+  hrbrthemes::theme_ipsum_rc() +
+  theme_trueMinimal() +
+  theme(title = element_text(colour = '#585858'))
+```
+
+
+Now let's go back and visualize the data.  The following plots both predictors against the target variable.
+
+```{r covariatePlot, echo=FALSE, out.width='75%', fig.asp=.75}
+# p =
+  dat %>% 
+  select(x1, x2, y) %>% 
+  gather(key=variable, value=Predictor, -y) %>% 
+  ggplot(aes(x=Predictor, y=y)) +
+  geom_point(alpha=.25, color='#ff5500') + 
+  geom_smooth(aes(), color='#00aaff', se=F) +
+  facet_grid(~variable) + 
+  labs(title='Predictors vs. Y') +
+  hrbrthemes::theme_ipsum_rc() +
+  theme_trueMinimal() +
+  theme(legend.title=element_blank(),
+        legend.background=element_blank(),
+        legend.key=element_blank(),
+        title = element_text(colour = '#585858'))
+# ggplotly()
+
+```
+
+Yikes. We certainly have a positive effect for x1, but it looks rather curvy.  The other predictor doesn't appear to have a relationship that could be classified as easily. It is sharply positive for low values of x2, but negative thereafter, though not in a straightforward fashion.
+
+## Heteroscedasticity, non-normality etc.
+
+In many cases as above, people have some standby methods for dealing with the problem.  For example, they might see the qq-plot for the residuals and think some of those cases are 'outliers', perhaps even dropping them from analysis.  Others might try a transformation of the target variable, for example, in cases of heteroscedasticity (not because of non-normality!) some might take the log.
+
+
+```{r loglm, eval=FALSE}
+modlog = lm(log(y) ~ x1 + x2, dat)
+summary(modlog)
+```
+```{r loglmsummary_clean, echo=FALSE}
+modlog = lm(log(y) ~ x1 + x2, dat)
+# tidy(modlog) %>% 
+#   mutate_if(is.numeric, round, digits=2) %>% 
+#   pander::pander()
+# glance(modlog) %>% 
+#   select(r.squared) %>% 
+#   round(2) %>% 
+#   pander
+summary(modlog) %>% 
+  pander(justify='lrrrr', caption='', round=2)
+```
+
+<br>
+
+Well, our fit in terms of R^2^ has actually gone down. Let's check the diagnostics.
+
+```{r loglmdiag, echo=FALSE, out.width='75%', fig.asp=.75}
+par(mfrow=c(1,2))
+plot(modlog, which=1, bty='n', pch=19, col=scales::alpha('#ff5500', .1), 
+     col.smooth='#00aaff', lwd=2, cex=1.25, col.lab='gray25', col.axis='gray50', col.sub='gray50',
+     cex.caption = 1, cex.oma.main = 1.25, yaxt='n')
+axis(2, col='gray75', col.axis='gray33')
+axis(1, col='gray75', col.axis='gray33')
+title(col.caption=.2)
+plot(modlog, which=2, bty='n', pch=19, col=scales::alpha('#ff5500', .1), 
+     col.smooth='#00aaff', lwd=2, cex=1.25, col.lab='gray25', col.axis='gray75', col.sub='gray50',
+     cex.caption = 1, cex.oma.main = 1.25, yaxt='n')
+axis(2, col='gray75', col.axis='gray33')
+axis(1, col='gray75', col.axis='gray33')
+graphics::layout(1)
+```
+
+The transformation may have helped in some ways, but made other things worse.
+
+
+```{r plotloglmfit, echo=FALSE, out.width='75%', fig.asp=.75}
+augment(modlog) %>% 
+  ggplot(aes(x=.fitted, y=log.y.)) +
+  geom_point(alpha=.25, color='#ff5500') + 
+  geom_smooth(se=F, color='#00aaff') +
+  labs(title='Fitted vs. Observed', y='log(y)') +
+  hrbrthemes::theme_ipsum_rc() +
+  theme_trueMinimal() +
+  theme(title = element_text(colour = '#585858'))
+```
+
+We continue to see some poor fitting cases and now our fit is flattening even more than it was. 
+
+
+This is a fairly typical result.  Transformations often exacerbate data issues or fail to help. What's more, some of them lead to more difficult interpretation, or aren't even applicable (e.g. categorical, ordinal targets).  
+
+Outliers, if there was actually a standard for deeming something as such, are just indications that your model doesn't capture the data generating process in some fashion.  Cutting data out of the modeling process for that reason hasn't been acceptable for a long time (if it ever was).
+
+Data abounds where a standard linear model performs poorly or doesn't do a good enough job capturing the nuances of the data. There may be nonlinear relationships as above, dependency in the observations, known non-Gaussian data etc.  One should be prepared to use models better suited to the situation, rather than torturing the data to fit a simplified modeling scheme.
+
+## Polynomial Regression
+
+
+A common application in regression to deal with nonlinear relationships involves <span class="emph">polynomial regression</span>.  For the predictor in question, $x$, we add terms e.g. quadratic ($x^2$), cubic ($x^3$) etc. to get a better fit.  Consider the following data situation.
+
+```{r datasetup, echo=FALSE}
+set.seed(123)
+x = rnorm(1000)
+y = x - x^2 +.25*x^3 + rnorm(1000)
+poly_dat = data.frame(x, y)
+
+poly_dat %>% 
+  plot_ly() %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.25)) %>% 
+  config(displayModeBar=F) %>% 
+  theme_plotly()
+```
+
+Let's fit a quadratic term and note the result.
+
+```{r polymod, echo=1}
+mod_poly = lm(y ~ poly(x, 2))
+mod_poly3 = lm(y ~ poly(x, 3))
+
+library(modelr)
+poly_dat %>% 
+  add_predictions(mod_poly) %>% 
+  plot_ly() %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.25), showlegend=F) %>% 
+  add_lines(~x, ~pred, line=list(color="#00aaff", opacity=1), name='fit') %>% 
+  config(displayModeBar=F) %>% 
+  theme_plotly()
+```
+
+The R^2^ for this is `r broom::glance(mod_poly)$r.squared %>% round(2)`, that's great! But look closely and you might notice that we aren't capturing the lower tail of this target at all, and not doing so great for observations that are very high on both variables.  Here's what the data and fit would look like if we extend the data based on the underlying true function, and things only get worse.
+
+```{r poly_ack, echo=FALSE}
+x2 = c(runif(250, -5, -2), runif(250, 2, 5))
+y2 = x2 - x2^2 +.25*x2^3 + rnorm(500)
+mod_gam = gam(y ~ s(x), data=poly_dat)
+newdat = rbind(poly_dat, data.frame(x=x2, y=y2))
+newdat %>% 
+  add_predictions(mod_poly) %>% 
+  plot_ly() %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.25), showlegend=F) %>% 
+  add_lines(~x, ~pred, name='poly', line=list(color="#00aaff", opacity=1)) %>% 
+  config(displayModeBar=F) %>% 
+  theme_plotly()
+```
+
+<br>
+
+Part of the reason is that, outside of deterministic relationships due to known physical or other causes, you are unlikely to discover a quadratic relationship between variables among found data.  Even when it appears to fit, without a lot of data it is almost certainly <span class="emph">overfit</span> due to this reason.  Fitting a polynomial is more akin to enforcing our vision of how the data should be, rather than letting the data speak for itself. Sure, it might be a good approximation some of the time, just as assuming a linear relationship is, but often it's just wishful thinking.
+
+
+Compare the previous result to the following fit from a generalized additive model.  GAMs are susceptible to extrapolation, as is every statistical model ever created.  However, the original fit (in red) is much better. Notice how it was better able to follow the straightened-out data points at the high end, rather than continuing the bend that the quadratic approach enforced.
+
+```{r polyplusgam, echo=FALSE}
+newdat %>% 
+  add_predictions(mod_poly) %>% 
+  plot_ly() %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.1), showlegend=F) %>% 
+  add_lines(~x, ~pred, name='poly', line=list(color='#00aaff')) %>% 
+  add_lines(~x, ~pred, name='gam',  line=list(color='#a703ff'), data=add_predictions(newdat, mod_gam) %>% arrange(x)) %>% 
+  add_lines(~x, ~pred, name='gam',  line=list(color='#ff1803'), data=add_predictions(poly_dat, mod_gam) %>% arrange(x)) %>% 
+  config(displayModeBar=F) %>% 
+  theme_plotly()
+# newdat %>% 
+#   add_predictions(mod_poly) %>% 
+#   plot_ly() %>% 
+#   add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.1), showlegend=F) %>% 
+#   add_lines(~x, ~pred, name='poly', line=list(color='#00aaff')) %>% 
+#   add_lines(~x, ~pred, name='gam',  line=list(color='#a703ff'), data=add_predictions(newdat, mod_gam)) %>% 
+#   add_lines(~x, ~pred, name='gam',  line=list(color='#ff1803'), data=add_predictions(poly_dat, mod_gam)) %>% 
+#   add_lines(~x, ~pred, name='true',  line=list(color='green'), data=add_predictions(newdat, modpoly3)) %>% 
+#   theme_plotly()
+```
+
+
+### A more complex relationship
+
+Perhaps you would have been satisfied with the initial quadratic fit above or perhaps a cubic fit[^cubic]. We may come across a situation where the target of interest $y$ is a function of some covariate $x$, whose effect is not straightforward at all.  Consider the following functional form for x:
+
+$$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2} + \epsilon$$
+$$\epsilon \sim N(0,.3^2)$$
+
+Let's generate some data and take a look at it visually.
+
+```{r simData}
+set.seed(123)
+x = runif(500)
+mu = sin(2*(4*x-2)) + 2*exp(-(16^2)*((x-.5)^2))
+y = rnorm(500, mu, .3)
+d = data.frame(x,y) 
+```
+
+
+
+```{r simDataPlot, echo=F}
+plot_ly(data=d) %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.5)) %>% 
+  theme_plotly() %>% 
+  config(displayModeBar=F) %>% 
+  layout()
+```
+
+
+
+#### Polynomial regression is problematic
+
+A standard linear regression is definitely not going to capture this relationship.  As above, we could try and use polynomial regression here, e.g. fitting a quadratic or cubic function within the standard regression framework.  However, this is unrealistic at best and at worst isn't useful for complex relationships. In the following, even with a polynomial of degree 15 the fit is fairly poor in many areas, and 'wiggles' in some places where there doesn't appear to be a need to.
+
+```{r polyreg, echo=FALSE}
+fits = sapply(seq(3,15, 3), function(p) fitted(lm(y~poly(x,p)))) %>% 
+  data.frame(x, y, .) %>% 
+  gather(key=polynomial, value=fits, -x, -y) %>% 
+  mutate(polynomial = factor(polynomial, labels=seq(3,15, 3)))
+
+
+plot_ly(data=d) %>% 
+  add_markers(~x, ~y, marker=list(color='#ff5500', opacity=.2), showlegend=F) %>% 
+  add_lines(~x, ~fits, color=~polynomial, data=fits) %>% 
+  config(displayModeBar=F) %>% 
+  theme_blank()
+```
+
+
+The same would hold true for other approaches that require the functional form to be specified (e.g. so-called logistic growth curve models). It's maybe also obvious that a target transformation (e.g. log) isn't going to help us in this case either.   In general, we'll need tools better suited to more complex relationships, or simply ones that don't require us to overfit/simplify the relationship we see, or guess about the form randomly until finding a decent fit.
+
+[^cubic]: The example was actually generated with a cubic polynomial.
+
+[^basergraphics]: In case you are wondering, yes, these diagnostic plots are in fact base R graphics, and they still can look good with some work.

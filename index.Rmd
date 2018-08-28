@@ -1,33 +1,14 @@
 ---
-title: <span style="color:#0085A1; font-size:5rem">Generalized Additive Models</span>
-author: |
-  <div class="title"><span style="font-size:200%; font-variant:small-caps; ">Michael Clark</span><br><br>
-  <span class="" style="font-size:75%">https://m-clark.github.io/generalized-additive-models/</span><br><br>
-  <img src="img/signature-acronym.png" style="width:30%; padding:10px 0;"> <br>
-  <img src="img/ARC-acronym-signature.png" style="width:21%; padding:10px 0;"> </div>
-date: '`r Sys.Date()`'
+title: Generalized Additive Models
+author:  |
+  <span class="noem">Michael Clark</span> 
+  https://m-clark.github.io/
+  <img class='arc' src="img/signature-acronym.png" alt="University of Michigan: CSCAR">
+  <img class='cscar' src="img/ARC-acronym-signature.png" alt="University of Michigan: Advanced Research Computing"> 
+date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
-  bookdown::gitbook:
-    css: [css/tufte.css, css/standard_html.css, css/book.css]
-    highlight: pygments
-    number_sections: false
-    config:
-      toc:
-        depth: 2
-        collapse: section
-        scroll_highlight: yes
-      edit : null
-      download: null
-      search: yes
-      sharing:
-        facebook: no
-        twitter: no
-        google: no
-        weibo: no
-        instapper: no
-        vk: no
-        all: ['twitter', 'facebook', 'google', 'weibo', 'instapaper']
+  bookdown::gitbook
 always_allow_html: yes
 documentclass: book
 # bibliography: refs.bib
@@ -47,8 +28,10 @@ nocite: |
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive, @shalizi2016
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache.rebuild=T, cache = T, message = F, warning = F, R.options=list(width=120), 
-                      fig.width=8, fig.align = 'center', comment=NA, dev='svglite', dev.args = list(bg = 'transparent'))
+knitr::opts_chunk$set(echo = T, message=F, warning=F, comment=NA, autodep=F, 
+                      eval=T, cache.rebuild=F, cache=T, R.options=list(width=120), 
+                      out.width = '40%', fig.asp = .5,
+                      fig.width=8, fig.align = 'center', dev.args=list(bg = 'transparent'), dev='svglite')
 ```
 
 ```{r loadpacks, include=FALSE, cache=FALSE, results='hide'}
@@ -61,14 +44,13 @@ mapply(function(o, v) panderOptions(o, v),
 
 #
 
-```{r cover_image, fig.align='center', echo=FALSE}
-knitr::include_graphics('img/nineteeneightyR.png', dpi = NA)
+```{r cover_image, fig.align='center', out.width=200, echo=FALSE}
+knitr::include_graphics('img/198R.png', dpi = NA)
 ```
 
 
 ```{r ccimg, fig.align='center',  out.width=0, fig.show='hide', echo=FALSE}
-knitr::include_graphics('img/ccbysa.png', dpi = NA)
-knitr::include_graphics('img/mc.png', dpi = NA)
+knitr::include_graphics('img/mc_logo.png', dpi = NA)
 ```
 
 

@@ -24,15 +24,15 @@
 
 
 
-<meta name="date" content="2018-07-21">
+<meta name="date" content="2018-08-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
-<link rel="prev" href="application-using-r.html">
-<link rel="next" href="other-approaches.html">
+<link rel="prev" href="application.html">
+<link rel="next" href="other.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -121,9 +121,8 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<link rel="stylesheet" href="css/tufte.css" type="text/css" />
-<link rel="stylesheet" href="css/standard_html.css" type="text/css" />
 <link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" type="text/css" />
 </head>
 
 <body>
@@ -136,11 +135,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class='before'><a href="https://m-clark.github.io/">Generalized Additive Models</a></li>
+<li class='before'><a href="./">Generalized Additive Models</a></li>
 
 <li class="divider"></li>
 <li><a href="index.html#section"></a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="part"><span><b>Part I: Concepts</b></span></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a><ul>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-i"><i class="fa fa-check"></i>Beyond the General Linear Model I</a><ul>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#general-linear-model"><i class="fa fa-check"></i>General Linear Model</a></li>
@@ -155,31 +155,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="the-case-for-gams.html"><a href="the-case-for-gams.html"><i class="fa fa-check"></i>The case for GAMs</a><ul>
-<li class="chapter" data-level="" data-path="the-case-for-gams.html"><a href="the-case-for-gams.html#why-not-just-use-standard-methods"><i class="fa fa-check"></i>Why not just use standard methods?</a></li>
-<li class="chapter" data-level="" data-path="the-case-for-gams.html"><a href="the-case-for-gams.html#heteroscedasticity-non-normality-etc."><i class="fa fa-check"></i>Heteroscedasticity, non-normality etc.</a></li>
-<li class="chapter" data-level="" data-path="the-case-for-gams.html"><a href="the-case-for-gams.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a><ul>
-<li class="chapter" data-level="" data-path="the-case-for-gams.html"><a href="the-case-for-gams.html#a-more-complex-relationship"><i class="fa fa-check"></i>A more complex relationship</a></li>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html"><i class="fa fa-check"></i>The case for GAMs</a><ul>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#why-not-just-use-standard-methods"><i class="fa fa-check"></i>Why not just use standard methods?</a></li>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#heteroscedasticity-non-normality-etc."><i class="fa fa-check"></i>Heteroscedasticity, non-normality etc.</a></li>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a><ul>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#a-more-complex-relationship"><i class="fa fa-check"></i>A more complex relationship</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html"><i class="fa fa-check"></i>Building up to GAMs</a><ul>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
-<li class="chapter" data-level="" data-path="building-up-to-gams.html"><a href="building-up-to-gams.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html"><i class="fa fa-check"></i>Building up to GAMs</a><ul>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html"><i class="fa fa-check"></i>Application Using R</a><ul>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#single-predictor"><i class="fa fa-check"></i>Single Predictor</a><ul>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#linear-fit"><i class="fa fa-check"></i>Linear Fit</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#gam"><i class="fa fa-check"></i>GAM</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#graphical-display"><i class="fa fa-check"></i>Graphical Display</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
+<li class="part"><span><b>Part II: Praxis</b></span></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html"><i class="fa fa-check"></i>Application Using R</a><ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#single-predictor"><i class="fa fa-check"></i>Single Predictor</a><ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#linear-fit"><i class="fa fa-check"></i>Linear Fit</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#gam"><i class="fa fa-check"></i>GAM</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#graphical-display"><i class="fa fa-check"></i>Graphical Display</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#multiple-predictors"><i class="fa fa-check"></i>Multiple Predictors</a><ul>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#linear-fit-1"><i class="fa fa-check"></i>Linear Fit</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#gam-1"><i class="fa fa-check"></i>GAM</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#graphical-display-1"><i class="fa fa-check"></i>Graphical Display</a></li>
-<li class="chapter" data-level="" data-path="application-using-r.html"><a href="application-using-r.html#model-comparison-1"><i class="fa fa-check"></i>Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#multiple-predictors"><i class="fa fa-check"></i>Multiple Predictors</a><ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#linear-fit-1"><i class="fa fa-check"></i>Linear Fit</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#gam-1"><i class="fa fa-check"></i>GAM</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#graphical-display-1"><i class="fa fa-check"></i>Graphical Display</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#model-comparison-1"><i class="fa fa-check"></i>Model Comparison</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html"><i class="fa fa-check"></i>Issues</a><ul>
@@ -194,32 +195,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#model-comparison-revisited"><i class="fa fa-check"></i>Model Comparison Revisited</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html"><i class="fa fa-check"></i>Other Approaches</a><ul>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#other-nonlinear-modeling-approaches"><i class="fa fa-check"></i>Other Nonlinear Modeling Approaches</a><ul>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#known-form"><i class="fa fa-check"></i>Known Form</a></li>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#response-transformation"><i class="fa fa-check"></i>Response Transformation</a></li>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#the-black-box"><i class="fa fa-check"></i>The Black Box</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Approaches</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-nonlinear-modeling-approaches"><i class="fa fa-check"></i>Other Nonlinear Modeling Approaches</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#known-form"><i class="fa fa-check"></i>Known Form</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#response-transformation"><i class="fa fa-check"></i>Response Transformation</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#the-black-box"><i class="fa fa-check"></i>The Black Box</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#extensions"><i class="fa fa-check"></i>Extensions</a><ul>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#other-gams"><i class="fa fa-check"></i>Other GAMs</a></li>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#reproducing-kernel-hilbert-space"><i class="fa fa-check"></i>Reproducing Kernel Hilbert Space</a></li>
-<li class="chapter" data-level="" data-path="other-approaches.html"><a href="other-approaches.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#extensions"><i class="fa fa-check"></i>Extensions</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-gams"><i class="fa fa-check"></i>Other GAMs</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#reproducing-kernel-hilbert-space"><i class="fa fa-check"></i>Reproducing Kernel Hilbert Space</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="concluding-remarks.html"><a href="concluding-remarks.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html"><i class="fa fa-check"></i>Technical details</a><ul>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#gam-2"><i class="fa fa-check"></i>GAM</a><ul>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
+<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
+<li class="part"><span><b>Part III: Addendum</b></span></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html"><i class="fa fa-check"></i>Technical details</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#gam-2"><i class="fa fa-check"></i>GAM</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#a-detailed-example"><i class="fa fa-check"></i>A detailed example</a><ul>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#preview-of-other-bases"><i class="fa fa-check"></i>Preview of other bases</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#a-detailed-example"><i class="fa fa-check"></i>A detailed example</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#preview-of-other-bases"><i class="fa fa-check"></i>Preview of other bases</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#the-number-of-knots-and-where-to-put-them"><i class="fa fa-check"></i>The number of knots and where to put them</a></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#interpreting-output-for-smooth-terms"><i class="fa fa-check"></i>Interpreting output for smooth terms</a><ul>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#effective-degrees-of-freedom"><i class="fa fa-check"></i>Effective degrees of freedom</a></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#deviance-explained"><i class="fa fa-check"></i>Deviance explained</a></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
-<li class="chapter" data-level="" data-path="technical-details.html"><a href="technical-details.html#examining-first-derivatives"><i class="fa fa-check"></i>Examining first derivatives</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#the-number-of-knots-and-where-to-put-them"><i class="fa fa-check"></i>The number of knots and where to put them</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#interpreting-output-for-smooth-terms"><i class="fa fa-check"></i>Interpreting output for smooth terms</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#effective-degrees-of-freedom"><i class="fa fa-check"></i>Effective degrees of freedom</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#deviance-explained"><i class="fa fa-check"></i>Deviance explained</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#examining-first-derivatives"><i class="fa fa-check"></i>Examining first derivatives</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
@@ -230,11 +232,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#space"><i class="fa fa-check"></i>Space</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#references"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa.png" /></a></li>
-
+<li class='after'">
+   <a href="https://m-clark.github.io/">
+      <img src="img/mc_logo.png" style="width:25%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo">
+   </a>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a href="https://github.com/m-clark/">
+         <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+      </a>
+   </div>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+         <i class="fab fa-creative-commons fa-lg"></i>
+         <i class="fab fa-creative-commons-by fa-lg"></i>
+         <i class="fab fa-creative-commons-sa fa-lg"></i>
+      </a>
+   </div>
+</li>
 </ul>
 
       </nav>
@@ -244,7 +264,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><span style="color:#0085A1; font-size:5rem">Generalized Additive Models</span></a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Generalized Additive Models</a>
           </h1>
         </div>
 
@@ -256,13 +276,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Issues</h1>
 <div id="estimation" class="section level2">
 <h2>Estimation</h2>
-<p><span class="newthought">As noted previously</span>, estimation of GAMs in the mgcv package is conducted via a penalized likelihood approach. More detail can be found in the <a href="technical-details.html#technical-details">technical section</a>, but conceptually this amounts to fitting the following model:</p>
+<p><span class="newthought">As noted previously</span>, estimation of GAMs in the mgcv package is conducted via a penalized likelihood approach. More detail can be found in the <a href="technical.html#technical-details">technical section</a>, but conceptually this amounts to fitting the following model:</p>
 <p><span class="math display">\[g(\mu) = f(x_1) + f(x_2) ... f(x_j)\]</span></p>
 <p>But note that each smooth has its own model matrix made up of the basis functions. So for each smooth covariate <span class="math inline">\(j\)</span> we have:</p>
 <p><span class="math display">\[f_j = \tilde{X}_j \tilde{\beta}_j\]</span></p>
 <p>Given a matrix of coefficients <span class="math inline">\(S\)</span>, we can more formally note a penalized likelihood function:</p>
 <p><span class="math display">\[l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta\]</span></p>
-<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As <span class="math inline">\(\lambda\rightarrow\infty\)</span>, we’d have a linear estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>. Technically we could specify the smoothing parameters explicitly, and the <a href="technical-details.html#a-detailed-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
+<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As <span class="math inline">\(\lambda\rightarrow\infty\)</span>, we’d have a linear estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>. Technically we could specify the smoothing parameters explicitly, and the <a href="technical.html#a-detailed-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
 <p>Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before. Smoothing parameters are selected which minimize the GCV score by default, though one has other options, e.g. using REML as with mixed models. Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.</p>
 <div id="shrinkage-variable-selection" class="section level3">
 <h3>Shrinkage &amp; Variable Selection</h3>
@@ -285,7 +305,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="diagnostics" class="section level2">
 <h2>Diagnostics</h2>
 <p>We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">gam.check</span>(mod_gam2, <span class="dt">k.rep=</span><span class="dv">1000</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">gam.check</span>(mod_gam2, <span class="dt">k.rep=</span><span class="dv">1000</span>)</a></code></pre></div>
 <p><span class="marginnote">This visualization is from <span class="pack">visibly</span>::<span class="func">plot_gam_check</span>.</span></p>
 <p><img src="gam_files/figure-html/gam_check_show-1.svg" width="75%" style="display: block; margin: auto;" /></p>
 <p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><span class="marginnote"> The <code>k</code> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a>.</p>
@@ -294,7 +314,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Concurvity</h3>
 <p><span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a>. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem as elsewhere, i.e. unstable estimates.</p>
 <p>Wood provides three indices related to concurvity via the concurvity function, all range from 0 to 1 with 0 suggesting no problem, and 1 indicating that the function lies entirely in the space of one or more of the other smooth terms. See <code>?concurvity</code> for details.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">concurvity</span>(mod_gam2)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">concurvity</span>(mod_gam2)</a></code></pre></div>
 <table style="width:76%;">
 <colgroup>
 <col width="20%" />
@@ -342,14 +362,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="prediction" class="section level2">
 <h2>Prediction</h2>
-<p>A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale. We’d typically use this on new data. I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that. It is worth noting again that there is an option, <code>type='lpmatrix'</code>, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values. This can be particularly useful towards opening the <a href="other-approaches.html#the-black-box">black box</a> as one learns the technique.</p>
+<p>A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale. We’d typically use this on new data. I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that. It is worth noting again that there is an option, <code>type='lpmatrix'</code>, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values. This can be particularly useful towards opening the <a href="other.html#the-black-box">black box</a> as one learns the technique.</p>
 </div>
 <div id="model-comparison-revisited" class="section level2">
 <h2>Model Comparison Revisited</h2>
 <p>We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select=TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>, and in general either of these would be viable approaches. Consider the following comparison:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb36-3" data-line-number="3">## AIC(mod_1d, mod_2d)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">## AIC(mod_1d, mod_2d)</a></code></pre></div>
 <table style="width:40%;">
 <colgroup>
 <col width="18%" />
@@ -378,33 +398,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 <p><br></p>
 <p>In some cases, we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance. We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function. While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place. The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb37-4" data-line-number="4">## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</a></code></pre></div>
-<table style="width:40%;">
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)</a>
+<a class="sourceLine" id="cb35-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb35-4" data-line-number="4">## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</a></code></pre></div>
+<table style="width:75%;">
+<caption>Analysis of Deviance Table</caption>
 <colgroup>
+<col width="16%" />
 <col width="18%" />
-<col width="11%" />
-<col width="11%" />
+<col width="9%" />
+<col width="15%" />
+<col width="15%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="center"> </th>
-<th align="center">df</th>
-<th align="center">AIC</th>
+<th align="center">Resid. Df</th>
+<th align="center">Resid. Dev</th>
+<th align="center">Df</th>
+<th align="center">Deviance</th>
+<th align="center">Pr(&gt;Chi)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><strong>mod_1d</strong></td>
-<td align="center">15.59</td>
-<td align="center">476.1</td>
+<td align="center">46.06</td>
+<td align="center">36644</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>mod_2d</strong></td>
-<td align="center">13.25</td>
-<td align="center">489.7</td>
+<td align="center">40.03</td>
+<td align="center">24998</td>
+<td align="center">6.03</td>
+<td align="center">11645</td>
+<td align="center">0</td>
 </tr>
 </tbody>
 </table>
@@ -440,8 +469,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="application-using-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="other-approaches.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="application.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="other.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -477,6 +506,7 @@ gitbook.start({
 "depth": 2,
 "scroll_highlight": true
 },
+"df_print": "kable",
 "highlight": "pygments",
 "search": true
 });

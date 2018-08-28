@@ -1,6 +1,25 @@
 book_filename: "gam"
 language:
   ui:
-    chapter_name: "Chapter "
-output_dir: "docs"
+    chapter_name: 'Chapter '
+output_dir: 'docs'
 delete_merged_file: true
+
+rmd_files: [
+  'index.Rmd',
+  'preface.Rmd',
+
+  # Part I
+  'introduction.Rmd',
+  'case_for_gam.Rmd',
+  'building_gam.Rmd',
+
+
+  # Part II
+  'application.Rmd',
+  'issues.Rmd',
+  'other.Rmd',
+  'conclusion.Rmd',
+  'technical.Rmd',
+  'appendix.Rmd'
+]
