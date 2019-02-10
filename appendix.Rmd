@@ -100,7 +100,7 @@ Going further, we can think of smooth terms as adding random effects to the line
 
 A natural setting for GAMs is where there are observations over time. Perhaps we want to examine the trend over time. The SLiM would posit a linear trend, but we often would doubt that is the case.  How would we do this with a GAM?  We can incorporate a covariate representing the time component and add it as a smooth term.  There will be some additional issues though as we will see.
 
-Here I use the data and example at [Gavin Simpon's nifty blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
+Here I use the data and example at [Gavin Simpon's nifty blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. <span class="marginnote">Simpson -@simpson_modelling_2018 has offered a recent article regarding this topic as well.</span> The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
 
 
 ```{r gamtime_setup, echo=c(1:2, 5:8), eval=-(2:3), out.width='40%', fig.asp=.5}
