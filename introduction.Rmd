@@ -199,10 +199,24 @@ gamfit = fitted(mgcv::gam(accel~s(times,bs="cs"))) #original drops duplicates
 mcycle2 = data.frame(mcycle, polyfit, nsfit, ssfit, lowfit, ksfit, gamfit)
 detach('mcycle')
 
-# library(reshape2)
-mcycle3 = gather(mcycle2, key=variable, value = value, -times, -accel) %>% 
-  mutate(variable = factor(variable, labels=c('Polynomial Regression (cubic)', 'Natural Splines', 'Smoothing Splines',
-                                                    'Lowess', 'Kernel Smoother', 'GAM')))
+mcycle3 = 
+  mcycle2 %>% 
+  gather(key=variable, value = value, -times, -accel) %>% 
+  mutate(variable = factor(variable, 
+                           labels=c('GAM', 
+                                    'Kernel Smoother', 
+                                    'Lowess', 
+                                    'Natural Splines', 
+                                    'Polynomial Regression (cubic)', 
+                                    'Smoothing Splines'
+                                    )),
+         variable = fct_relevel(variable, 
+                                'Polynomial Regression (cubic)', 
+                                'Natural Splines',
+                                'Kernel Smoother',
+                                'Lowess',
+                                'Smoothing Splines')
+         )
 ```
 
 
@@ -210,7 +224,7 @@ mcycle3 = gather(mcycle2, key=variable, value = value, -times, -accel) %>%
 
 The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident[^mcycle]  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
 
-```{r mcycleFigure, out.width='50%', echo=FALSE}
+```{r mcycleFigure, out.width='66%', fig.asp = .75, echo=FALSE}
 mcycleFigure = ggplot(aes(x=times,y=accel), data=mcycle3) + 
   geom_point(color='#ff5500', alpha=.25, size=1) + 
   geom_line(aes(y=value), color='#00aaff', size=.75) +
@@ -219,8 +233,10 @@ mcycleFigure = ggplot(aes(x=times,y=accel), data=mcycle3) +
   xlab('Time') +
   theme(plot.background=element_blank()) +
   theme_trueMinimal()
-ggplotly(mcycleFigure) %>%    # unlike plot_ly, ggplotly can't handle % width
-    theme_plotly()  
+
+mcycleFigure
+# ggplotly(mcycleFigure) %>%    # unlike plot_ly, ggplotly can't handle % width, but also just randomly disappears
+#     theme_plotly()  
 ```
 
 
