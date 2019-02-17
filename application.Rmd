@@ -3,7 +3,7 @@
 # Application Using R
 
 ```{r setupApplication, include=FALSE}
-# knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+# knitr::opts_chunk$set(cache.rebuild=T, cache = T)
 ```
 
 <span class="newthought">We're now ready to do some modeling</span>! We've now seen the relationships of GAM to techniques we know, deficiencies with common approaches, and a little bit about how GAMs work conceptually. The next step is to dive in.
@@ -28,10 +28,9 @@ The first thing to do is get the data in and do some initial inspections.
 
 ```{r initial_inspection_of_pisa, echo=1}
 pisa = read.csv('data/pisasci2006.csv')
-# psych::describe(pisa)[-1,1:9]  #univariate
+
 pisa %>% 
-  lazerhawk::num_by(vars(-Country)) %>% 
-  slice(c(9,8,3,2,7,10,6,5,1,4))  %>% # overturn alpha order
+  tidyext::num_by(vars(-Country)) %>% 
   pander()
 ```
 
@@ -67,13 +66,14 @@ The scatterplot matrix has quite a bit of information to spend some time with- u
 
 
 ```{r scatterwrap, echo=F, out.width='45%', fig.asp=.6}
-#get data into a form to take advantage of ggplot
-# dmelt = melt(pisa, id=c('Country','Overall'), 
-#              measure=c('Interest','Support','Income','Health','Edu','HDI'))
+# get data into a form to take advantage of ggplot
 
-dmelt = gather(dplyr::select(pisa, -Evidence, -Explain, -Issues), key=Variable, value=Value, -Overall,-Country)
+dmelt = gather(dplyr::select(pisa, -Evidence, -Explain, -Issues), 
+               key=Variable, 
+               value=Value, 
+               -Overall, -Country)
 
-#leave the smooth off for now
+# leave the smooth off for now
 scatterwrap = ggplot(aes(x=Value,y=Overall), data=dmelt) +
   geom_point(color='#ff5500',alpha=.75) +
   #geom_smooth(se=F) +
@@ -290,7 +290,7 @@ Let us now compare our regular regression fit to the GAM model fit. The followin
 ```{r mod_lm_fit}
 AIC(mod_lm)
 summary(mod_lm)$sp.criterion
-summary(mod_lm)$r.sq  #adjusted R squared
+summary(mod_lm)$r.sq  # adjusted R squared
 ```
 
 Do the same to extract those same elements from the GAM. The following display makes for easy comparison.
@@ -474,7 +474,7 @@ visreg2d(mod_gam3, xvar='Income', yvar='Edu', scale='response')
 #            xaxis=list(title='Income'),
 #            yaxis=list(title='Edu'),
 #            zaxis=list(title='Overall')))
-plot_gam_3d(model = mod_gam3, main_var = Income, second_var = Edu, palette='tokyo')
+plot_gam_3d(model = mod_gam3, main_var = Income, second_var = Edu, palette='bilbao', direction = 1)
 ```
 
 <br>

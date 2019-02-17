@@ -277,7 +277,8 @@ plot_ly(data=d) %>%
 A standard linear regression is definitely not going to capture this relationship.  As above, we could try and use polynomial regression here, e.g. fitting a quadratic or cubic function within the standard regression framework.  However, this is unrealistic at best and at worst isn't useful for complex relationships. In the following, even with a polynomial of degree 15 the fit is fairly poor in many areas, and 'wiggles' in some places where there doesn't appear to be a need to.
 
 ```{r polyreg, echo=FALSE}
-fits = sapply(seq(3,15, 3), function(p) fitted(lm(y~poly(x,p)))) %>% 
+fits = sapply(seq(3, 15, 3), function(p)
+  fitted(lm(y ~ poly(x, p)))) %>% 
   data.frame(x, y, .) %>% 
   gather(key=polynomial, value=fits, -x, -y) %>% 
   mutate(polynomial = factor(polynomial, labels=seq(3,15, 3)))

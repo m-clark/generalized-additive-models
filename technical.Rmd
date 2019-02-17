@@ -34,11 +34,11 @@ $$\mathrm{STAR:}\quad g(\mu) = X\beta + Z\gamma + \Upsilon\varpi + \Xi\varrho + 
 Consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. We can write the <span class="emph">penalized likelihood</span> as follows:
 
 
-$$l_p(\beta)= l(\beta) - \color{darkred}{\lambda B'SB}$$
+$$l_p(\beta)= l(\beta) - \color{#b2001d}{\lambda B'SB}$$
 
 Where $S$ is a penalty matrix of known coefficients[^Smat]. If you prefer least squares as the loss function, we can put it as:
 
-$$\mathcal{Loss} = \sum (y-X\beta)^2 + \color{darkred}{\lambda B'SB}$$
+$$\mathcal{Loss} = \sum (y-X\beta)^2 + \color{#b2001d}{\lambda B'SB}$$
 
 So, if we're maximizing the likelihood will make it lower than it otherwise would have been, and vice versa in terms of a loss function.  What it means for a GAM is that we'll add a penalty for the coefficients associated with the basis functions[^secondderiv].  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly.  As $\lambda \rightarrow \infty$, the result is a linear fit because any wiggliness will add too much to the loss function. As $\lambda \rightarrow 0$, we have the opposite effect, where any wiggliness is incorporated into the model.  In <span class='pack'>mgcv</span>, by default the estimated parameters are chosen via a generalized cross validation, or <span class="emph">GCV</span>, approach, and that statistic is reported in the summary. It modifies the loss function depicted above to approximate leave-one-out cross-validation selection.
 

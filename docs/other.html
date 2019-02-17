@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2019-02-10">
+<meta name="date" content="2019-02-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -309,11 +309,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="structured-additive-regression-models" class="section level4">
 <h4>Structured Additive Regression Models</h4>
-<p>The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- <span class="emph">structured additive regression models</span>, or STARs[linkedin]. It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix. With those two components, we can specify the models in almost identical fashion, and combine such effects within a single model. This results in a very powerful regression modeling strategy. Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling<span class="marginnote">The <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the mgcv package’s syntax style.</span>.</p>
+<p>The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- <span class="emph">structured additive regression models</span>, or STARs<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>. It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix. With those two components, we can specify the models in almost identical fashion, and combine such effects within a single model. This results in a very powerful regression modeling strategy. Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling<span class="marginnote">The <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the mgcv package’s syntax style.</span>.</p>
 </div>
 <div id="gamlss" class="section level4">
 <h4>GAMLSS</h4>
-<p>Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>, and modeling different parameters besides the mean. <span class="pack">mgcv</span> has recently added several options in this regard as well.</p>
+<p>Generalized additive models for location, scale, and shape (GAMLSS) allow for distributions beyond the exponential family<a href="#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a>, and modeling different parameters besides the mean. <span class="pack">mgcv</span> has recently added several options in this regard as well.</p>
 </div>
 <div id="other" class="section level4">
 <h4>Other</h4>
@@ -322,7 +322,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="reproducing-kernel-hilbert-space" class="section level3">
 <h3>Reproducing Kernel Hilbert Space</h3>
-<p>Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>. I won’t pretend to be able to get into it here, but the idea is that some forms of additive models can be represented in the inner product form used in RKHS approaches<a href="#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a>. This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods. For the interested, I have an example of RKHS regression <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md">here</a>.</p>
+<p>Generalized smoothing splines are built on the theory of <span class="emph">reproducing kernel Hilbert spaces</span>. I won’t pretend to be able to get into it here, but the idea is that some forms of additive models can be represented in the inner product form used in RKHS approaches<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a>. This connection lends itself to a tie between GAMs and e.g. support vector machines and similar methods. For the interested, I have an example of RKHS regression <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/RKHSReg/RKHSReg.md">here</a>.</p>
 </div>
 <div id="gaussian-processes" class="section level3">
 <h3>Gaussian Processes</h3>
@@ -351,8 +351,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li id="fn27"><p>For an excellent discussion of these different approaches to understanding data see <span class="citation">Breiman (<a href="#ref-breiman_statistical_2001">2001</a>)</span> and associated commentary. For some general packages outside of R that incorporate a more algorithmic approach to modeling, you might check out the <span class="pack">scikit-learn</span> module for Python as a starting point.<a href="other.html#fnref27" class="footnote-back">↩</a></p></li>
 <li id="fn28"><p>See <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-hastie_elements_2009">2009</a>)</span> for an overview of such approaches. A more recent and very applied version of that text is also <a href="http://link.springer.com/book/10.1007/978-1-4614-7138-7?no-access=true">available</a>. I have an R oriented intro <a href="https://m-clark.github.io/introduction-to-machine-learning/">here</a>.<a href="other.html#fnref28" class="footnote-back">↩</a></p></li>
 <li id="fn29"><p><span class="citation">Wood (<a href="#ref-wood_generalized_2017">2017</a>)</span> has a whole chapter devoted to the subject, though <span class="citation">Fahrmeir et al. (<a href="#ref-fahrmeir2013regression">2013</a>)</span> provides an even fuller treatment. I also have a document on <a href="http://m-clark.github.io/docs/mixedModels/mixedModelML.html">mixed models</a> that goes into it some. In addition, Wood also provides a complementary package, <span class="pack">gamm4</span>, for adding random effects to GAMs via <span class="pack">lme4</span>.<a href="other.html#fnref29" class="footnote-back">↩</a></p></li>
-<li id="fn30"><p>See <span class="citation">Rigby and Stasinopoulos (<a href="#ref-rigby_generalized_2005">2005</a>)</span> and the <span class="pack">gamlss</span> package.<a href="other.html#fnref30" class="footnote-back">↩</a></p></li>
-<li id="fn31"><p>You might note that the function used in the spline example in the technical section is called <em>rk</em>.<a href="other.html#fnref31" class="footnote-back">↩</a></p></li>
+<li id="fn30"><p>Linkedin has used what they call <strong>GAME</strong>, or <a href="https://docs.google.com/presentation/d/1vHanpK3KLIVgdDIHYRehUeyb04Hc2AasbBHs4InVPSU/edit#slide=id.g160b8a9fe5_0_61">Generalized Additive Mixed-Effect Model</a>, though these are called GAMMs (generalized additive mixed model) practically everywhere else. The GAME implementation does appear to go beyond what one would do with the <span class="emph">gamm</span> function in <span class="pack">mgcv</span>, or at least, takes a different and more scalable computational approach.<a href="other.html#fnref30" class="footnote-back">↩</a></p></li>
+<li id="fn31"><p>See <span class="citation">Rigby and Stasinopoulos (<a href="#ref-rigby_generalized_2005">2005</a>)</span> and the <span class="pack">gamlss</span> package.<a href="other.html#fnref31" class="footnote-back">↩</a></p></li>
+<li id="fn32"><p>You might note that the function used in the spline example in the technical section is called <em>rk</em>.<a href="other.html#fnref32" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
