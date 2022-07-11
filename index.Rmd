@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
   comment = NA,
   R.options = list(width = 120),
   # viz
-  out.width = '40%',
+  # out.width = '40%',
   fig.asp = .5,
   fig.width = 8,
   fig.align = 'center',
@@ -116,12 +116,12 @@ theme_set(theme_clean())
 # paletteer::palettes_d$colorblindr$OkabeIto
 update_geom_defaults('vline',   list(color = 'gray25',  alpha = .25))  # vlines and hlines are typically not attention grabbers so set alpha
 update_geom_defaults('hline',   list(color = 'gray25',  alpha = .25))  # usually a zero marker
-update_geom_defaults('point',   list(color = '#E69F00', alpha = .5))   # alpha as usually there are many points
+update_geom_defaults('point',   list(color = '#D55E00', alpha = .5))   # alpha as usually there are many points
 update_geom_defaults('smooth',  list(color = '#56B4E9', alpha = .15))
 update_geom_defaults('line',    list(color = '#56B4E9', alpha = .5))
-update_geom_defaults('bar',     list(color = '#E69F00', fill = '#E69F00'))  
-update_geom_defaults('col',     list(color = '#E69F00', fill = '#E69F00'))
-update_geom_defaults('dotplot', list(color = '#E69F00', fill = '#E69F00'))
+update_geom_defaults('bar',     list(color = '#D55E00', fill = '#D55E00'))  
+update_geom_defaults('col',     list(color = '#D55E00', fill = '#D55E00'))
+update_geom_defaults('dotplot', list(color = '#D55E00', fill = '#D55E00'))
 
 # use colorblind safe colors for categories; if you supply a continuous value to
 # color you'll get an error, but you just have to use `myplot +
@@ -130,7 +130,7 @@ update_geom_defaults('dotplot', list(color = '#E69F00', fill = '#E69F00'))
 # will apply for both color and fill, which is usually what we want.
 
 okabe_ito = c(
-  '#E69F00',
+  '#D55E00',
   '#56B4E9',
   '#009E73',
   '#F0E442',
@@ -192,6 +192,8 @@ library(pander)
 library(tidyverse)
 library(broom)
 library(mgcv)
+library(modelr)
+
 
 library(htmltools)
 library(lazerhawk)
