@@ -16,6 +16,8 @@ The data set has been constructed using average Science scores by country from t
 
 - **Overall** Science Score (average score for 15 year olds)
 - **Interest** in science
+- Identifying scientific **Issues**
+- **Explaining** phenomena scientifically
 - **Support** for scientific inquiry
 - **Income** Index
 - **Health** Index

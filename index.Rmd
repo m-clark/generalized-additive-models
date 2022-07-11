@@ -35,14 +35,29 @@ knitr::opts_chunk$set(echo = T, message=F, warning=F, comment=NA, autodep=F,
 ```
 
 ```{r loadpacks, include=FALSE, cache=FALSE, results='hide'}
-library(magrittr); library(pander); library(tidyverse); library(broom); library(mgcv); 
-library(htmltools); library(lazerhawk); library(visibly); library(visreg); library(plotly)
-mapply(function(o, v) panderOptions(o, v),
-       c('keep.trailing.zeros', 'round', 'table.split.table', 'table.split.cells'), 
-       c(TRUE, 2, Inf, Inf))
+library(pander)
+library(tidyverse)
+library(broom)
+library(mgcv)
+
+library(htmltools)
+library(lazerhawk)
+library(visibly)
+# library(visreg)
+library(plotly)
+
+map2(
+  list(
+    'keep.trailing.zeros',
+    'round',
+    'table.split.table',
+    'table.split.cells'
+  ),
+  list(TRUE, 2, Inf, Inf),
+  function(o, v) panderOptions(o, v)
+)
 ```
 
-#
 
 ```{r cover_image, fig.align='center', out.width=200, echo=FALSE}
 knitr::include_graphics('img/198R.png', dpi = NA)

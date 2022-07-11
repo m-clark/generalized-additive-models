@@ -3,7 +3,7 @@
 
 # Technical details
 
-```{r, echo=F}
+```{r setup_technical, echo=F}
 knitr::opts_chunk$set(cache.rebuild=F, cache = T)
 ```
 
@@ -71,7 +71,9 @@ $$B_1(x)=1, B_2(x)=x, ..., B_{l+1}(x)=x^l, B_{l+2}(x)=(x-\kappa_2)_+^l...B_{d}(x
 <span class="marginnote">
 $$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2} + \epsilon$$
 $$\epsilon \sim N(0,.3^2)$$
-</span>.Let's see it in action. Here our polynomial spline will be done with degree $l$ equal to 1, which means that we are just fitting a linear regression between knots This uses the data we employed for demonstration [before][A more complex relationship].
+</span>
+
+Let's see it in action. Here our polynomial spline will be done with degree $l$ equal to 1, which means that we are just fitting a linear regression between knots. The following uses the data we employed for demonstration [before][A more complex relationship].
 
 ```{r csbs, eval=-6}
 knots = seq(0, 1, by=.1)
@@ -89,13 +91,11 @@ head(bs)
 ```{r csbs_show, echo=FALSE}
 head(bs) %>%
   pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
-# head(bs) %>% 
-#   DT::datatable(options=list(dom='t'))
 ```
 
 <br>
 
-If we plot this against our target variable $y$, it doesn't look like much.
+If we plot this against our target variable $y$, it doesn't look like much, but we can maybe start to see the partitioning of the effect by knots.
 
 ```{r csbsPlot, echo=FALSE, out.width='40%', fig.asp=.5}
 bs = data.frame(int=1, bs)
@@ -357,7 +357,7 @@ d4 %>%
 
 <br>
 
-However, we don't really have to worry about this except in the conceptual sense, i.e. being able to control the wiggliness.  The odds of you knowing beforehand the number of knots and where to put them is somewhere between slim and none, so this is a good thing.
+However, we don't really have to worry about this except in the conceptual sense, i.e. being able to control the wiggliness.  The odds of you knowing beforehand the number of knots and where to put them is somewhere between slim and none, so it's good that we can control this via a single parameter and via a more automatic process.
 
 
 ## Interpreting output for smooth terms
@@ -399,14 +399,31 @@ First we'll start with the basic GAM plot. First we get the term for year, i.e. 
 
 
 ```{r termplot_gam, out.width='75%'}
-income_term = predict(mod_gam2, type='terms')[,'s(Income)']
+income_term = predict(mod_gam2, type = 'terms')[, 's(Income)']
 res_partial = residuals(mod_gam2) + income_term
 income = mod_gam2$model$Income
-par(mfrow=c(1,2))
-plot(income, res_partial, ylim=c(-200,100), col='black', 
-     ylab='s(income, 7.59)', pch=19, main='ours')
+par(mfrow = c(1, 2))
+plot(
+  x = income,
+  y = res_partial,
+  ylim = c(-200, 100),
+  col = 'black',
+  ylab = 's(income, 7.59)',
+  pch = 19,
+  main = 'ours'
+)
 lines(income[order(income)], income_term[order(income)])
-plot(mod_gam2, select = 1, se=F, residuals=T, pch=19, rug=F, ylim=c(-200,100), main='mgcv')
+
+plot(
+  mod_gam2,
+  select = 1,
+  se = F,
+  residuals = T,
+  pch = 19,
+  rug = F,
+  ylim = c(-200, 100),
+  main = 'mgcv'
+)
 ```
 
 Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default, these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal.
