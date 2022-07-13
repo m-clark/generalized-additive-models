@@ -3,7 +3,7 @@
 
 Generalized additive models are a conceptually straightforward tool that allows one to incorporate nonlinear and other relationships into their otherwise linear models. In addition, they allow one to keep within the linear and generalized linear modeling frameworks with which one is already familiar, while providing new avenues of model exploration and improved results.  As was demonstrated, it is easy enough with just a modicum of familiarity to pull them off, and as such, it is hoped that this document provided one the means to do so.
 
-In closing, I offer the following lifted directly from Shalizi, *Advanced Data Analysis from an Elementary Point of View*, as I don't think I could have put it more clearly:
+In closing, I offer the following lifted directly from @shalizi2016, *Advanced Data Analysis from an Elementary Point of View*, as I don't think I could have put it more clearly:
 
 > With modern computing power, there are very few situations in which it is actually better to do linear regression than to fit an additive model. In fact, there seem to be only two good reasons to prefer linear models.
 >
@@ -19,6 +19,8 @@ better, and can spread the word**.
 
 <br>
 
+Nowadays, GAMs serve as a potentially great starting point for modeling, especially for tabular data. A well-specified GAM should perform very well even compared to boosting or deep learning methods, and so at the very least, serves as a good baseline with enhanced interpretability and easier uncertainty metrics.  For a lot of data situations, GAMs may be all you need.
+
 <div style="text-align:center">
-<span class="" style="font-size:200%; font-family:'Alex Brush'">Best of luck with your data!</span>
+<span class="" style="font-size:200%; color: #990024; font-family:'Alex Brush'">Best of luck with your data!</span>
 </div>
