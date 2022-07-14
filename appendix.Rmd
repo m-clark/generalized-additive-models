@@ -5,19 +5,14 @@
 ```
 
 ## R packages
-<span class="newthought">The following is</span> a non-exhaustive list of R packages which contain GAM functionality. Each is linked to the CRAN page for the package.  Note also that several build upon the <span class="pack">mgcv</span> package used for this document.
+
+The following is a non-exhaustive list of R packages which contain GAM functionality. Each is linked to the CRAN page for the package.  Note also that several build upon the <span class="pack">mgcv</span> package used for this document.  I haven't really looke much lately, as between mgcv and brms there is little you can't do. gamlss and VGAM I can vouch are decent too, but I've not used either in a long time.
 
 [brms](http://cran.r-project.org/web/packages/brms/) Allows for Bayesian GAMs via the Stan modeling language (very new implementation).
 
 [CausalGAM](http://cran.r-project.org/web/packages/CausalGAM/) This package implements various estimators for average treatment effects. 
 
-[COZIGAM](http://cran.r-project.org/web/packages/COZIGAM/) Constrained and Unconstrained Zero-Inflated Generalized Additive Models.
-
-[CoxBoost](http://cran.r-project.org/web/packages/CoxBoost/) This package provides routines for fitting Cox models. See also <span class="func">cph</span> in rms package for nonlinear approaches in the survival context.
-
 [gam](http://cran.r-project.org/web/packages/gam/) Functions for fitting and working with generalized additive models.  
-
-[GAMBoost](http://cran.r-project.org/web/packages/GAMBoost/): This package provides routines for fitting generalized linear and and generalized additive models by likelihood based boosting.
 
 [gamboostLSS](http://cran.r-project.org/web/packages/gamboostLSS/): Boosting models for fitting generalized additive models for location, shape and scale (gamLSS models). 
 
@@ -27,13 +22,7 @@
 
 [gamm4](http://cran.r-project.org/web/packages/gamm4/): Fit generalized additive mixed models via a version of mgcv's gamm function.  
 
-[gammSlice](http://cran.r-project.org/web/packages/gammSlice/): Bayesian fitting and inference for generalized additive mixed models.
-
-[GMMBoost](http://cran.r-project.org/web/packages/GMMBoost/): Likelihood-based Boosting for Generalized mixed models.
-
 [gss](http://cran.r-project.org/web/packages/gss/):  A comprehensive package for structural multivariate function estimation using smoothing splines.
-
-[mboost](http://cran.r-project.org/web/packages/mboost/): Model-Based Boosting. 
 
 [mgcv](http://cran.r-project.org/web/packages/mgcv/): Routines for GAMs and other generalized ridge regression with multiple smoothing parameter selection by GCV, REML or UBRE/AIC. Also GAMMs. 
 
@@ -103,45 +92,49 @@ A natural setting for GAMs is where there are observations over time. Perhaps we
 Here I use the data and example at [Gavin Simpon's nifty blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model. <span class="marginnote">Simpson -@simpson_modelling_2018 has offered a recent article regarding this topic as well.</span> The data regards global temperature anomalies, which for some people assume does not exist, but for our purposes is actually in front of our face.
 
 
-```{r gamtime_setup, echo=c(1:2, 5:8), eval=-(2:3), out.width='40%', fig.asp=.5}
+
+```{r gamtime_setup, eval = FALSE}
 ## Global temperatures
-gtemp = read.table("https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat", 
-                   fill = TRUE)
-save(gtemp, file='data/global_temperatures.RData')
-load('data/global_temperatures.RData')
+# Original found at "https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat"
+
+load(url('https://github.com/m-clark/generalized-additive-models/raw/master/data/global_temperatures.RData'))
 
 ## Drop the even rows
 gtemp = gtemp %>% drop_na()
 
 ## Add colnames
-colnames(gtemp) <- c("Year", month.abb, "Annual")
+colnames(gtemp) = c("Year", month.abb, "Annual")
 
 # Create a long format for later; Also set year to start at 0
-gtemp_long = gtemp %>% 
-  mutate(Year0 = Year-1850) %>% 
-  gather(key = Month, value=Anomaly, -Year, -Annual)
+gtemp_long = gtemp %>%
+  mutate(Year0 = Year - 1850) %>%
+  pivot_longer(-c(Year, Annual), names_to = 'Month', values_to = 'Anomaly')
+```
 
+
+```{r gamtime_setup, echo=FALSE, eval=-1, fig.asp=.5}
+save(gtemp, file='data/global_temperatures.RData')
+load('data/global_temperatures.RData')
 
 gtemp %>% 
-  plot_ly(x=~ Year, y=~ Annual) %>% 
-  add_lines(x=~Year, y=0, color=I('gray92')) %>% 
-  add_lines(color=I('#00aaff'), showlegend=F, opacity=.75) %>% 
-  theme_plotly()
+  ggplot(aes(x= Year, y = Annual)) +
+  geom_hline(yintercept = 0) +
+  geom_line()
 ```
 
 <br>
 
 Fitting a straight line to this would be disastrous, so let's do a GAM. 
 
-```{r gamtime, out.width='40%', fig.asp=.5, echo=1:2, out.width='40%', fig.asp=.5}
+```{r gamtime, fig.asp=.5, echo=1:2}
 hot_gam = gam(Annual ~ s(Year), data=gtemp)
 summary(hot_gam)
 plotdat = visreg(hot_gam, plot = F)$fit
 plotdat %>% 
   plot_ly() %>% 
-  add_ribbons(x=~Year, ymin=~visregLwr, ymax =~visregUpr, color=I('#ff5500')) %>% 
-  add_markers(x=~Year, y=~Annual, data=gtemp, color=I('#ff5500'), opacity=.5) %>% 
-  add_lines(x=~Year, y=~visregFit, color=I('#00aaff'), data=plotdat) %>% 
+  add_ribbons(x=~Year, ymin=~visregLwr, ymax =~visregUpr, color=I('#D55E00')) %>% 
+  add_markers(x=~Year, y=~Annual, data=gtemp, color=I('#D55E00'), opacity=.5) %>% 
+  add_lines(x=~Year, y=~visregFit, color=I('#56B4E9'), data=plotdat) %>% 
   theme_plotly() %>% 
   config(displayModeBar=F) %>% 
   layout(showlegend=F,
@@ -168,8 +161,8 @@ acfdat = acf(gtemp$Annual,
              lty=1,
              ylim=c(-.2,1), 
              xlim=c(0,25),
-             col='#ff5500CC',
-             ci.col='#00aaff80',
+             col='#D55E00CC',
+             ci.col='#56B4E980',
              main='',
              ylab='Autocorrelation',
              col.axis='gray35',
@@ -196,8 +189,8 @@ acfdat = acf(resid(hot_gam),
              lty=1,
              ylim=c(-.2,1), 
              xlim=c(0,10),
-             col='#ff5500CC',
-             ci.col='#00aaff80',
+             col='#D55E00CC',
+             ci.col='#56B4E980',
              main='',
              ylab='Autocorrelation',
              col.axis='gray35',
@@ -221,36 +214,67 @@ summary(hot_gam_ar$lme)
 
 In the gam output, we see some slight differences from the original model, but not much (and we wouldn't expect it). From the lme output we can see the estimated autocorrelation value denoted as `Phi`[^Xlme].  Let's see what it does for our fit.
 
-```{r gam_ar_fit, echo=FALSE, fig.show='hide', out.width='40%', fig.asp=.5}
-plotdat1 = predict(gamm(Annual ~ s(Year), data=gtemp)$gam, newdata = plotdat %>% select(Year), type = 'response', se=T)
-plotdat1 = data_frame(Year= plotdat$Year,
-                      fit = plotdat1$fit,
-                      upper=fit+2*plotdat1$se,
-                      lower=fit-2*plotdat1$se
-                      )
-plotdat2 = predict(hot_gam_ar$gam, newdata = plotdat %>% select(Year), type='response', se=T)
-plotdat2 = data_frame(Year= plotdat$Year,
-                      fit = plotdat2$fit,
-                      upper=fit+2*plotdat2$se,
-                      lower=fit-2*plotdat2$se
-                      )
+```{r gam_ar_fit, echo=FALSE, fig.show='hide', fig.asp=.5}
+plotdat1 = predict(
+  gamm(Annual ~ s(Year), data = gtemp)$gam,
+  newdata = plotdat %>% select(Year),
+  type = 'response',
+  se = T
+)
+plotdat1 = data_frame(
+  Year = plotdat$Year,
+  fit = plotdat1$fit,
+  upper = fit + 2 * plotdat1$se,
+  lower = fit - 2 * plotdat1$se
+)
+plotdat2 = predict(
+  hot_gam_ar$gam,
+  newdata = plotdat %>% select(Year),
+  type = 'response',
+  se = T
+)
+plotdat2 = data_frame(
+  Year = plotdat$Year,
+  fit = plotdat2$fit,
+  upper = fit + 2 * plotdat2$se,
+  lower = fit - 2 * plotdat2$se
+)
 
-plotdat1 %>% 
-  plot_ly() %>% 
-  add_ribbons(x=~Year, ymin=~lower, ymax =~upper, color=I('gray75'), data=plotdat1) %>% 
-  # add_lines(x=~Year, y=~fit, color=I('gray50'), data=plotdat1) %>% 
-  add_ribbons(x=~Year, ymin=~lower, ymax =~upper, color=I('#ff5500'), data=plotdat2) %>% 
-  add_lines(x=~Year, y=~fit, color=I('#00aaff'), data=plotdat2) %>% 
-  theme_plotly() %>% 
-  config(displayModeBar=F) %>% 
-  layout(showlegend=F,
-         xaxis=list(ticklength=10),
-         yaxis=list(title='Anomaly'))
+plotdat1 %>%
+  plot_ly() %>%
+  add_ribbons(
+    x =  ~ Year,
+    ymin =  ~ lower,
+    ymax =  ~ upper,
+    color = I('gray75'),
+    data = plotdat1
+  ) %>%
+  # add_lines(x=~Year, y=~fit, color=I('gray50'), data=plotdat1) %>%
+  add_ribbons(
+    x =  ~ Year,
+    ymin =  ~ lower,
+    ymax =  ~ upper,
+    color = I('#D55E00'),
+    data = plotdat2
+  ) %>%
+  add_lines(
+    x =  ~ Year,
+    y =  ~ fit,
+    color = I('#56B4E9'),
+    data = plotdat2
+  ) %>%
+  theme_plotly() %>%
+  config(displayModeBar = F) %>%
+  layout(
+    showlegend = F,
+    xaxis = list(ticklength = 10),
+    yaxis = list(title = 'Anomaly')
+  )
 ```
 
 <br>
 
-We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  Thus, in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
+We can in fact see that we were a bit optimistic in the previous fit (non-colored band).  Our new fit is wider at every point[^timefits].  So, in using a GAM for time-series data, we have the same issues we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
 
 ### Space
 
@@ -604,15 +628,15 @@ gam_rent_re = gam(rent ~ s(district, bs = 're'),
 data_frame(mrf_fit = fitted(gam_rent_mrf), 
            mm_fit = fitted(gam_rent_re)) %>% 
   ggplot(aes(x=mm_fit, y=mrf_fit)) +
-  geom_point(color=I('#ff55001A'), size=3) +
-  theme_trueMinimal()
+  geom_point(color=I('#D55E001A'), size=3) +
+  theme_clean()
   # seriously, avoid plotly for anything not necessary until they fix it; the
   # below won't plot at all even with no size arguement
   # plot_ly() %>%
   # add_markers(x=~mm_fit,
   #             y=~mrf_fit,
   #             # size=I(10),
-  #             color=I('#ff55001A')
+  #             color=I('#D55E001A')
   #             ) %>%
   # config(displayModeBar=F) %>%
   # theme_plotly() %>%
