@@ -188,29 +188,19 @@ tbl_summary <- function(..., title = '', butcher = TRUE) {
 ```
 
 ```{r loadpacks, include=FALSE, cache=FALSE, results='hide'}
-library(pander)
+library(gt)
 library(tidyverse)
 library(broom)
 library(mgcv)
+library(gratia)
 library(modelr)
-
+library(purrr)
 
 library(htmltools)
 library(lazerhawk)
 library(visibly)
-# library(visreg)
 library(plotly)
-
-map2(
-  list(
-    'keep.trailing.zeros',
-    'round',
-    'table.split.table',
-    'table.split.cells'
-  ),
-  list(TRUE, 2, Inf, Inf),
-  function(o, v) panderOptions(o, v)
-)
+library(scico)
 ```
 
 

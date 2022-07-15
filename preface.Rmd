@@ -20,4 +20,4 @@ Color guide:
 R Info: **`r sessionInfo()$R.version$version.string` `r sessionInfo()$R.version$nickname`**
 
 
-This document was last modified `r Sys.Date()`. Original draft August 2012.
+This document was last modified `r Sys.Date()`. Original draft August 2012. (@$%* me I've been doing this stuff a while).

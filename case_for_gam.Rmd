@@ -42,7 +42,7 @@ mod = lm(y ~ x1 + x2, data = dat)
 #   round(2) %>% 
 #   pander(justify='c')
 
-pander(summary(mod),
+pander::pander(summary(mod),
        justify = 'lrrrr',
        caption = '',
        round = 1)
@@ -148,24 +148,18 @@ summary(modlog)
 
 ```{r loglmsummary_clean, echo=FALSE}
 modlog = lm(log(y) ~ x1 + x2, dat)
-# tidy(modlog) %>%
-#   mutate_if(is.numeric, round, digits=2) %>%
-#   pander::pander()
-# glance(modlog) %>%
-#   select(r.squared) %>%
-#   round(2) %>%
-#   pander
+
 summary(modlog) %>%
-  pander(justify = 'lrrrr',
-         caption = '',
-         round = 2)
+  pander::pander(justify = 'lrrrr',
+                 aption = '',
+                 round = 2)
 ```
 
 <br>
 
 Well, our fit in terms of R^2^ has actually gone down. Let's check the diagnostics.
 
-```{r loglmdiag, echo=FALSE, out.width='75%', fig.asp=.75}
+```{r loglmdiag, echo=FALSE, fig.asp=.75}
 par(mfrow = c(1, 2))
 plot(
   modlog,
@@ -210,7 +204,7 @@ graphics::layout(1)
 The transformation may have helped in some ways, but made other things worse.
 
 
-```{r plotloglmfit, echo=FALSE, out.width='75%', fig.asp=.75}
+```{r plotloglmfit, echo=FALSE, fig.asp=.75}
 augment(modlog) %>%
   ggplot(aes(x = .fitted, y = `log(y)`)) +
   geom_point(alpha = .25, color = '#D55E00') +

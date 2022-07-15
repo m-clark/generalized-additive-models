@@ -10,6 +10,8 @@
 
 This section is for some of the more technically inclined, though you'll find more context and detail in  and @wood_generalized_2006 and @wood_generalized_2017, from which a good chunk of this section is taken more or less directly from.
 
+
+
 ## GAM
 
 As we noted before, a GAM is a GLM whose linear predictor includes a sum of smooth functions of covariates. With link function $g(.)$, model matrix $X$ of $n$ rows and $p$ features (plus a column for the intercept), a vector of $p$ coefficients $\beta$, we can write a GLM as follows:
@@ -70,10 +72,7 @@ With the spline above this becomes:
 
 $$B_1(x)=1, B_2(x)=x, ..., B_{l+1}(x)=x^l, B_{l+2}(x)=(x-\kappa_2)_+^l...B_{d}(x)=(x-\kappa_{m-1})_+^l$$
 
-<span class="marginnote">
-$$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2} + \epsilon$$
-$$\epsilon \sim N(0,.3^2)$$
-</span>
+
 
 Let's see it in action. Here our polynomial spline will be done with degree $l$ equal to 1, which means that we are just fitting a linear regression between knots. The following uses the data we employed for demonstration [before][A more complex relationship].
 
@@ -395,7 +394,8 @@ all.equal(sm$X, modelMatrix)
 
 ```{r gamDatavsByhandData_show, echo=FALSE}
 head(sm$X[,1:6]) %>% 
-  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
+  as_tibble() %>% 
+  gt(decimals = 3)
 ```
 
 
@@ -508,11 +508,13 @@ d4 %>%
 However, we don't really have to worry about this except in the conceptual sense, i.e. being able to control the wiggliness.  The odds of you knowing beforehand the number of knots and where to put them is somewhere between slim and none, so it's good that we can control this via a single parameter and via a more automatic process.
 
 
+
 ## Interpreting output for smooth terms
+
 
 ### Effective degrees of freedom
 
-In interpreting the output from <span class="pack">mgcv</span>, we'll start with the  *effective degrees of freedom*, or edf. In typical OLS regression, the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure. In our previous example in the application section, there are actually 9 terms associated with the smooth tem, but their corresponding parameters are each penalized to some extent, and so the *effective* degrees of freedom does not equal 9. For hypothesis testing, an alternate edf is actually used, which is the other one provided there in the summary result (Ref.df).  For more on this see `?summary.gam` and `?anova.gam`. 
+In interpreting the output from <span class="pack">mgcv</span>, we'll start with the  *effective degrees of freedom*, or edf. In typical OLS regression, the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure. In our previous example in the application section, there are actually 9 terms associated with the smooth term, but their corresponding parameters are each penalized to some extent, and so the *effective* degrees of freedom does not equal 9. For hypothesis testing, an alternate edf is actually used, which is the other one provided there in the summary result (Ref.df).  For more on this see `?summary.gam` and `?anova.gam`. 
 
 At this point you might be thinking these p-values are a bit fuzzy, and you'd be right.   As is the case with mixed models, machine learning approaches, etc., p-values are not straightforward. The gist is that in the GAM setting they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level, but then standard p-values shouldn't be used that way either.  If they are pretty low you can feel comfortable claiming statistical significance, but if you want a tight p-value you'll need to go back to using a non-penalized approach like standard GLM. 
 
@@ -526,6 +528,7 @@ And the following:
 > One scenario that can cause confusion is this: a model is fitted with k=10 for a smooth term, and the EDF for the term is estimated as 7.6, some way below the maximum of 9. The model is then refitted with k=20 and the EDF increases to 8.7 - what is happening - how come the EDF was not 8.7 the first time around? The explanation is that the function space with k=20 contains a larger subspace of functions with EDF 8.7 than did the function space with k=10: one of the functions in this larger subspace fits the data a little better than did any function in the smaller subspace. These subtleties seldom have much impact on the statistical conclusions to be drawn from a model fit, however.
 
 If you want a more statistically oriented approach, see `?gam.check`.
+
 
 ### Deviance explained
 
@@ -541,7 +544,7 @@ As noted above, the GCV, or generalized cross validation score, can be taken as 
 
 ### Visual depiction
 
-The following reproduces the plots produced by <span class="pack">mgcv</span> and <span class="pack">visreg</span>.  I'll even use base R plotting to 'keep it real'.
+The following reproduces the plots produced by <span class="pack">mgcv</span>.  I'll even use base R plotting to 'keep it real'.
 
 First we'll start with the basic GAM plot using our `mod_gam2` from the [application section][Application Using R]. First we get the term for year, i.e. the linear combination of the basis functions for year.  The <span class="pack">mgcv</span> package provides this for you via the <span class="func">predict</span> function with `type='terms'`. For non-smooth components, this is just the original covariate times its corresponding coefficient.  Next we need the partial residuals, which are just the basic residuals plus the term of interest added. With the original predictor variable, we're ready to proceed.
 
@@ -614,7 +617,7 @@ We can easily extract this information using the <span class="pack">gratia</span
 ```{r fderiv, echo=1:3, fig.asp=.5, cache=FALSE}
 library(gratia)
 
-fd_inc = confint(fderiv(mod_gam1, n = 500))
+fd_inc = derivatives(mod_gam1, n = 500)
 
 fd_inc = fd_inc %>%
   mutate(Income = seq(
@@ -622,7 +625,7 @@ fd_inc = fd_inc %>%
     max(mod_gam1$model$Income),
     length.out = 500
   )) %>%
-  rename(Estimate = est)
+  rename(Estimate = derivative)
 
 fd_inc %>% 
   ggplot(aes(x = Income, y = Estimate)) +

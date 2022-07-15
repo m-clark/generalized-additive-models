@@ -13,7 +13,7 @@
 Let's get started by considering the *standard linear regression model* (SLiM) estimated via ordinary least squares (OLS).  We have some response or target variable we wish to study, and believe it to be some function of other variables.  In terms of the underlying data generating process, $y$ is the variable of interest, assumed to be normally distributed with mean $\mu$ and variance $\sigma^2$, and the Xs are the features/covariates in this scenario.  The features are multiplied by the weights/coefficients ($\beta$) and summed, giving us the linear predictor, which in this case also directly provides us the estimated fitted values.  The following is a variant of the way this type of model is presented in introductory texts.
 
 $$y\sim \mathcal{N}(\mu,\sigma^2)$$
-$$\mu = b_0+b_1X_1+b_2X_2...+b_pX_p$$
+$$\mu = b_0+b_1\cdot x_1+b_2\cdot x_2\;...\;+ b_p\cdot x_p$$
 
 
 Here is an example of how the R code would look like for such a model.
@@ -38,8 +38,8 @@ Consider again the typical linear regression.  In that situation, we assume a Ga
 To further illustrate the generalization, we consider a distribution other than the Gaussian.  Here we'll examine a Poisson distribution for some vector of count data.  There is only one parameter to be considered, $\mu$, since for the Poisson the mean and variance are equal.  For the Poisson, the (canonical) link function $g(.)$, is the natural log, and so relates the log of $\mu$ to the linear predictor.  As such we could also write it in terms of exponentiating the right-hand side.
 
 $$y \sim \mathcal{P}(\mu)$$
-$$\ln(\mu) = b_0+b_1X_1+b_2X_2...+b_pX_p$$
-$$\mu = e^{b_0+b_1X_1+b_2X_2...+b_pX_p}$$
+$$\ln(\mu) = b_0+b_1\cdot x_1+b_2\cdot x_2\;...\;+ b_p\cdot x_p$$
+$$\mu = e^{b_0+b_1\cdot x_1+b_2\cdot x_2\;...\;+b_p\cdot x_p}$$
 
 
 
@@ -53,7 +53,7 @@ Now let us make another generalization to incorporate nonlinear forms of the fea
 $$
 y \sim ExpoFam(\mu, etc.) \\
 E(y) = \mu \\
-g(\mu) = b_0 + f(x_1) + f(x_2) +...+f(x_p)
+g(\mu) = b_0 + f(x_1) + f(x_2) \;...\;+f(x_p)
 $$
     
 
@@ -102,7 +102,7 @@ One common approach we could undertake is to add a transformation of the predict
 
 $$
 y \sim \mathcal{N}(\mu,\sigma^2)\\
-\mu = b_0 + b_{1}X_1+b_{2}X^2
+\mu = b_0 + b_1\cdot x_1+b_2\cdot x^2
 $$
 And here is how the model would fit the data.
 
@@ -217,7 +217,7 @@ mcycle3 =
 
 ### Generalized Additive Models
 
-The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident[^mcycle]  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
+The next figure regards a data set giving a series of measurements of head acceleration in a simulated motorcycle accident[^mcycle].  Time is in milliseconds, acceleration in g.  Here we have data that are probably not going to be captured with simple transformations of the predictors. We can compare various approaches, and the first is a straightforward cubic polynomial regression, which unfortunately doesn't help us much. We could try higher orders, which would help, but in the end we will need something more flexible, and generalized additive models can help us in such cases.  
 
 ```{r mcycleFigure, fig.asp = .75, echo=FALSE}
 mcycleFigure = ggplot(aes(x = times, y = accel), data = mcycle3) +
@@ -245,20 +245,20 @@ Let's summarize our efforts up to this point.
 
 - Standard Linear Model
 
-$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
-$$\mu = b_{0}+b_{1}X_{1}$$
+$$y\sim \mathcal{N}(\mu, \sigma^2)$$
+$$\mu = b_0+b_1\cdot x_1$$
 
 
 
 - Polynomial Regression
 
-$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
-$$\mu = b_{0}+b_{1}X_{1}+b_{2}X^2$$
+$$y\sim \mathcal{N}(\mu, \sigma^2)$$
+$$\mu = b_0+b_1\cdot x_1+b_2\cdot x^2$$
 
 - GLM formulation
 
-$$y\sim \mathcal{N}(\mu, \sigma^{2})$$
-$$g(\mu) = b_{0}+b_{1}X_{1}+b_{2}X$$ 
+$$y\sim \mathcal{N}(\mu, \sigma^2)$$
+$$g(\mu) = b_0+b_1\cdot x_1+b_2\cdot x_2$$ 
 
 - GAM formulation
 

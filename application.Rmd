@@ -149,7 +149,7 @@ mod_lm = gam(Overall ~ Income, data = pisa)
 summary(mod_lm)
 ```
 
-What are we getting here?  The same thing you get from a regular linear model, because you just ran one.  However, there are a couple things to look at.  The coefficient is statistically significant, but serves as a reminder that it usually a good idea to scale predictor variables so that the effect is more meaningful.  Here, moving one unit on Income is akin from going broke to being the richest country.  But in a more meaningful sense, if we moved from say, .7 to .8, we'd expect an increase of about 35 points on the science score.  We also see the deviance explained[^devianceexplained], which serves as a generalization of R-squared, and in this case, it actually is equivalent to the unadjusted R-squared.  Likewise, there is the familiar adjusted version of it to account for small sample size and model complexity.  The scale estimate is the scaled deviance, which here is equivalent to the residual sums of squares.  The GCV score we will save for when we run a GAM.
+What are we getting here?  The same thing you get from a regular linear model, because you just ran one.  However, there are a couple things to look at.  The coefficient is statistically significant, but serves as a reminder that it usually a good idea to scale feature variables so that the effect is more meaningful.  Here, moving one unit on Income is akin from going broke to being the richest country.  But in a more meaningful sense, if we moved from say, .7 to .8, we'd expect an increase of about 35 points on the science score.  We also see the deviance explained[^devianceexplained], which serves as a generalization of R-squared, and in this case, it actually is equivalent to the unadjusted R-squared.  Likewise, there is the familiar adjusted version of it to account for small sample size and model complexity.  The scale estimate is the scaled deviance, which here is equivalent to the residual sums of squares.  The GCV score we will save for when we run a GAM.
 
 
 ### GAM
@@ -256,7 +256,7 @@ csbyhand
 
 <br>
 
-A cubic spline is essentially a connection of multiple cubic polynomial regressions, similar to what we demonstrated previously.  We choose points of the predictor variable at which to create sections, and these points are referred to as *knots*.  Separate cubic polynomials are fit at each section, and then joined at the knots to create a continuous curve.  The above graph represents a cubic spline with 8 knots between the first and third quartiles[^tenknots]. The red line uses the GAM results from 
+A cubic spline is essentially a connection of multiple cubic polynomial regressions, similar to what we demonstrated previously.  We choose points of the feature variable at which to create sections, and these points are referred to as *knots*.  Separate cubic polynomials are fit at each section, and then joined at the knots to create a continuous curve.  The above graph represents a cubic spline with 8 knots between the first and third quartiles[^tenknots]. The red line uses the GAM results from 
 <span class="pack">mgcv</span>.
 
 
@@ -279,7 +279,7 @@ The first thing to note is that, aside from the smooth part, our model code is s
 
 
 
-We'll start with the *effective degrees of freedom*[^lme4], or `edf`.  In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure, something that will be discussed more later[^edfinit]. In this situation, we are still trying to minimize the residual sums of squares, but we also have a built-in penalty for 'wiggliness' of the fit, where in general we try to strike a balance between an undersmoothed fit and an oversmoothed fit. The default p-value for the test is based on the effective degrees of freedom and the rank $r$ of the covariance matrix for the coefficients for a particular smooth, so here, *conceptually*, it is the p-value associated with the $F(r, n-edf)$.  However, there are still other issues to be concerned about, and `?summary.gam` will provide your first step down that particular rabbit hole. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result[^refdf].  At this point you might be thinking these p-values are a bit fuzzy, and you'd be right. The gist is, they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level[^p05], but if they are pretty low you can feel comfortable claiming statistical significance, which of course is the end all, be all, of the scientific endeavor- right?
+We'll start with the *effective degrees of freedom*[^lme4], or `edf`.  In typical OLS regression the model degrees of freedom is equivalent to the number of features/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure, something that will be discussed more later[^edfinit]. In this situation, we are still trying to minimize the residual sums of squares, but we also have a built-in penalty for 'wiggliness' of the fit, where in general we try to strike a balance between an undersmoothed fit and an oversmoothed fit. The default p-value for the test is based on the effective degrees of freedom and the rank $r$ of the covariance matrix for the coefficients for a particular smooth, so here, *conceptually*, it is the p-value associated with the $F(r, n-edf)$.  However, there are still other issues to be concerned about, and `?summary.gam` will provide your first step down that particular rabbit hole. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result[^refdf].  At this point you might be thinking these p-values are a bit fuzzy, and you'd be right. The gist is, they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level[^p05], but if they are pretty low you can feel comfortable claiming statistical significance, which of course is the end all, be all, of the scientific endeavor- right?
 
 [^lme4]: This part regarding effective degrees of freedom should ring a bell for those who use the <span class="pack">lme4</span> package for mixed models. All of this applies there too, and may provide more insight as to why they don't even provide p-values as a default. See the [Other Approaches][Categorical variables] section.
 
@@ -293,7 +293,7 @@ The GCV, or *generalized cross validation* score can be taken as an estimate of 
 
 ### Visualization
 
-One can get  sense of the form of the fit by plotting the model object as follows:
+One can get  sense of the form of the fit by plotting the model object as follows[^othervis]:
 
 ```{r plot_mod_gam1, echo=1, eval = -(1:2), fig.asp=.75}
 plot(mod_gam1)
@@ -307,7 +307,7 @@ plot_gam(mod_gam1, line_color = okabe_ito[2], ribbon_color = 'gray92') +
   )
 ```
 
-Note that the plot function will only plot the smooth terms in the model- the others are straight lines since they are linear effects.  The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single predictor case, one can also revisit the previous graph.  
+Note that the plot function will only plot the smooth terms in the model- the others are straight lines since they are linear effects.  The intervals are Bayesian credible intervals based on the posterior predictive distribution. In this single feature case, one can also revisit the previous graph.  
 
 
 [^othervis]: More visually appealing alternatives to the default <span class="pack">mgcv</span> plot can be found with <span class="pack">ggeffects</span>, <span class="pack">mgcViz</span>, <span class="pack">gratia</span>, and probably others.  In most places, I'm using my own functions from <span class="pack">visibly</span>, which you can get from [GitHub](https://m-clark.github.io/visibly/).
@@ -420,7 +420,7 @@ Here we can see the effects of interest, and again one might again note the pena
 [^mgcvyaxis]: One will notice that for the default gam plot in <span class="pack">mgcv</span>, the y-axis scale is on that of the linear predictor, but due to identifiability constraints, the smooths must sum to zero, and so they are presented in a mean-centered fashion.
 
 
-The following code demonstrates how to create data necessary for the plot, specifically for incomes, with the other predictors held at their mean.  See the [technical section][visual depiction] for more details on these visualizations.
+The following code demonstrates how to create data necessary for the plot, specifically for incomes, with the other features held at their mean values.  See the [technical section][visual depiction] for more details on these visualizations.
 
 
 ```{r plot_mod_gam2_responseA}
@@ -457,7 +457,7 @@ The GAM gives us a sense for one feature, but let's now take a gander at Income 
 vis.gam(mod_gam2, type = 'response', plot.type = 'contour')
 ```
 
-```{r contourheat, echo=FALSE, cache=FALSE, out.width='66%', fig.asp=.66}
+```{r contourheat, echo=FALSE, cache=FALSE, fig.asp=.66}
 plot_gam_2d(model = mod_gam2, main_var = Income, second_var = Edu, n_plot = 250) +
   theme(legend.text = element_text(size = 6))
 ```
@@ -527,7 +527,7 @@ One can verify this by running the same model via the <span class="func">glm</sp
 
 [^polyreg]: See <span class="func">poly</span> for how to fit a polynomial in R.
 
-[^edfinit]: In this example, there are actually 9 terms associated with this smooth, but they are each 'penalized' to some extent and thus the edf does not equal 9.
+[^edfinit]: In this example, there are actually 9 terms associated with this smooth, but they are each 'penalized' to some extent and so the edf does not equal 9.
 
 [^refdf]: Here it is noted `Ref.df`. In the past, there were four or five p-values to choose from, but now the option has settled to Bayesian-esque vs. frequentist approaches.  The full story of edf, p-values and related is scattered throughout Wood's text. See also `?anova.gam`.
 

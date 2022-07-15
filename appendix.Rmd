@@ -6,7 +6,7 @@
 
 ## R packages
 
-The following is a non-exhaustive list of R packages which contain GAM functionality. Each is linked to the CRAN page for the package.  Note also that several build upon the <span class="pack">mgcv</span> package used for this document.  I haven't really looke much lately, as between mgcv and brms there is little you can't do. gamlss and VGAM I can vouch are decent too, but I've not used either in a long time.
+The following is a non-exhaustive list of R packages which contain GAM functionality. Each is linked to the CRAN page for the package.  Note also that several build upon the <span class="pack">mgcv</span> package used for this document.  I haven't really looked much lately, as between <span class="pack">mgcv</span> and <span class="pack">brms</span> there is little you can't do. I can vouch that <span class="pack">gamlss</span> and <span class="pack">VGAM</span> are decent too, but I've not used either in a long time.
 
 [brms](http://cran.r-project.org/web/packages/brms/) Allows for Bayesian GAMs via the Stan modeling language (very new implementation).
 
@@ -33,7 +33,9 @@ The following is a non-exhaustive list of R packages which contain GAM functiona
 
 We noted previously that there were ties between generalized additive and mixed models.  Aside from the identical matrix representation noted in the [technical section][technical details], one of the key ideas is that the penalty parameter for the smooth coefficients reflects the ratio of the residual variance to the variance components for the random effects (see Fahrmeier et al., 2013, p. 483).  Conversely, we can recover the variance components by dividing the scale by the penalty parameter.
 
-To demonstrate this, we can set things up by running what will amount to equivalent models in both <span class="pack">mgcv</span> and <span class="pack">lme4</span> using the <span class="objclass">sleepstudy</span> data set that comes from the latter.<span class="marginnote">See `?sleepstudy` for details.</span>  I'll run a model with random intercepts and slopes, and for this comparison the two random effects will not be correlated. We will use the standard smoothing approach in <span class="pack">mgcv</span>, just with the basis specification for random effects - `bs='re'`.  In addition, we'll use restricted maximum likelihood as is the typical default in mixed models. 
+To demonstrate this, we can set things up by running what will amount to equivalent models in both <span class="pack">mgcv</span> and <span class="pack">lme4</span> using the <span class="objclass">sleepstudy</span> data set that comes from the latter[^sleepstudy]. I'll run a model with random intercepts and slopes, and for this comparison the two random effects will not be correlated. We will use the standard smoothing approach in <span class="pack">mgcv</span>, just with the basis specification for random effects - `bs='re'`.  In addition, we'll use restricted maximum likelihood as is the typical default in mixed models. 
+
+[^sleepstudy]: See `?sleepstudy` for details.
 
 ```{r mixed_vs_gam}
 library(lme4)
@@ -168,7 +170,6 @@ Fitting a straight line to this would be disastrous, so let's do a GAM.
 hot_gam = gam(Annual ~ s(Year), data = gtemp)
 summary(hot_gam)
 
-plotdat = visreg(hot_gam, plot = F)$fit
 plotdat = plot(ggeffects::ggpredict(hot_gam, 'Year'))$data %>% 
   as_tibble() %>% 
   rename(Year = x) %>% 
@@ -191,7 +192,7 @@ We can see that the trend is generally increasing, and has been more or less sin
 acf(gtemp$Annual)
 ```
 
-```{r ar_raw_pretty, echo=FALSE, out.width='75%', fig.asp=.5}
+```{r ar_raw_pretty, echo=FALSE, fig.asp=.5}
 acfdat = acf(
   gtemp$Annual,
   lag.max = 25,
@@ -231,7 +232,7 @@ What the plot shows is the correlation of the values with themselves at differen
 
 With our model, the issue remains in that there is still autocorrelation among the residuals, at least at lag 1.
 
-```{r ar_res, echo=FALSE, out.width='75%', fig.asp=.5}
+```{r ar_res, echo=FALSE, fig.asp=.5}
 acfdat = acf(
   resid(hot_gam),
   lag.max = 25,
@@ -358,7 +359,7 @@ Our example[^spatexample] will use census data from New Zealand and focus on med
 
 Let's take an initial peek.  You can hover over the points to get the location and income information.
 
-```{r nz_income, eval=T, echo=c(5,8), out.width='40%', fig.asp=.5}
+```{r nz_income, eval=T, echo=c(5,8), fig.asp=.5}
 # install the nzcensus package (note it is part of the nzelect GitHub repository):
 # devtools::install_github("ellisp/nzelect/pkg2")
 
@@ -568,10 +569,10 @@ gamm_spat = gamm(
 plot(gamm_spat)
 ```
 
-So whether you choose to deal with the spatial autocorrelation explicitly by using something like coordinates as features in the model itself, or via the residual correlation structure, or perhaps both, is up to you.<span class="marginnote">For a nice discussion of this, see the Q & A at [Stack Exchange](https://stats.stackexchange.com/questions/35510/why-does-including-latitude-and-longitude-in-a-gam-account-for-spatial-autocorre), and note the top *two* answers to the question "Why does including latitude and longitude in a GAM account for spatial autocorrelation?"</span>
+So whether you choose to deal with the spatial autocorrelation explicitly by using something like coordinates as features in the model itself, or via the residual correlation structure, or perhaps both, is up to you[^spatcorvar].
 
 
-
+[^spatcorvar]: For a nice discussion of this, see the Q & A at [Stack Exchange](https://stats.stackexchange.com/questions/35510/why-does-including-latitude-and-longitude-in-a-gam-account-for-spatial-autocorre), and note the top *two* answers to the question "Why does including latitude and longitude in a GAM account for spatial autocorrelation?".
 
 
 #### Discrete
@@ -773,4 +774,3 @@ Either of these models is appropriate, but they ask different questions. The MRF
 
 [^gpreg]: Much like with Gaussian process regression, where it's perhaps a bit more explicit.
 
-[^mitzi]: Stan developer Mitzi Morris provided an example of the model in Stan to the Ann Arbor R Users Group, but it wasn't yet available at the time I last updated this document. See the [A2RUG site](http://annarborrusergroup.github.io/) for April 2018 in case it is posted there.
