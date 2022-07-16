@@ -1,45 +1,44 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Issues | Generalized Additive Models</title>
-  <meta name="description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Issues | Generalized Additive Models />
+  <meta property="og:title" content="Issues | Generalized Additive Models" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://m-clark.github.io/generalized-additive-models/" />
-  <meta property="og:image" content="https://m-clark.github.io/generalized-additive-models/img/nineteeneightyR.png" />
+  <meta property="og:image" content="https://m-clark.github.io/generalized-additive-models//img/nineteeneightyR.png" />
   <meta property="og:description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well." />
   <meta name="github-repo" content="m-clark/generalized-additive-models/" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Issues | Generalized Additive Models />
+  <meta name="twitter:title" content="Issues | Generalized Additive Models" />
   
   <meta name="twitter:description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well." />
-  <meta name="twitter:image" content="https://m-clark.github.io/generalized-additive-models/img/nineteeneightyR.png" />
+  <meta name="twitter:image" content="https://m-clark.github.io/generalized-additive-models//img/nineteeneightyR.png" />
 
 
 
-<meta name="date" content="2019-02-17">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
-<link rel="prev" href="application.html">
-<link rel="next" href="other.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="application.html"/>
+<link rel="next" href="other.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,36 +46,38 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
-<script src="libs/plotly-binding-4.8.0/plotly.js"></script>
+
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.0/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
-<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<link href="libs/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotly-main-1.39.2/plotly-latest.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -85,9 +86,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -120,8 +121,31 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="css/book.css" type="text/css" />
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" type="text/css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" type="text/css" />
 </head>
 
 <body>
@@ -137,16 +161,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class='before'><a href="./">Generalized Additive Models</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#section"></a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="part"><span><b>Part I: Concepts</b></span></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-i"><i class="fa fa-check"></i>Beyond the General Linear Model I</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-i"><i class="fa fa-check"></i>Beyond the General Linear Model I</a>
+<ul>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#general-linear-model"><i class="fa fa-check"></i>General Linear Model</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-linear-model"><i class="fa fa-check"></i>Generalized Linear Model</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-model"><i class="fa fa-check"></i>Generalized Additive Model</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-ii"><i class="fa fa-check"></i>Beyond the General Linear Model II</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-ii"><i class="fa fa-check"></i>Beyond the General Linear Model II</a>
+<ul>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#fitting-the-standard-linear-model"><i class="fa fa-check"></i>Fitting the Standard Linear Model</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#polynomial-regression"><i class="fa fa-check"></i>Polynomial Regression</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#scatterplot-smoothing"><i class="fa fa-check"></i>Scatterplot Smoothing</a></li>
@@ -154,53 +180,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html"><i class="fa fa-check"></i>The case for GAMs</a><ul>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html"><i class="fa fa-check"></i>The case for GAMs</a>
+<ul>
 <li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#why-not-just-use-standard-methods"><i class="fa fa-check"></i>Why not just use standard methods?</a></li>
 <li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#heteroscedasticity-non-normality-etc."><i class="fa fa-check"></i>Heteroscedasticity, non-normality etc.</a></li>
-<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a><ul>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a>
+<ul>
 <li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#a-more-complex-relationship"><i class="fa fa-check"></i>A more complex relationship</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html"><i class="fa fa-check"></i>Building up to GAMs</a><ul>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html"><i class="fa fa-check"></i>Building up to GAMs</a>
+<ul>
 <li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
 <li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
 <li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
 </ul></li>
 <li class="part"><span><b>Part II: Praxis</b></span></li>
-<li class="chapter" data-level="" data-path="application.html"><a href="application.html"><i class="fa fa-check"></i>Application Using R</a><ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html"><i class="fa fa-check"></i>Application Using R</a>
+<ul>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
-<li class="chapter" data-level="" data-path="application.html"><a href="application.html#single-predictor"><i class="fa fa-check"></i>Single Predictor</a><ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#single-feature"><i class="fa fa-check"></i>Single Feature</a>
+<ul>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#linear-fit"><i class="fa fa-check"></i>Linear Fit</a></li>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#gam"><i class="fa fa-check"></i>GAM</a></li>
-<li class="chapter" data-level="" data-path="application.html"><a href="application.html#graphical-display"><i class="fa fa-check"></i>Graphical Display</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#visualization"><i class="fa fa-check"></i>Visualization</a></li>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="application.html"><a href="application.html#multiple-predictors"><i class="fa fa-check"></i>Multiple Predictors</a><ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#multiple-features"><i class="fa fa-check"></i>Multiple Features</a>
+<ul>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#linear-fit-1"><i class="fa fa-check"></i>Linear Fit</a></li>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#gam-1"><i class="fa fa-check"></i>GAM</a></li>
-<li class="chapter" data-level="" data-path="application.html"><a href="application.html#graphical-display-1"><i class="fa fa-check"></i>Graphical Display</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#visualization-1"><i class="fa fa-check"></i>Visualization</a></li>
 <li class="chapter" data-level="" data-path="application.html"><a href="application.html#model-comparison-1"><i class="fa fa-check"></i>Model Comparison</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html"><i class="fa fa-check"></i>Issues</a><ul>
-<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#estimation"><i class="fa fa-check"></i>Estimation</a><ul>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html"><i class="fa fa-check"></i>Issues</a>
+<ul>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#estimation"><i class="fa fa-check"></i>Estimation</a>
+<ul>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#shrinkage-variable-selection"><i class="fa fa-check"></i>Shrinkage &amp; Variable Selection</a></li>
-<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#effective-degrees-of-freedom-again"><i class="fa fa-check"></i>Effective degrees of freedom again</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#choice-of-smoothing-function"><i class="fa fa-check"></i>Choice of Smoothing Function</a></li>
-<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#diagnostics"><i class="fa fa-check"></i>Diagnostics</a><ul>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#diagnostics"><i class="fa fa-check"></i>Diagnostics</a>
+<ul>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#concurvity"><i class="fa fa-check"></i>Concurvity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#model-comparison-revisited"><i class="fa fa-check"></i>Model Comparison Revisited</a></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#big-data"><i class="fa fa-check"></i>Big Data</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Approaches</a><ul>
-<li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-nonlinear-modeling-approaches"><i class="fa fa-check"></i>Other Nonlinear Modeling Approaches</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Approaches</a>
+<ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-nonlinear-modeling-approaches"><i class="fa fa-check"></i>Other Nonlinear Modeling Approaches</a>
+<ul>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html#known-functional-form"><i class="fa fa-check"></i>Known Functional Form</a></li>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html#response-transformation"><i class="fa fa-check"></i>Response Transformation</a></li>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html#the-black-box"><i class="fa fa-check"></i>The Black Box</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other.html"><a href="other.html#extensions"><i class="fa fa-check"></i>Extensions</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#bayesian-estimation"><i class="fa fa-check"></i>Bayesian Estimation</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#extensions"><i class="fa fa-check"></i>Extensions</a>
+<ul>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-gams"><i class="fa fa-check"></i>Other GAMs</a></li>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html#reproducing-kernel-hilbert-space"><i class="fa fa-check"></i>Reproducing Kernel Hilbert Space</a></li>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
@@ -208,30 +247,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
 <li class="part"><span><b>Part III: Addendum</b></span></li>
-<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html"><i class="fa fa-check"></i>Technical details</a><ul>
-<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#gam-2"><i class="fa fa-check"></i>GAM</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html"><i class="fa fa-check"></i>Technical details</a>
+<ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#gam-2"><i class="fa fa-check"></i>GAM</a>
+<ul>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#effective-degrees-of-freedom-again"><i class="fa fa-check"></i>Effective degrees of freedom again</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#a-detailed-example"><i class="fa fa-check"></i>A detailed example</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#a-detailed-example"><i class="fa fa-check"></i>A detailed example</a>
+<ul>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#preview-of-other-bases"><i class="fa fa-check"></i>Preview of other bases</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#the-number-of-knots-and-where-to-put-them"><i class="fa fa-check"></i>The number of knots and where to put them</a></li>
-<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#interpreting-output-for-smooth-terms"><i class="fa fa-check"></i>Interpreting output for smooth terms</a><ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#interpreting-output-for-smooth-terms"><i class="fa fa-check"></i>Interpreting output for smooth terms</a>
+<ul>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#effective-degrees-of-freedom"><i class="fa fa-check"></i>Effective degrees of freedom</a></li>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#deviance-explained"><i class="fa fa-check"></i>Deviance explained</a></li>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
 <li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#examining-first-derivatives"><i class="fa fa-check"></i>Examining first derivatives</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
+<ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#a-comparison-to-mixed-models"><i class="fa fa-check"></i>A comparison to mixed models</a></li>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#time-and-space"><i class="fa fa-check"></i>Time and Space</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#time-and-space"><i class="fa fa-check"></i>Time and Space</a>
+<ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#time"><i class="fa fa-check"></i>Time</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#space"><i class="fa fa-check"></i>Space</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li class='after'">
    <a href="https://m-clark.github.io/">
@@ -273,194 +319,1451 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="issues" class="section level1">
 <h1>Issues</h1>
+<p>Here we’ll cover some additional things to consider.</p>
 <div id="estimation" class="section level2">
 <h2>Estimation</h2>
-<p><span class="newthought">As noted previously</span>, estimation of GAMs in the mgcv package is conducted via a penalized likelihood approach. More detail can be found in the <a href="technical.html#technical-details">technical section</a>, but conceptually this amounts to fitting the following model:</p>
+<p>As noted previously, estimation of GAMs in the <span class="pack">mgcv</span> package is conducted via a penalized likelihood approach. More detail can be found in the <a href="technical.html#technical-details">technical section</a>, but conceptually this amounts to fitting the following model:</p>
 <p><span class="math display">\[g(\mu) = f(x_1) + f(x_2) ... f(x_j)\]</span></p>
-<p>But note that each smooth has its own model matrix made up of the basis functions. So for each smooth covariate <span class="math inline">\(j\)</span> we have:</p>
+<p>But note that each smooth has its own model matrix made up of the basis functions. So for each smooth feature <span class="math inline">\(j\)</span> we have:</p>
 <p><span class="math display">\[f_j = \tilde{X}_j \tilde{\beta}_j\]</span></p>
-<p>Given a matrix of coefficients <span class="math inline">\(S\)</span>, we can more formally note a penalized likelihood function:</p>
+<p>Given a matrix of known coefficients <span class="math inline">\(S\)</span>, we can more formally note a penalized likelihood function:</p>
 <p><span class="math display">\[l_p(\beta)=\displaystyle l(\beta) - \frac{1}{2}\sum_j\lambda_j \beta^\mathrm{T} S_j\beta\]</span></p>
-<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As <span class="math inline">\(\lambda\rightarrow\infty\)</span>, we’d have a linear estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>. Technically we could specify the smoothing parameters explicitly, and the <a href="technical.html#a-detailed-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
+<p>where <span class="math inline">\(l(\beta)\)</span> is the usual GLM likelihood function, and <span class="math inline">\(\lambda_j\)</span> are the smoothing parameters. The part of the function including <span class="math inline">\(\lambda\)</span> penalizes curvature in the function, where <span class="math inline">\(\lambda\)</span> establishes a trade-off between the goodness of fit and the smoothness, and such an approach will allow for less overfitting. As <span class="math inline">\(\lambda\rightarrow\infty\)</span>, we’d have a linear estimate for <span class="math inline">\(f_j\)</span>, while <span class="math inline">\(\lambda = 0\)</span> would allow any <span class="math inline">\(f\)</span> that interpolates the data<a href="#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a>. Technically we could specify the smoothing parameters explicitly, and the <a href="technical.html#a-detailed-example">Appendix</a> has some ‘by-hand’ code taken directly from <span class="citation">S. N. Wood (<a href="#ref-wood_generalized_2006" role="doc-biblioref">2006</a>)</span> with only slight modifications, where the smoothing parameters are chosen and compared.</p>
 <p>Smoothing parameters however are in fact estimated rather than arbitrarily set, and this brings us back to the cross-validation procedure mentioned before. Smoothing parameters are selected which minimize the GCV score by default, though one has other options, e.g. using REML as with mixed models. Note that there are other approaches to estimation such as backfitting, generalized smoothing splines and Bayesian.</p>
 <div id="shrinkage-variable-selection" class="section level3">
 <h3>Shrinkage &amp; Variable Selection</h3>
-<p>Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions. An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a>. In this manner, one can assess whether a predictor is adding anything to the model, i.e. if it’s effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.</p>
-</div>
-<div id="effective-degrees-of-freedom-again" class="section level3">
-<h3>Effective degrees of freedom again</h3>
-<p>If we define a matrix <span class="math inline">\(F\)</span> that maps the unpenalized estimates of <span class="math inline">\(\beta\)</span> to the penalized estimates such that</p>
-<p><span class="math display">\[F = (X^T X + S)^{-1} X^T X\]</span></p>
-<p>and note</p>
-<p><span class="math display">\[\tilde{\beta} = (X^T X)^{-1} X^T y\]</span>
-<span class="math display">\[\hat{\beta} = F\tilde{\beta}\]</span></p>
-<p>the diagonal elements of <span class="math inline">\(F\)</span> are where the effective degrees of freedom for each covariate come from.</p>
+<p>Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions. An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>. In this manner, one can assess whether a predictor is adding anything to the model, i.e. if it’s effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.</p>
 </div>
 </div>
 <div id="choice-of-smoothing-function" class="section level2">
 <h2>Choice of Smoothing Function</h2>
-<p>A number of smooths are available with the <span class="pack">mgcv</span> package, and one can learn more via the help file for <span class="func">smooth.terms</span> (<a href="http://www.inside-r.org/r-doc/mgcv/smooth.terms">link</a>). In our models, we have used cubic regression splines and thin plate regression splines (TPRS), the latter being the default for a GAM in this package. As a brief summary, TPRS work well in general in terms of performance and otherwise has some particular advantages, and has a shrinkage alternative available. One should still feel free to play around, particularly when dealing with multiple smooths, where the tensor product smooths would be better for covariates of different scales.</p>
+<p>A number of smooths are available with the <span class="pack">mgcv</span> package, and one can learn more via the help file for <span class="func">smooth.terms</span> (<a href="https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/smooth.terms.html">link</a>). In our models, we have used cubic regression splines and thin plate regression splines (TPRS), the latter being the default for a GAM in this package. As a brief summary, TPRS work well in general in terms of performance and otherwise has some particular advantages, and has a shrinkage alternative available. One should still feel free to play around, particularly when dealing with multiple smooths, where the tensor product smooths would be better for covariates of different scales.</p>
 </div>
 <div id="diagnostics" class="section level2">
 <h2>Diagnostics</h2>
-<p>We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gam.check</span>(mod_gam2, <span class="dt">k.rep=</span><span class="dv">1000</span>)</code></pre>
-<p><span class="marginnote">This visualization is from <span class="pack">visibly</span>::<span class="func">plot_gam_check</span>.</span></p>
-<p><img src="gam_files/figure-html/gam_check_show-1.svg" width="75%" style="display: block; margin: auto;" /></p>
-<p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. <span class="marginnote">One can inspect the quantile-quantile plot directly with <span class="func">qq.gam</span>.</span> The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <span class="math inline">\(k\)</span><span class="marginnote"> The <code>k</code> can be set as an argument to <code>s(var1, k=?)</code>.</span> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a>.</p>
+<p>We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model from the <a href="application.html#application-using-r">application section</a>.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="issues.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gam.check</span>(mod_gam2, <span class="at">k.rep =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>
+Method: GCV   Optimizer: magic
+Smoothing parameter selection converged after 21 iterations.
+The RMS GCV score gradient at convergence was 2.499332e-05 .
+The Hessian was positive definite.
+Model rank =  28 / 28 
+
+Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+indicate that k is too low, especially if edf is close to k&#39;.
+
+            k&#39;  edf k-index p-value
+s(Income) 9.00 7.59    1.26    0.96
+s(Edu)    9.00 6.20    1.01    0.44
+s(Health) 9.00 1.00    0.90    0.18</code></pre>
+<p>This visualization is from <span class="pack">visibly’s</span> <span class="func">plot_gam_check</span>.</p>
+<p><img src="gam_files/figure-html/gam_check_show-1.svg" width="768" style="display: block; margin: auto;" /></p>
+<p>The plots are of the sort we’re used to from a typical regression setting, though it’s perhaps a bit difficult to make any grand conclusion based on such a small data set. The printed output on the other hand contains unfamiliar information, but is largely concerned with over-smoothing, and so has tests of whether the basis dimension for a smooth is too low. The p-values are based on simulation, so I bumped up the number with the additional argument. Guidelines are given in the output itself, and at least in this case it does not look like we have an issue. However, if there were a potential problem, it is suggested to double <code>k</code> parameter <a href="#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a> and refit, and if the effective degrees of freedom increases quite a bit you would probably want to go with the updated model<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a>.</p>
 <p>Given the penalization process, the exact choice of <span class="math inline">\(k\)</span> isn’t too big of a deal, and can be seen as an upper limit to the flexibility of the term. The actual flexibility is determined via the penalization process. However, the defaults are arbitrary. You want to set it large enough to get at the true effect as best as possible, but in some cases computational efficiency will also be of concern. For example, in fairly complex models with many predictors, interactions, etc., it might be worthwhile to reduce <span class="math inline">\(k\)</span> at the outset. The help file for the function <span class="func">choose.k</span> provides another approach to examining <span class="math inline">\(k\)</span> based on the residuals from the model under consideration, and provides other useful information.</p>
 <div id="concurvity" class="section level3">
 <h3>Concurvity</h3>
-<p><span class="emph">Concurvity</span> refers to the generalization of collinearity to the GAM setting<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a>. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem as elsewhere, i.e. unstable estimates.</p>
+<p><em>Concurvity</em> refers to the generalization of collinearity to the GAM setting<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a>. In this case it refers to the situation where a smooth term can be approximated by some combination of the others. It largely results in the same problem as elsewhere, i.e. unstable estimates.</p>
 <p>Wood provides three indices related to concurvity via the concurvity function, all range from 0 to 1 with 0 suggesting no problem, and 1 indicating that the function lies entirely in the space of one or more of the other smooth terms. See <code>?concurvity</code> for details.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">concurvity</span>(mod_gam2)</code></pre>
-<table style="width:76%;">
-<colgroup>
-<col width="20%" />
-<col width="9%" />
-<col width="16%" />
-<col width="12%" />
-<col width="16%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">para</th>
-<th align="center">s(Income)</th>
-<th align="center">s(Edu)</th>
-<th align="center">s(Health)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>worst</strong></td>
-<td align="center">0</td>
-<td align="center">0.98</td>
-<td align="center">0.97</td>
-<td align="center">0.97</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>observed</strong></td>
-<td align="center">0</td>
-<td align="center">0.80</td>
-<td align="center">0.61</td>
-<td align="center">0.87</td>
-</tr>
-<tr class="odd">
-<td align="center"><strong>estimate</strong></td>
-<td align="center">0</td>
-<td align="center">0.76</td>
-<td align="center">0.65</td>
-<td align="center">0.80</td>
-</tr>
-</tbody>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="issues.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">concurvity</span>(mod_gam2)</span></code></pre></div>
+<div id="nlrkirebmk" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#nlrkirebmk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nlrkirebmk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nlrkirebmk .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #334422;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nlrkirebmk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nlrkirebmk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nlrkirebmk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nlrkirebmk .gt_column_spanner {
+  border-bottom-style: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #334422;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nlrkirebmk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nlrkirebmk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nlrkirebmk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nlrkirebmk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nlrkirebmk .gt_row {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nlrkirebmk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nlrkirebmk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nlrkirebmk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nlrkirebmk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nlrkirebmk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nlrkirebmk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nlrkirebmk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nlrkirebmk .gt_table_body {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #FFFFFF;
+}
+
+#nlrkirebmk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nlrkirebmk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nlrkirebmk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nlrkirebmk .gt_left {
+  text-align: left;
+}
+
+#nlrkirebmk .gt_center {
+  text-align: center;
+}
+
+#nlrkirebmk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nlrkirebmk .gt_font_normal {
+  font-weight: normal;
+}
+
+#nlrkirebmk .gt_font_bold {
+  font-weight: bold;
+}
+
+#nlrkirebmk .gt_font_italic {
+  font-style: italic;
+}
+
+#nlrkirebmk .gt_super {
+  font-size: 65%;
+}
+
+#nlrkirebmk .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
+#nlrkirebmk .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#nlrkirebmk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nlrkirebmk .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#nlrkirebmk .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#nlrkirebmk .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">para</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">s(Income)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">s(Edu)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">s(Health)</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">worst</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.00</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.98</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.97</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.97</td></tr>
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">observed</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.00</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.80</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.61</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.87</td></tr>
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">estimate</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.00</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.76</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.65</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.80</td></tr>
+  </tbody>
+  
+  
 </table>
+</div>
 <p><br></p>
-<p>It should probably come as little surprise that we may have an issue here given the nature of the covariates. We can certainly make assumptions about wealthier nations’ education and health status, for example. What can we do? Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data. We certainly can’t do that here as we are dealing with country level data. That may also provide the solution, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores). In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique. For example, if it is the result of having several <a href="appendix.html#time-and-space">time- or spatially- covarying predictors</a>, one might be able retain only those that best capture that effect. However, the <span class="pack">mgcv</span> estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See <span class="citation">Wood (<a href="#ref-wood2008">2008</a>)</span>.</p>
+<p>It should probably come as little surprise that we may have an issue here given the nature of the covariates. We can certainly make assumptions about wealthier nations’ education and health status, for example. What can we do? Collinearity does not lead to biased estimates, only less stable ones, and the inflated variance can potentially be overcome with more data. We certainly can’t do that here as we are dealing with country level data. That may also provide the solution though, since there is nothing to generalize to, as we have the population of interest (all countries with PISA scores). In other data settings however, we may need to think hard about what to include in the model to avoid such redundancy, take dimension reduction steps beforehand, or use some other selection technique. For example, if it is the result of having several <a href="appendix.html#time-and-space">time- or spatially- covarying predictors</a>, one might be able retain only those that best capture that effect. However, the <span class="pack">mgcv</span> estimation procedures have been developed with such issues in mind, and one can feel fairly confident in the results even in the presence of concurvity. See <span class="citation">Simon N. Wood (<a href="#ref-wood2008" role="doc-biblioref">2008</a>)</span> for additional detail.</p>
 </div>
 </div>
 <div id="prediction" class="section level2">
 <h2>Prediction</h2>
-<p>A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale. We’d typically use this on new data. I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that. It is worth noting again that there is an option, <code>type='lpmatrix'</code>, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values. This can be particularly useful towards opening the <a href="other.html#the-black-box">black box</a> as one learns the technique.</p>
+<p>A previous example used the predict function on the data used to fit the model to obtain fitted values on the response scale. We’d typically use this on new data. I do not cover it, because the functionality is the same as the <span class="func">predict.glm</span> function in base R, and one can just refer to that. It is worth noting again that there is an option, <code>type = 'lpmatrix'</code>, which will return the actual model matrix by which the coefficients must be pre-multiplied to get the values of the linear predictor at the supplied covariate values. This can be particularly useful towards opening the <a href="other.html#the-black-box">black box</a> as one learns the technique.</p>
 </div>
 <div id="model-comparison-revisited" class="section level2">
 <h2>Model Comparison Revisited</h2>
-<p>We have talked about automated smoothing parameter and term selection, and in general potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select=TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>, and in general either of these would be viable approaches. Consider the following comparison:</p>
-<pre class="sourceCode r"><code class="sourceCode r">mod_1d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu), <span class="dt">data=</span>pisa)
-mod_2d =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">te</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&quot;tp&quot;</span>), <span class="dt">data=</span>pisa)
-<span class="co">## AIC(mod_1d, mod_2d)</span></code></pre>
-<table style="width:40%;">
-<colgroup>
-<col width="18%" />
-<col width="11%" />
-<col width="11%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">df</th>
-<th align="center">AIC</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>mod_1d</strong></td>
-<td align="center">15.59</td>
-<td align="center">476.1</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>mod_2d</strong></td>
-<td align="center">13.25</td>
-<td align="center">489.7</td>
-</tr>
-</tbody>
+<p>We have talked about automated smoothing parameter and term selection, and in general, potential models are selected based on estimation of the smoothing parameter. Using an extra penalty to allow coefficients to tend toward zero with the argument <code>select = TRUE</code> is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores<a href="#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a>, and in general, either of these would be viable approaches. Consider the following comparison:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="issues.html#cb37-1" aria-hidden="true" tabindex="-1"></a>mod_1d <span class="ot">=</span> <span class="fu">gam</span>(Overall <span class="sc">~</span> <span class="fu">s</span>(Income) <span class="sc">+</span> <span class="fu">s</span>(Edu), <span class="at">data =</span> pisa)</span>
+<span id="cb37-2"><a href="issues.html#cb37-2" aria-hidden="true" tabindex="-1"></a>mod_2d <span class="ot">=</span> <span class="fu">gam</span>(Overall <span class="sc">~</span> <span class="fu">te</span>(Income, Edu, <span class="at">bs =</span> <span class="st">&quot;tp&quot;</span>), <span class="at">data =</span> pisa)</span>
+<span id="cb37-3"><a href="issues.html#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="issues.html#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_1d, mod_2d)</span></code></pre></div>
+<pre><code>             df      AIC
+mod_1d 15.59154 476.0631
+mod_2d 13.24670 489.7046</code></pre>
+<div id="oiohuufkvv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#oiohuufkvv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#oiohuufkvv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#oiohuufkvv .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #334422;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#oiohuufkvv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#oiohuufkvv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#oiohuufkvv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#oiohuufkvv .gt_column_spanner {
+  border-bottom-style: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #334422;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#oiohuufkvv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#oiohuufkvv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#oiohuufkvv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#oiohuufkvv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#oiohuufkvv .gt_row {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#oiohuufkvv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oiohuufkvv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#oiohuufkvv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#oiohuufkvv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oiohuufkvv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#oiohuufkvv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oiohuufkvv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#oiohuufkvv .gt_table_body {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #FFFFFF;
+}
+
+#oiohuufkvv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oiohuufkvv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#oiohuufkvv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oiohuufkvv .gt_left {
+  text-align: left;
+}
+
+#oiohuufkvv .gt_center {
+  text-align: center;
+}
+
+#oiohuufkvv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#oiohuufkvv .gt_font_normal {
+  font-weight: normal;
+}
+
+#oiohuufkvv .gt_font_bold {
+  font-weight: bold;
+}
+
+#oiohuufkvv .gt_font_italic {
+  font-style: italic;
+}
+
+#oiohuufkvv .gt_super {
+  font-size: 65%;
+}
+
+#oiohuufkvv .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
+#oiohuufkvv .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#oiohuufkvv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#oiohuufkvv .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#oiohuufkvv .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#oiohuufkvv .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">model</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">df</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">AIC</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">mod_1d</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">15.59</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">476.06</td></tr>
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">mod_2d</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">13.25</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">489.70</td></tr>
+  </tbody>
+  
+  
 </table>
+</div>
 <p><br></p>
 <p>In some cases, we might prefer to be explicit in comparing models with and without particular terms, and we can go about comparing models as we would with a typical GLM analysis of deviance. We have demonstrated this previously using the <span class="func">anova.gam</span> function, where we compared linear fits to a model with an additional smooth function. While we could construct a scenario that is identical to the GLM situation for a statistical comparison, it should be noted that in the usual situation the test is actually an approximation, though it should be close enough when it is appropriate in the first place. The following provides an example that would nest the main effects of Income and Education within the product smooth, i.e. sets their basis dimension and smoothing function to the defaults employed by the tensor product smooth.</p>
-<pre class="sourceCode r"><code class="sourceCode r">mod_A =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">s</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>), <span class="dt">data=</span>pisa)
-mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class="op">~</span><span class="st"> </span><span class="kw">ti</span>(Income, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Edu, <span class="dt">bs=</span><span class="st">&quot;cr&quot;</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ti</span>(Income, Edu, <span class="dt">bs=</span><span class="st">&#39;cr&#39;</span>), <span class="dt">data=</span>pisa)
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="issues.html#cb39-1" aria-hidden="true" tabindex="-1"></a>mod_A <span class="ot">=</span> <span class="fu">gam</span>(</span>
+<span id="cb39-2"><a href="issues.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  Overall <span class="sc">~</span> </span>
+<span id="cb39-3"><a href="issues.html#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">s</span>(Income, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>, <span class="at">k =</span> <span class="dv">5</span>) </span>
+<span id="cb39-4"><a href="issues.html#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">+</span> <span class="fu">s</span>(Edu, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>, <span class="at">k =</span> <span class="dv">5</span>), </span>
+<span id="cb39-5"><a href="issues.html#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> pisa</span>
+<span id="cb39-6"><a href="issues.html#cb39-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-7"><a href="issues.html#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="issues.html#cb39-8" aria-hidden="true" tabindex="-1"></a>mod_B <span class="ot">=</span> <span class="fu">gam</span>(</span>
+<span id="cb39-9"><a href="issues.html#cb39-9" aria-hidden="true" tabindex="-1"></a>  Overall <span class="sc">~</span> </span>
+<span id="cb39-10"><a href="issues.html#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ti</span>(Income, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>, <span class="at">k =</span> <span class="dv">5</span>) </span>
+<span id="cb39-11"><a href="issues.html#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">+</span> <span class="fu">ti</span>(Edu, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>, <span class="at">k =</span> <span class="dv">5</span>) </span>
+<span id="cb39-12"><a href="issues.html#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">+</span> <span class="fu">ti</span>(Income, Edu, <span class="at">bs =</span> <span class="st">&#39;cr&#39;</span>),</span>
+<span id="cb39-13"><a href="issues.html#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> pisa</span>
+<span id="cb39-14"><a href="issues.html#cb39-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-15"><a href="issues.html#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="issues.html#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mod_A, mod_B, <span class="at">test =</span> <span class="st">&quot;Chisq&quot;</span>)</span></code></pre></div>
+<div id="ycisafecye" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
 
-<span class="co">## anova(mod_A,mod_B, test=&quot;Chisq&quot;)</span></code></pre>
-<table style="width:75%;">
-<caption>Analysis of Deviance Table</caption>
-<colgroup>
-<col width="16%" />
-<col width="18%" />
-<col width="9%" />
-<col width="15%" />
-<col width="15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">Resid. Df</th>
-<th align="center">Resid. Dev</th>
-<th align="center">Df</th>
-<th align="center">Deviance</th>
-<th align="center">Pr(&gt;Chi)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">46.06</td>
-<td align="center">36644</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">40.03</td>
-<td align="center">24998</td>
-<td align="center">6.03</td>
-<td align="center">11645</td>
-<td align="center">0</td>
-</tr>
-</tbody>
+#ycisafecye .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ycisafecye .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ycisafecye .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ycisafecye .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ycisafecye .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ycisafecye .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #334422;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ycisafecye .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ycisafecye .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ycisafecye .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ycisafecye .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ycisafecye .gt_column_spanner {
+  border-bottom-style: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #334422;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ycisafecye .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ycisafecye .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ycisafecye .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ycisafecye .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ycisafecye .gt_row {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ycisafecye .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ycisafecye .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ycisafecye .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ycisafecye .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ycisafecye .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ycisafecye .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ycisafecye .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ycisafecye .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ycisafecye .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ycisafecye .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ycisafecye .gt_table_body {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #FFFFFF;
+}
+
+#ycisafecye .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ycisafecye .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ycisafecye .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ycisafecye .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ycisafecye .gt_left {
+  text-align: left;
+}
+
+#ycisafecye .gt_center {
+  text-align: center;
+}
+
+#ycisafecye .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ycisafecye .gt_font_normal {
+  font-weight: normal;
+}
+
+#ycisafecye .gt_font_bold {
+  font-weight: bold;
+}
+
+#ycisafecye .gt_font_italic {
+  font-style: italic;
+}
+
+#ycisafecye .gt_super {
+  font-size: 65%;
+}
+
+#ycisafecye .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
+#ycisafecye .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#ycisafecye .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ycisafecye .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#ycisafecye .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#ycisafecye .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">model</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">Resid. Df</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">Resid. Dev</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">Df</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">Deviance</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #A9A9A9; font-family: &#39;Source Sans Pro&#39;; text-transform: uppercase;">Pr(&gt;Chi)</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">mod_A</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">46.06</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">36,643.55</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">NA</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">NA</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">NA</td></tr>
+    <tr><td class="gt_row gt_left" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">mod_B</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">40.03</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">24,998.24</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">6.03</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">11,645.31</td>
+<td class="gt_row gt_right" style="font-family: &#39;Source Sans Pro&#39;; font-weight: 400;">0.00</td></tr>
+  </tbody>
+  
+  
 </table>
+</div>
 <p><br></p>
 <p>Again though, we could have just used the summary output from the second model.</p>
-<p>Instances where such a statistical test does not appear to be appropriate within the context of the <span class="mgcv"></span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it’s possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical. Wood suggests that if such model comparison is the ultimate goal an unpenalized approach<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a> would be best to have much confidence in the p-values<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a>.</p>
+<p>Instances where such a statistical test does not appear to be appropriate within the context of the <span class="pack">mgcv</span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it’s possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical. Wood suggests that if such model comparison is the ultimate goal, an unpenalized approach<a href="#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a> would be best to use in order to have much confidence in the p-values<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a>.</p>
+</div>
+<div id="big-data" class="section level2">
+<h2>Big Data</h2>
+<p>Many times you’ll come across some notably large data for which you’d still like to fit a GAM too. Wood has implemented a lot of speed and memory efficiency into the <span class="func">bam</span> function, which works basically the same as the gam function. Assuming you get the data into memory, even millions of rows will likely pose little issue for mgcv.</p>
+<p>Where things do start to hurt computationally is in the number of parameters. While <span class="pack">mgcv</span> is great just as a <a href="appendix.html#a-comparison-to-mixed-models">mixed model tool to incorporate random effects</a>, as the dimensionality grows, <span class="func">bam</span>’s performance will start to suffer. This would likely not be a big deal for standard implementation of GAM for smooth terms, but when using it for categorical random effects (i.e. <code>bs = 're'</code>), having a lot of groups means a lot of parameters to estimate. I have a <a href="https://m-clark.github.io/posts/2019-10-20-big-mixed-models/">demo that provides more details</a>.</p>
 
 </div>
 </div>
 <h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-wood_generalized_2006">
-<p>Wood, S. N. 2006. <em>Generalized Additive Models: An Introduction with R</em>. Vol. 66. CRC Press.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-wood_generalized_2006" class="csl-entry">
+Wood, S. N. 2006. <em>Generalized Additive Models: An Introduction with r</em>. Vol. 66. <span>CRC</span> Press.
 </div>
-<div id="ref-wood2008">
-<p>Wood, Simon N. 2008. “Fast Stable Direct Fitting and Smoothness Selection for Generalized Additive Models.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 70 (3). Wiley Online Library: 495–518.</p>
+<div id="ref-wood_generalized_2017" class="csl-entry">
+———. 2017. <em>Generalized Additive Models: An Introduction with r</em>. 2nd ed. <span>CRC</span> Press.
+</div>
+<div id="ref-wood2008" class="csl-entry">
+Wood, Simon N. 2008. <span>“Fast Stable Direct Fitting and Smoothness Selection for Generalized Additive Models.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 70 (3): 495–518.
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="19">
-<li id="fn19"><p>See p. 128, <span class="citation">Wood (<a href="#ref-wood_generalized_2006">2006</a>)</span>, or p. 168 in <span class="citation">Wood (<a href="#ref-wood_generalized_2017">2017</a>)</span>.<a href="issues.html#fnref19" class="footnote-back">↩</a></p></li>
-<li id="fn20"><p>See also, the <code>select</code> argument to the <span class="func">gam</span> function.<a href="issues.html#fnref20" class="footnote-back">↩</a></p></li>
-<li id="fn21"><p>I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.<a href="issues.html#fnref21" class="footnote-back">↩</a></p></li>
-<li id="fn22"><p>The topic is strangely absent in Wood’s text.<a href="issues.html#fnref22" class="footnote-back">↩</a></p></li>
-<li id="fn23"><p>GCV scores are not useful for comparing fits of different families; AIC is still okay though.<a href="issues.html#fnref23" class="footnote-back">↩</a></p></li>
-<li id="fn24"><p>This can be achieved with the argument <code>s(..., fx=T)</code>, although now one has to worry more about the k value used, as very high k will lead to low power.<a href="issues.html#fnref24" class="footnote-back">↩</a></p></li>
-<li id="fn25"><p>One might also examine the <span class="pack">gss</span> package for an ANOVA based approach to generalized smoothing splines.<a href="issues.html#fnref25" class="footnote-back">↩</a></p></li>
+<ol start="29">
+<li id="fn29"><p>See p. 128, <span class="citation">S. N. Wood (<a href="#ref-wood_generalized_2006" role="doc-biblioref">2006</a>)</span>, or p. 168 in <span class="citation">S. N. Wood (<a href="#ref-wood_generalized_2017" role="doc-biblioref">2017</a>)</span>.<a href="issues.html#fnref29" class="footnote-back">↩︎</a></p></li>
+<li id="fn30"><p>See also, the <code>select</code> argument to the <span class="func">gam</span> function.<a href="issues.html#fnref30" class="footnote-back">↩︎</a></p></li>
+<li id="fn31"><p>The <code>k</code> can be set as an argument to <code>s(var1, k=?)</code>.<a href="issues.html#fnref31" class="footnote-back">↩︎</a></p></li>
+<li id="fn32"><p>I actually did this for Health, just for demonstration, and there was no change at all; it still reduced to a linear effect.<a href="issues.html#fnref32" class="footnote-back">↩︎</a></p></li>
+<li id="fn33"><p>The topic is strangely absent in Wood’s text.<a href="issues.html#fnref33" class="footnote-back">↩︎</a></p></li>
+<li id="fn34"><p>GCV scores are not useful for comparing fits of different families; AIC is still okay though.<a href="issues.html#fnref34" class="footnote-back">↩︎</a></p></li>
+<li id="fn35"><p>This can be achieved with the argument <code>s(..., fx=T)</code>, although now one has to worry more about the k value used, as very high k will lead to low power.<a href="issues.html#fnref35" class="footnote-back">↩︎</a></p></li>
+<li id="fn36"><p>One might also examine the <span class="pack">gss</span> package for an ANOVA based approach to generalized smoothing splines.<a href="issues.html#fnref36" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -473,12 +1776,13 @@ mod_B =<span class="st"> </span><span class="kw">gam</span>(Overall <span class=
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -486,12 +1790,13 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": false,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["twitter", "facebook", "google", "weibo", "instapaper"],
+"google": false,
 "instapper": false
 },
 "fontsettings": {
@@ -504,15 +1809,22 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "depth": 2,
 "scroll_highlight": true
 },
 "df_print": "kable",
-"highlight": "pygments",
-"search": true
+"highlight": "pygments"
 });
 });
 </script>
@@ -524,8 +1836,9 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

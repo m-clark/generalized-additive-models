@@ -1,14 +1,13 @@
 ---
 title: Generalized Additive Models
 author:  |
-  <span class="noem">Michael Clark</span> 
-  https://m-clark.github.io/
-  <img class='arc' src="img/signature-acronym.png" alt="University of Michigan: CSCAR">
-  <img class='cscar' src="img/ARC-acronym-signature.png" alt="University of Michigan: Advanced Research Computing"> 
-date: "`r Sys.Date()`"
+  <span class="noem">Michael Clark</span> <br>
+  [m-clark.github.io](https://m-clark.github.io/)
+# date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output:
-  bookdown::gitbook
+  bookdown::gitbook:
+    anchor_sections: FALSE
 always_allow_html: yes
 documentclass: book
 # bibliography: refs.bib
@@ -17,32 +16,194 @@ biblio-style: apalike
 link-citations: yes
 description: "An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R.  Discussion includes common approaches, standard extensions, and relations to other techniques.  More technical modeling details are described and demonstrated as well."
 cover-image: 'img/nineteeneightyR.png'
-url: 'https\://m-clark.github.io/generalized-additive-models/'  # evidently the \: is required or you'll get text in the title/toc area
-favicon: 'img/R.ico'
+url: 'https\://m-clark.github.io/generalized-additive-models/' 
+favicon: 'img/favicon.ico'
 github-repo:  'm-clark/generalized-additive-models/'
 bibliography: refs.bib
 nocite: | 
-  @wood_generalized_2006,  @wood_generalized_2017, @venables_modern_2002, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
+  @wood_generalized_2006,  @wood_generalized_2017, @venables_modern_2002, @rosscourse, @rasmussen_gaussian_2006, @hardin_generalized_2012, 
   @rigby_generalized_2005, @hastie_generalized_1990, @fox_multiple_2000, @fox_nonparametric_2000,
   @breiman_statistical_2001, @bybee_pisa_2009, @hastie_elements_2009, @ruppert_semiparametric_2003,
   @wasserman_all_2006, @fahrmeir2013regression, @friedman2000additive, @shalizi2016
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = T, message=F, warning=F, comment=NA, autodep=F, 
-                      eval=T, cache.rebuild=F, cache=T, R.options=list(width=120), 
-                      out.width = '40%', fig.asp = .5,
-                      fig.width=8, fig.align = 'center', dev.args=list(bg = 'transparent'), dev='svglite')
+knitr::opts_chunk$set(
+  # code
+  echo    = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  error   = FALSE,
+  comment = NA,
+  R.options = list(width = 120),
+  # viz
+  # out.width = '40%',
+  fig.asp = .5,
+  fig.width = 8,
+  fig.align = 'center',
+  dev.args = list(bg = 'transparent'),
+  dev = 'svglite',
+  #cache
+  cache.rebuild = FALSE,
+  cache = TRUE
+)
+
+library(tidyverse)
+
+# create a theme
+theme_clean <- function (
+  font_size = 12,
+  font_family = "",
+  center_axis_labels = FALSE
+) {
+  
+  if (center_axis_labels) {
+    haxis_just_x <- 0.5
+    vaxis_just_y <- 0.5
+    v_rotation_x <- 0
+    v_rotation_y <- 0
+  }
+  else {
+    haxis_just_x <- 0
+    vaxis_just_y <- 1
+    v_rotation_x <- 0
+    v_rotation_y <- 0
+  }
+  
+  ggplot2::theme(
+    text = ggplot2::element_text(
+      family = font_family,
+      face   = "plain",
+      color  = "gray30",
+      size   = font_size,
+      hjust  = 0.5,
+      vjust  = 0.5,
+      angle  = 0,
+      lineheight = 0.9,
+      margin = ggplot2::margin(),
+      debug  = FALSE
+    ),
+    axis.title.x = ggplot2::element_text(
+      hjust = haxis_just_x,
+      angle = v_rotation_x,
+      size  = 0.8 * font_size
+    ),
+    axis.title.y = ggplot2::element_text(
+      vjust = vaxis_just_y,
+      hjust = 0,
+      angle = v_rotation_y,
+      size  = 0.8 * font_size
+    ),
+    axis.ticks        = ggplot2::element_line(color = "gray30"),
+    title             = ggplot2::element_text(color = "gray30", size = font_size * 1.25),
+    plot.subtitle     = ggplot2::element_text(color = "gray30", size = font_size * .75, hjust = 0),
+    plot.caption      = ggplot2::element_text(color = "gray30", size = font_size * .5, hjust = 0),
+    legend.position   = 'bottom', 
+    legend.key        = ggplot2::element_rect(fill = "transparent", color = NA),
+    legend.background = ggplot2::element_rect(fill = "transparent", color = NA),
+    legend.title      = ggplot2::element_blank(), 
+    panel.background  = ggplot2::element_blank(),
+    panel.grid        = ggplot2::element_blank(),
+    strip.background  = ggplot2::element_blank(),
+    plot.background   = ggplot2::element_rect(fill = "transparent", color = NA),
+  )
+}
+
+# set the theme as default
+theme_set(theme_clean())
+
+# set other point/line default colors; in most cases, we can use the color from
+# default discrete scale for more consistency across plots.
+# paletteer::palettes_d$colorblindr$OkabeIto
+update_geom_defaults('vline',   list(color = 'gray25',  alpha = .25))  # vlines and hlines are typically not attention grabbers so set alpha
+update_geom_defaults('hline',   list(color = 'gray25',  alpha = .25))  # usually a zero marker
+update_geom_defaults('point',   list(color = '#D55E00', alpha = .5))   # alpha as usually there are many points
+update_geom_defaults('smooth',  list(color = '#56B4E9', alpha = .15))
+update_geom_defaults('line',    list(color = '#56B4E9', alpha = .5))
+update_geom_defaults('bar',     list(color = '#D55E00', fill = '#D55E00'))  
+update_geom_defaults('col',     list(color = '#D55E00', fill = '#D55E00'))
+update_geom_defaults('dotplot', list(color = '#D55E00', fill = '#D55E00'))
+
+# use colorblind safe colors for categories; if you supply a continuous value to
+# color you'll get an error, but you just have to use `myplot +
+# scale_color_continous()` or whatever to override this; likewise you can always
+# override this scale for categorical schemes if desired also. Note that this
+# will apply for both color and fill, which is usually what we want.
+
+okabe_ito = c(
+  '#D55E00',
+  '#56B4E9',
+  '#009E73',
+  '#F0E442',
+  '#0072B2',
+  '#D55E00',
+  '#CC79A7',
+  '#999999'
+)
+
+ggplot <- function(...) ggplot2::ggplot(...) + 
+  # okabe ito colorblind safe scheme
+  scale_color_manual(
+    values = okabe_ito,
+    drop = FALSE,
+    aesthetics = c('color', 'fill')
+  )
+
+gt <- function(..., decimals = 2, title = NULL, subtitle = NULL) {
+  gt::gt(...) %>% 
+    gt::fmt_number(
+      columns = where(is.numeric),
+      decimals = decimals
+    ) %>% 
+    gt::tab_header(title = title, subtitle = subtitle) %>% 
+    gtExtras::gt_theme_nytimes()
+}
+
+gt_theme <-   
+  list(
+    # report median (IQR) and n (percent) as default stats in `tbl_summary()`
+    "tbl_summary-str:continuous_stat" = "{mean} ({sd})",
+    "tbl_summary-str:categorical_stat" = "{n} ({p})"
+  )
+
+
+gtsummary::set_gtsummary_theme(gt_theme)
+
+tbl_summary <- function(..., title = '', butcher = TRUE) {
+  tbl_out <- gtsummary::tbl_summary(
+    ..., 
+    digits = list(
+    all_continuous() ~ c(1, 1),
+    all_categorical() ~ c(0, 1)
+    )
+  ) %>% 
+    modify_caption(caption = title)
+  # 
+  # # trim dataset etc from table; may lose other functionality
+  if (butcher)
+    tbl_out <- tbl_out %>% 
+      gtsummary::tbl_butcher()
+  # 
+  tbl_out
+}
 ```
 
 ```{r loadpacks, include=FALSE, cache=FALSE, results='hide'}
-library(magrittr); library(pander); library(tidyverse); library(broom); library(mgcv); 
-library(htmltools); library(lazerhawk); library(visibly); library(visreg); library(plotly)
-mapply(function(o, v) panderOptions(o, v),
-       c('keep.trailing.zeros', 'round', 'table.split.table', 'table.split.cells'), 
-       c(TRUE, 2, Inf, Inf))
+library(gt)
+library(tidyverse)
+library(broom)
+library(mgcv)
+library(gratia)
+library(modelr)
+library(purrr)
+
+library(htmltools)
+library(lazerhawk)
+library(visibly)
+library(plotly)
+library(scico)
+library(ggborderline)
 ```
 
-#
 
 ```{r cover_image, fig.align='center', out.width=200, echo=FALSE}
 knitr::include_graphics('img/198R.png', dpi = NA)

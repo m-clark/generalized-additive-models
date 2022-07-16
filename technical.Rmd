@@ -3,16 +3,18 @@
 
 # Technical details
 
-```{r, echo=F}
-knitr::opts_chunk$set(cache.rebuild=F, cache = T)
+```{r setup_technical, echo=F}
+# knitr::opts_chunk$set(cache.rebuild = T, cache = T)
 ```
 
 
 This section is for some of the more technically inclined, though you'll find more context and detail in  and @wood_generalized_2006 and @wood_generalized_2017, from which a good chunk of this section is taken more or less directly from.
 
+
+
 ## GAM
 
-As we noted before, a GAM is a GLM whose linear predictor includes a sum of smooth functions of covariates. With link function $g(.)$, model matrix $X$ of $n$ rows and $p$ covariates (plus a column for the intercept), a vector of $p$ coefficients $\beta$, we can write a GLM as follows:
+As we noted before, a GAM is a GLM whose linear predictor includes a sum of smooth functions of covariates. With link function $g(.)$, model matrix $X$ of $n$ rows and $p$ features (plus a column for the intercept), a vector of $p$ coefficients $\beta$, we can write a GLM as follows:
 
 $$\mathrm{GLM:}\quad g(\mu) = X\beta$$
 For the GAM, it could look something like:
@@ -22,16 +24,16 @@ or in a manner similar to mixed models:
 
 $$\mathrm{GAM:}\quad g(\mu) = X\beta + Z\gamma$$
 
-Where $Z$ represents the basis functions of some subset of $X$ or other covariates. Thus we can have any number of smooth terms, possibly of different bases, and even combinations of them.
+Where $Z$ represents the basis functions of some subset of $X$ or other features. So, we can have any number of smooth terms, possibly of different bases, and even combinations of them.
 
-Finally, we can depict the structured additive regression, or STAR, model as a GAM + random effects ($\Upsilon$) + spatial effects ($\Xi$) + other fun stuff.
+Finally, we can depict the structured additive regression, or STAR, model as a GAM + categorical random effects ($\Upsilon$) + spatial effects ($\Xi$) + other fun stuff ($?$).
 
 $$\mathrm{STAR:}\quad g(\mu) = X\beta + Z\gamma + \Upsilon\varpi + \Xi\varrho + \ldots \mathbf{?}\vartheta $$
 
 
 ### Penalized regression
 
-Consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. We can write the <span class="emph">penalized likelihood</span> as follows:
+Consider a standard GLM that we usually estimate with maximum likelihood, $l(\beta)$, where $\beta$ are the associated regression coefficients. We can write the  *penalized likelihood* as follows:
 
 
 $$l_p(\beta)= l(\beta) - \color{#b2001d}{\lambda B'SB}$$
@@ -40,13 +42,30 @@ Where $S$ is a penalty matrix of known coefficients[^Smat]. If you prefer least 
 
 $$\mathcal{Loss} = \sum (y-X\beta)^2 + \color{#b2001d}{\lambda B'SB}$$
 
-So, if we're maximizing the likelihood will make it lower than it otherwise would have been, and vice versa in terms of a loss function.  What it means for a GAM is that we'll add a penalty for the coefficients associated with the basis functions[^secondderiv].  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly.  As $\lambda \rightarrow \infty$, the result is a linear fit because any wiggliness will add too much to the loss function. As $\lambda \rightarrow 0$, we have the opposite effect, where any wiggliness is incorporated into the model.  In <span class='pack'>mgcv</span>, by default the estimated parameters are chosen via a generalized cross validation, or <span class="emph">GCV</span>, approach, and that statistic is reported in the summary. It modifies the loss function depicted above to approximate leave-one-out cross-validation selection.
+So, if we're maximizing the likelihood will make it lower than it otherwise would have been, and vice versa in terms of a loss function.  What it means for a GAM is that we'll add a penalty for the coefficients associated with the basis functions[^secondderiv].  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly.  As $\lambda \rightarrow \infty$, the result is a linear fit because any wiggliness will add too much to the loss function. As $\lambda \rightarrow 0$, we have the opposite effect, where any wiggliness is incorporated into the model.  In <span class='pack'>mgcv</span>, by default the estimated parameters are chosen via a generalized cross validation, or *GCV*, approach, and that statistic is reported in the summary. It modifies the loss function depicted above to approximate leave-one-out cross-validation selection.
+
+
+### Effective degrees of freedom again
+
+If we define a matrix $F$ that maps the unpenalized estimates of $\beta$ to the penalized estimates such that
+
+$$F = (X^T X + S)^{-1} X^T X$$
+
+and note
+
+$$\tilde{\beta} = (X^T X)^{-1} X^T y$$
+$$\hat{\beta} = F\tilde{\beta}$$
+
+the diagonal elements of $F$ are the effective degrees of freedom for each feature.  
+
 
 
 
 ## A detailed example
 
-The following will demonstrate a polynomial spline by hand[^trunc]. The example, and in particular the visual display, is based on a depiction in Fahrmeier et al. (2013).
+The following will demonstrate a polynomial spline by hand[^trunc]. The example, and in particular the visual display, is based on a depiction in @fahrmeir2013regression (figure 8.6) [^coefnote].
+
+[^coefnote]: The notation is slightly different here but consistent with previous. Given the applied nature of the previous sections, I opted to keep to the typical linear regression of using $b$ or $\beta$ to represent the coefficients, but was too lazy to redo this section, which just uses Farhmeir's.
 
 The approach is defined as follows, with $\kappa$ knots on the interval $[a,b]$ as $a=\kappa_1 < ... < \kappa_m =b$:
 
@@ -68,77 +87,93 @@ With the spline above this becomes:
 
 $$B_1(x)=1, B_2(x)=x, ..., B_{l+1}(x)=x^l, B_{l+2}(x)=(x-\kappa_2)_+^l...B_{d}(x)=(x-\kappa_{m-1})_+^l$$
 
-<span class="marginnote">
-$$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2} + \epsilon$$
-$$\epsilon \sim N(0,.3^2)$$
-</span>.Let's see it in action. Here our polynomial spline will be done with degree $l$ equal to 1, which means that we are just fitting a linear regression between knots This uses the data we employed for demonstration [before][A more complex relationship].
 
-```{r csbs, eval=-6}
-knots = seq(0, 1, by=.1)
+
+Let's see it in action. Here our polynomial spline will be done with degree $l$ equal to 1, which means that we are just fitting a linear regression between knots. The following uses the data we employed for demonstration [before][A more complex relationship].
+
+```{r csbs}
+# data same as earlier examples
+set.seed(123)
+
+x  = runif(500)
+mu = sin(2 * (4 * x - 2)) + 2 * exp(-(16 ^ 2) * ((x - .5) ^ 2))
+y  = rnorm(500, mu, .3)
+knots = seq(0, 1, by = .1)
+d  = tibble(x, y) %>% 
+  mutate(
+    xcut = cut(x, knots, right = F),
+    xcut = factor(xcut, levels = c('Int', levels(xcut)))
+  )
+
+
+# knots = seq(0, 1, by = .1)
 knots = knots[-length(knots)]  # don't need the last value
-l = 1
-bs = sapply(1:length(knots), function(k) ifelse(x >= knots[k], (x-knots[k])^l, 0))
+l  = 1
+bs = sapply(
+  1:length(knots), 
+  function(k)
+    ifelse(x >= knots[k], (x - knots[k]) ^ l, 0)
+)
 
-head(bs)
-
-# a more digestible example to make things even more clear
-# x2 = seq(0,1, length.out=30)
-# sapply(1:3, function(k) ifelse(x2 >= knots[k], (x2-knots[k])^l, 0))
+# head(bs)
 ```
 
 ```{r csbs_show, echo=FALSE}
 head(bs) %>%
-  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
-# head(bs) %>% 
-#   DT::datatable(options=list(dom='t'))
+  as_tibble() %>% 
+  gt(decimals = 3)
 ```
 
 <br>
 
-If we plot this against our target variable $y$, it doesn't look like much.
+If we plot this against our target variable $y$, it doesn't look like much, but we can maybe start to see the partitioning of the effect by knots.
 
-```{r csbsPlot, echo=FALSE, out.width='40%', fig.asp=.5}
-bs = data.frame(int=1, bs)
-d2 = data.frame(x, bs) %>% 
-  gather(key=bs, value=bsfunc, -x)
+```{r csbsPlot, echo=FALSE,  fig.asp=.5}
+bs = data.frame(int = 1, bs)
+d2 = data.frame(x, bs) %>%
+  pivot_longer(-x, names_to = 'bs', values_to = 'bsfunc')
 
-plot_ly(d) %>% 
-  add_markers(~x, ~y, marker=list(color='black', opacity=.25), showlegend=F) %>% 
-  add_lines(~x, ~bsfunc, color=~bs, colors='Set3', showlegend=F, data=arrange(d2,x)) %>% # colorscale ignored
-  theme_plotly() %>% 
-  config(displayModeBar=F) %>% 
-  layout()
+ggplot(d) +
+  geom_point(aes(x, y), color = 'black', alpha = .25) +
+  geom_line(
+    aes(x = x, color = bs, y = bsfunc),
+    show.legend = FALSE,
+    data = arrange(d2 %>% mutate(bs = fct_inorder(bs)), x)
+  ) +
+  scico::scale_color_scico_d(palette = 'batlow')
 ```
 
 <br>
 
 If we multiply each basis by its corresponding regression coefficient we can start to interpret the result. 
 
-```{r csbsScaledPlotData, echo=c(1:4,6), out.width='45%', fig.asp=.5, eval=-6}
-lmMod = lm(y ~ .-1, data=bs)  # just a regression!
+```{r csbsScaledPlotData, echo=c(1:4,6), fig.asp=.5, eval=-6}
+lmMod = lm(y ~ . - 1, data = bs)  # just a regression!
 bscoefs = coef(lmMod)
 bsScaled = sweep(bs, 2, bscoefs,`*`)
 colnames(bsScaled) = c('int', paste0('X', 1:10))
 # head(bsScaled)
 bscoefs
 
-d3 = data.frame(x, y, bsScaled) %>% 
-  gather(key=bs, value=bsfunc, -x, -y, factor_key = T) %>% 
+d3 = tibble(x, y, bsScaled) %>% 
+  pivot_longer(-c(x, y), names_to = 'bs', values_to = 'bsfunc') %>% 
+  # gather(key=bs, value=bsfunc, -x, -y, factor_key = T) %>% 
   dplyr::filter(bsfunc >= min(y) & bsfunc <= max(y))
 ```
 
 ```{r csbsScaledPlotData_show, echo=FALSE}
 round(bscoefs, 3) %>% 
   t() %>% 
-  as_data_frame() %>% 
-  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
+  as_tibble() %>% 
+  gt(decimals = 3)
 ```
 
 <br>
 
-```{r csbsScaledPlot, echo=F, out.width='45%', fig.asp=.5}
+```{r csbsScaledPlot, echo=F, fig.asp=.5}
 # NOTE: you've tried all the easy ways and plotly won't color lines and points the same; it will either do all one color or pick a different scheme.
 # but if you don't care about the markers, just make them black, but use more transparency, because there are replicates due to the data melt.
+# update 2022: I ultimately found plotly too frustrating to work with the colors here; since it randomly drops plots (which reappeared if I put another plot in the chunk), I had to try a ggplot fill in, which will never have the same colors, bc plotly apparently has no concept of a manually supplied scale. 
 cs = RColorBrewer::brewer.pal(nlevels(d$xcut), 'Set3')
 # KEEP this version. Dupes Fahrmeier, but not as desirable in my opinion
 # d3 %>%
@@ -150,88 +185,239 @@ cs = RColorBrewer::brewer.pal(nlevels(d$xcut), 'Set3')
 #   layout()
 
 # NOTE: if you do want the colors the same, try this
-d3 = bsScaled %>% 
-  mutate(x=x, y=y, xcut=as.ordered(d$xcut))
-plot_ly() %>%
-  add_markers(~x, ~y, color=~xcut, colors=cs, alpha=.5, showlegend=T, data=d3) %>% #RColorBrewer::brewer.pal(N, "Set3")
-  # add_markers(~x, ~bsfunc, color=I('navy'), data=data.frame(bsfunc=d3$bsfunc[1], x=0), showlegend=F) %>%
-  add_lines(~x, ~X1, color=~xcut, data=filter(d3, xcut=='[0,0.1)'), showlegend=F) %>%
-  add_lines(~x, ~X2, color=~xcut, data=filter(d3, xcut=='[0.1,0.2)'), showlegend=F) %>%
-  add_lines(~x, ~X3, color=~xcut, data=filter(d3, xcut=='[0.2,0.3)'), showlegend=F) %>%
-  add_lines(~x, ~X4, color=~xcut, data=filter(d3, xcut=='[0.3,0.4)'), showlegend=F) %>%
-  add_lines(~x, ~X5, color=~xcut, data=filter(d3, xcut=='[0.4,0.5)'), showlegend=F) %>%
-  add_lines(~x, ~X6, color=~xcut, data=filter(d3, xcut=='[0.5,0.6)'), showlegend=F) %>%
-  add_lines(~x, ~X7, color=~xcut, data=filter(d3, xcut=='[0.6,0.7)'), showlegend=F) %>%
-  add_lines(~x, ~X8, color=~xcut, data=filter(d3, xcut=='[0.7,0.8)'), showlegend=F) %>%
-  add_lines(~x, ~X9, color=~xcut, data=filter(d3, xcut=='[0.8,0.9)'), showlegend=F) %>%
-  add_lines(~x, ~X10, color=~xcut, data=filter(d3, xcut=='[0.9,1)'), showlegend=F) %>%
-  add_markers(x=0, y=bscoefs[1], color=I('salmon'), size=I(20), alpha=.5, showlegend=F) %>% 
-  add_lines(x=~x, y=0, color=I(alpha('black', .25)), data=d3, showlegend=F) %>%
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+d3 = bsScaled %>%
+  mutate(x = x,
+         y = y,
+         xcut = as.ordered(d$xcut))
+
+# plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color =  ~ xcut,
+#     colors = cs,
+#     alpha = .5,
+#     showlegend = TRUE,
+#     data = d3
+#   ) %>% #RColorBrewer::brewer.pal(N, "Set3")
+#   # add_markers(~x, ~bsfunc, color=I('navy'), data=data.frame(bsfunc=d3$bsfunc[1], x=0), showlegend=F) %>%
+#   add_lines(~x, ~X1,  color = ~xcut, data = filter(d3, xcut == '[0,0.1)'),   showlegend = FALSE) %>%
+#   add_lines(~x, ~X2,  color = ~xcut, data = filter(d3, xcut == '[0.1,0.2)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X3,  color = ~xcut, data = filter(d3, xcut == '[0.2,0.3)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X4,  color = ~xcut, data = filter(d3, xcut == '[0.3,0.4)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X5,  color = ~xcut, data = filter(d3, xcut == '[0.4,0.5)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X6,  color = ~xcut, data = filter(d3, xcut == '[0.5,0.6)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X7,  color = ~xcut, data = filter(d3, xcut == '[0.6,0.7)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X8,  color = ~xcut, data = filter(d3, xcut == '[0.7,0.8)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X9,  color = ~xcut, data = filter(d3, xcut == '[0.8,0.9)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X10, color = ~xcut, data = filter(d3, xcut == '[0.9,1)'),   showlegend = FALSE) %>%
+#   add_markers(x = 0, y = bscoefs[1], color = I('salmon'), size = I(20), alpha = .5,  showlegend = FALSE) %>% 
+#   add_lines(x =  ~x, y = 0, color = I(alpha('black', .25)), data = d3, showlegend = FALSE) %>%
+#   theme_plotly() 
+
+d3 %>%
+  select(-y) %>%
+  pivot_longer(-c(x, xcut), names_to = 'knot') %>%
+  ggplot(aes(x = x, y = value, color = xcut)) +
+  geom_hline(yintercept = 0) +
+  geom_point(aes(y = y), alpha = .25, data = d3) +
+  geom_point(aes(x = 0, y = int), 
+             color = 'salmon',
+             size = 2,
+             data = d3 %>% filter(xcut == levels(xcut)[1])) +
+  geom_line(aes(group = xcut, y = X1), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[1])) +
+  geom_line(aes(group = xcut, y = X2), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[2])) +
+  geom_line(aes(group = xcut, y = X3), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[3])) +
+  geom_line(aes(group = xcut, y = X4), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[4])) +
+  geom_line(aes(group = xcut, y = X5), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[5])) +
+  geom_line(aes(group = xcut, y = X6), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[6])) +
+  geom_line(aes(group = xcut, y = X7), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[7])) +
+  geom_line(aes(group = xcut, y = X8), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[8])) +
+  geom_line(aes(group = xcut, y = X9), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[9])) +
+  geom_line(aes(group = xcut, y = X10), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[10])) +
+  scale_color_manual(values = cs) +
+  theme(
+    legend.position = 'right'
+  )
+
 ```
 
 <br>
 
-In the plot above, the initial dot represents the global constant ($\gamma_1$, i.e. our intercept). We have a decreasing function starting from that point onward (<span style="color:#8DD3C7">line</span>). Between .1 and .2 (<span style="color:#FFFFB3">line</span>), the coefficient is negative again, furthering the already decreasing slope (i.e. steeper downward). The fourth coefficient is positive, which means that between .2 and .3 our decreasing trend is lessening (<span style="color:#BEBADA">line</span>).  Thus, our coefficients $j$ tell us the change in slope for the data from the previous section of data defined by the knots.  The lengths of the lines reflect the size of the coefficient, i.e. how dramatic the change is. If this gets you to thinking about interactions in more common model settings, you're on the right track (e.g. adding a quadratic term is just letting x have an interaction with itself; same thing is going on here).
+In the plot above, the initial dot represents the global constant ($\gamma_1$, i.e. our intercept). We have a decreasing function starting from that point onward (<span style="color:#8DD3C7">line</span>). Between .1 and .2 (<span style="color:#FFFFB3">line</span>), the coefficient is negative again, furthering the already decreasing slope (i.e. steeper downward). The fourth coefficient is positive, which means that between .2 and .3 our decreasing trend is lessening (<span style="color:#BEBADA">line</span>).  So our coefficients $j$ tell us the change in slope for the data from the previous section of data defined by the knots.  The lengths of the lines reflect the size of the coefficient, i.e. how dramatic the change is. If this gets you to thinking about interactions in more common model settings, you're on the right track (e.g. adding a quadratic term is just letting x have an interaction with itself; same thing is going on here).
 
 Finally, if we plot the sum of the basis functions, which is the same as taking our fitted values from a regression on the basis expansion of X, we get the following fit to the data. And we can see the trend our previous plot suggested.
 
-```{r csbsFitPlotDegree1, echo=FALSE, out.width='40%', fig.asp=.5}
-plotData = rbind(data.frame(d, sum=fitted(lmMod)),
-                 data.frame(x=0, y=bscoefs[1], sum=NA, xcut='Int'))
+```{r csbsFitPlotDegree1, echo=FALSE}
+# this plot randomly decides not to show in the doc. love plotly!
+plotData = bind_rows(data.frame(d, sum = fitted(lmMod)),
+                 data.frame(
+                   x = 0,
+                   y = bscoefs[1],
+                   sum = NA,
+                   xcut = 'Int'
+                 ))
 
-filter(plotData, xcut!='Int') %>% 
-  droplevels %>% 
-  plot_ly() %>% 
-  add_markers(~x, ~y, color=~xcut, colors=cs, alpha=.5, showlegend=F) %>% 
-  add_lines(~x, ~sum, color=~xcut, colors=cs, showlegend=F) %>% 
-  add_markers(x=0, y=bscoefs[1], size=~I(20), color=I('salmon'), alpha=.5, showlegend=F) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+# filter(plotData, xcut != 'Int') %>%
+#   droplevels() %>%
+#   plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color =  ~ xcut,
+#     colors = cs,
+#     alpha = .5,
+#     showlegend = F
+#   ) %>%
+#   add_lines( ~ x,
+#              ~ sum,
+#              color =  ~ xcut,
+#              colors = cs,
+#              showlegend = FALSE) %>%
+#   add_markers(
+#     x = 0,
+#     y = bscoefs[1],
+#     size =  ~ I(20),
+#     color = I('salmon'),
+#     alpha = .5,
+#     showlegend = FALSE
+#   ) %>%
+#   theme_plotly()
+
+filter(plotData, xcut != 'Int') %>%
+  droplevels() %>% 
+  ggplot(aes(x, y)) + 
+  geom_point(aes(color = xcut), alpha = .25, show.legend = FALSE) +
+  geom_line(aes(y = sum, color = xcut), size = 2, alpha = 1, show.legend = FALSE ) +
+  geom_point(x= 0, y = bscoefs[1], color = 'salmon', alpha = .5, size = 3) +
+  scale_color_manual(values = cs)
 ```
 
 <br>
 
 One of the more common approaches with GAMs uses a cubic spline fit. So we'll change our polynomial degree from 1 to 3 (i.e. `l = 3`).
 
-```{r csFitPlotDegree3, echo=FALSE, out.width='40%', fig.asp=.5}
+```{r csFitPlotDegree3, echo=FALSE, fig.asp=.5}
 l = 3
-bs = sapply(1:length(knots), function(k) ifelse(x >= knots[k], (x-knots[k])^l, 0))
-lmModCubicSpline = lm(y ~ poly(x,3) + bs)
+bs = sapply(1:length(knots), function(k)
+  ifelse(x >= knots[k], (x - knots[k]) ^ l, 0))
+lmModCubicSpline = lm(y ~ poly(x, 3) + bs)
 
+
+# d %>%
+#   # add_predictions(lmModCubicSpline) %>%
+#   mutate(pred = fitted(lmModCubicSpline)) %>%
+#   # data.frame(x, y, pred=fitted(lmModCubicSpline)) %>%
+#   plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .1)),
+#     colors = cs,
+#     showlegend = F
+#   ) %>%
+#   # add_lines(~x, ~pred, color=I('#ff5503'), colors=cs, showlegend=F) %>%
+#   add_lines(
+#     ~ x,
+#     ~ pred,
+#     color =  ~ xcut,
+#     colors = cs,
+#     showlegend = F
+#   ) %>%
+#   theme_plotly() 
 
 d %>%
-  # add_predictions(lmModCubicSpline) %>%
-  mutate(pred=fitted(lmModCubicSpline)) %>% 
-  # data.frame(x, y, pred=fitted(lmModCubicSpline)) %>% 
-  plot_ly() %>% 
-  add_markers(~x, ~y, color=I(scales::alpha('black', .1)), colors=cs, showlegend=F) %>% 
-  # add_lines(~x, ~pred, color=I('#ff5503'), colors=cs, showlegend=F) %>%
-  add_lines(~x, ~pred, color=~xcut, colors=cs, showlegend=F) %>%
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+  mutate(pred = fitted(lmModCubicSpline)) %>%
+  ggplot(aes(x, y)) +
+  geom_point(aes(color = xcut), alpha = .1, show.legend = FALSE) +
+  geom_line(
+    aes(y = pred, color = xcut),
+    size = 2,
+    alpha = 1,
+    show.legend = FALSE
+  ) +
+  scale_color_manual(values = cs)
 ```
 
 <br>
 
 Now we're getting somewhere.  Let's compare it to the <span class='func'>gam</span> function from the <span class='pack'>mgcv</span> package. We won't usually specify the knots directly, and even as we have set things up similar to the <span class='pack'>mgcv</span> approach, the <span class="func">gam</span> function is still doing some things our by-hand approach is not (penalized regression).  We still get pretty close agreement however.
 
-```{r csFitPlotvsGAM, echo=FALSE, out.width='45%', fig.asp=.5}
-library(mgcv)
+```{r csFitPlotvsGAM, echo=FALSE, fig.asp=.5}
+# data.frame(x,
+#            y,
+#            fits = fitted(lmModCubicSpline),
+#            fitsGam = fitted(gam(y ~ s(x, bs = 'cr'), knots = list(x = knots)))) %>%
+#   arrange(x) %>%
+#   plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .25)),
+#     colors = cs,
+#     showlegend = F
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ fits,
+#     color = I('#D55E00'),
+#     line = list(width = 5),
+#     showlegend = T,
+#     name = 'demo'
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ fitsGam,
+#     color = I('#56B4E9'),
+#     colors = cs,
+#     showlegend = T,
+#     name = 'gam'
+#   ) %>%
+#   theme_plotly() 
 
-data.frame(x, y, fits=fitted(lmModCubicSpline), fitsGam=fitted(gam(y~s(x, bs='cr'), knots=list(x=knots)))) %>% 
-  arrange(x) %>% 
-  plot_ly() %>% 
-  add_markers(~x, ~y, color=I(scales::alpha('black', .25)), colors=cs, showlegend=F) %>% 
-  add_lines(~x, ~fits, color=I('#ff5500'), line=list(width=5), showlegend=T, name='demo') %>% 
-  add_lines(~x, ~fitsGam, color=I('#00aaff'), colors=cs, showlegend=T, name='gam') %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+tibble(x,
+       y,
+       by_hand = fitted(lmModCubicSpline),
+       mgcv = fitted(gam(y ~ s(x, bs = 'cr'), knots = list(x = knots)))) %>%
+  pivot_longer(-c(x, y), names_to = 'mod', values_to = 'pred')  %>%
+  # mutate(pred = fitted(lmModCubicSpline)) %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = 'black', alpha = .1) +
+  geom_line(
+    aes(y = pred, color = mod),
+    size = 2,
+    alpha = .75
+  )
 ```
 
 <br>
@@ -239,134 +425,220 @@ data.frame(x, y, fits=fitted(lmModCubicSpline), fitsGam=fitted(gam(y~s(x, bs='cr
 We can see that we're on the right track by using the constructor function within <span class="pack">mgcv</span> and a custom function for truncated power series like what we're using above. See the example in the help file for <span class='func'>smooth.construct</span> for the underlying truncated power series function.  I only show a few of the columns, but our by-hand construction and that used by gam are identical. 
 
 ```{r gamDatavsByhandData, echo=-1, eval=-6}
-smooth.construct.tr.smooth.spec = function(object,data,knots)
-## a truncated power spline constructor method function
-## object$p.order = null space dimension
-{ m <- object$p.order[1]
-  if (is.na(m)) m <- 3 ## default 
-  if (m<1) stop("silly m supplied")
-  if (object$bs.dim<0) object$bs.dim <- 10 ## default
-  nk<-object$bs.dim-m-1 ## number of knots
-  if (nk<=0) stop("k too small for m")
+smooth.construct.tr.smooth.spec = function(object, data, knots)
+  ## a truncated power spline constructor method function
+  ## object$p.order = null space dimension
+{
+  m <- object$p.order[1]
+  if (is.na(m))
+    m <- 3 ## default
+  if (m < 1)
+    stop("silly m supplied")
+  if (object$bs.dim < 0)
+    object$bs.dim <- 10 ## default
+  nk <- object$bs.dim - m - 1 ## number of knots
+  if (nk <= 0)
+    stop("k too small for m")
   x <- data[[object$term]]  ## the data
   x.shift <- mean(x) # shift used to enhance stability
   k <- knots[[object$term]] ## will be NULL if none supplied
-  if (is.null(k)) # space knots through data
-  { n<-length(x)
-    k<-quantile(x[2:(n-1)],seq(0,1,length=nk+2))[2:(nk+1)]
+  if (is.null(k))
+    # space knots through data
+  {
+    n <- length(x)
+    k <- quantile(x[2:(n - 1)], seq(0, 1, length = nk + 2))[2:(nk + 1)]
   }
-  if (length(k)!=nk) # right number of knots?
-  stop(paste("there should be ",nk," supplied knots"))
+  if (length(k) != nk)
+    # right number of knots?
+    stop(paste("there should be ", nk, " supplied knots"))
   x <- x - x.shift # basis stabilizing shift
   k <- k - x.shift # knots treated the same!
-  X<-matrix(0,length(x),object$bs.dim)
-  for (i in 1:(m+1)) X[,i] <- x^(i-1)
-  for (i in 1:nk) X[,i+m+1]<-(x-k[i])^m*as.numeric(x>k[i])
-  object$X<-X # the finished model matrix
-  if (!object$fixed) # create the penalty matrix
-  { object$S[[1]]<-diag(c(rep(0,m+1),rep(1,nk)))
+  X <- matrix(0, length(x), object$bs.dim)
+  for (i in 1:(m + 1))
+    X[, i] <- x ^ (i - 1)
+  for (i in 1:nk)
+    X[, i + m + 1] <- (x - k[i]) ^ m * as.numeric(x > k[i])
+  object$X <- X # the finished model matrix
+  if (!object$fixed)
+    # create the penalty matrix
+  {
+    object$S[[1]] <- diag(c(rep(0, m + 1), rep(1, nk)))
   }
-  object$rank<-nk  # penalty rank
-  object$null.space.dim <- m+1  # dim. of unpenalized space
+  object$rank <- nk  # penalty rank
+  object$null.space.dim <- m + 1  # dim. of unpenalized space
   ## store "tr" specific stuff ...
-  object$knots<-k;object$m<-m;object$x.shift <- x.shift
- 
-  object$df<-ncol(object$X)     # maximum DoF (if unconstrained)
- 
-  class(object)<-"tr.smooth"  # Give object a class
+  object$knots <- k
+  object$m <- m
+  object$x.shift <- x.shift
+  
+  object$df <- ncol(object$X)     # maximum DoF (if unconstrained)
+  
+  class(object) <- "tr.smooth"  # Give object a class
   object
 }
 
-xs = scale(x, scale=F)
-bs = sapply(1:length(knots), function(k) ifelse(x >= knots[k], (x-knots[k])^l, 0))
-sm = smoothCon(s(x, bs='tr', k=14), data=d, knots=list(x=knots))[[1]]
-head(sm$X[,1:6])
+xs = scale(x, scale = F)
+
+bs = sapply(1:length(knots), function(k)
+  ifelse(x >= knots[k], (x - knots[k]) ^ l, 0))
+
+sm = smoothCon(s(x, bs = 'tr', k = 14),
+               data = d,
+               knots = list(x = knots))[[1]]
+# head(sm$X[, 1:6])
 modelMatrix = cbind(1, xs, xs^2, xs^3, bs)
+
 all.equal(sm$X, modelMatrix)
 ```
 
 ```{r gamDatavsByhandData_show, echo=FALSE}
 head(sm$X[,1:6]) %>% 
-  pander(split.cells=Inf, split.table=Inf, round=3, keep.trailing.zeros=T)
+  as_tibble() %>% 
+  gt(decimals = 3)
 ```
 
 
 
 ### Preview of other bases
 
-As an example of other types of smooth terms we might use, here are the basis functions for b-splines. They work notably differently, e.g. over intervals of $l+2$ knots.
+As an example of other types of smooth terms we might use, here are the basis functions for b-splines. They work notably differently, e.g. over intervals of $l+2$ knots.  An easy way to create your own matrix and subsequent plot of this sort would be to use the <span class="pack">basis</span> function in the <span class="pack">gratia</span> package, which is basically a cleaner version of the <span class="pack">mgcv</span> approach.
 
-```{r bSpline, echo=FALSE, out.width='40%', fig.asp=.5}
-bfs = splines::bs(x, knots=knots[-1])
+```{r bSpline, echo=FALSE, fig.asp=.5}
+bfs = splines::bs(x, knots = knots[-1])
 bsMod = lm(y ~ bfs)
 fits = fitted(bsMod)
-bfsScaled = sweep(cbind(Int=1, bfs), 2, coef(bsMod),`*`)
+bfsScaled = sweep(cbind(Int = 1, bfs), 2, coef(bsMod), `*`)
+
 
 bSplineXmatsc = data.frame(x, fits, bfsScaled) %>%
-  gather(key=bs, value=bsfunc, -x, -fits)
-bSplineXmat = data.frame (Int=1, x = x, bfs) %>% 
-  gather(key=bs, value=bsfunc, -x)
+  pivot_longer(-c(x, fits), names_to = 'bs', values_to = 'bsfunc')
+
+bSplineXmat = data.frame (Int = 1, x = x, bfs) %>%
+  pivot_longer(-c(x), names_to = 'bs', values_to = 'bsfunc')
 
 
-plot_ly(colors='Set3') %>% 
-  add_markers(~x, ~y, color=I(scales::alpha('black', .25)), showlegend=F, data=d) %>%
-  add_lines(~x, ~bsfunc, color=~bs, line=list(width=3), showlegend=F, data=bSplineXmat) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+# plot_ly(colors = 'Set3') %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .25)),
+#     showlegend = F,
+#     data = d
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ bsfunc,
+#     color =  ~ bs,
+#     line = list(width = 3),
+#     showlegend = F,
+#     data = bSplineXmat
+#   ) %>%
+#   theme_plotly()
 
-plot_ly(colors='Set3') %>% 
-  add_markers(~x, ~y, color=I(scales::alpha('black', .25)), showlegend=F, data=d) %>%
-  add_lines(~x, ~bsfunc, color=~bs, line=list(width=3), showlegend=F, data=bSplineXmatsc) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+d %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = 'black', alpha = .1) +
+  geom_line(
+    aes(y = bsfunc, color = bs),
+    size = 1,
+    data = bSplineXmat,
+    show.legend = FALSE
+  ) +
+  scale_color_brewer(palette = 'Set3')
+
+# plot_ly(colors = 'Set3') %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .25)),
+#     showlegend = F,
+#     data = d
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ bsfunc,
+#     color =  ~ bs,
+#     line = list(width = 3),
+#     showlegend = F,
+#     data = bSplineXmatsc
+#   ) %>%
+#   theme_plotly()
+
+
+d %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = 'black', alpha = .1) +
+  geom_line(
+    aes(y = bsfunc, color = bs),
+    size = 1,
+    data = bSplineXmatsc,
+    show.legend = FALSE
+  ) +
+  scale_color_brewer(palette = 'Set3')
 ```
 
 
 ## The number of knots and where to put them
 
-A natural question may arise as to how many knots to use. More knots potentially means more 'wiggliness', as demonstrated here. Note that these are number of knots, not powers in a polynomial regression as shown in the main section of this document.
+A natural question may arise as to how many knots to use. More knots potentially means more 'wiggliness', as demonstrated here (feel free to click on the different knot values). Note that these are number of knots, not powers in a polynomial regression as shown in the main section of this document.
 
 
-```{r differentNKnots, echo=FALSE, out.width='45%', fig.asp=.5}
+```{r differentNKnots, echo=FALSE, fig.asp=.5}
 library(dplyr)
 l = 3
 nk = c(3, 6, 9, 15)
 bs = lmCS = list()
-for (i in 1:length(nk)){
-  knots = seq(0, 1, length.out=nk[i]); knots = knots[-length(knots)]
+
+for (i in 1:length(nk)) {
+  knots = seq(0, 1, length.out = nk[i])
+  knots = knots[-length(knots)]
   # knots[[i]]
-  bs[[i]] = sapply(1:length(knots), function(k) ifelse(x >= knots[k], (x-knots[k])^l, 0))
-  lmCS[[i]] = lm(y~poly(x,3) + bs[[i]])
+  bs[[i]] = sapply(1:length(knots), function(k)
+    ifelse(x >= knots[k], (x - knots[k]) ^ l, 0))
+  lmCS[[i]] = lm(y ~ poly(x, 3) + bs[[i]])
 }
+
 fits = sapply(lmCS, fitted)
 
-d4 = data.frame(x, y, fits=fits) %>% #arrange(x) %>% 
-  gather(key='knots', value='value', -x, -y) %>%  
-  mutate(knots = factor(knots, labels=nk))
+d4 = data.frame(x, y, fits = fits) %>%
+  pivot_longer(-c(x, y), names_to = 'knots') %>% 
+  mutate(knots = factor(knots, labels = nk))
 
-d4 %>% 
-  plot_ly(colors='Set3') %>% # have to set colorscale here if you want it to work after point color
-  add_markers(~x, ~y, color=I(scales::alpha('black', .25)), showlegend=F, data=d) %>%
-  add_lines(~x, ~value, color=~knots, line=list(width=3), showlegend=T, data=d4) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly() %>% 
-  layout()
+
+d4 %>%
+  plot_ly(colors = 'Set3') %>% # have to set colorscale here if you want it to work after point color
+  add_markers(
+    ~ x,
+    ~ y,
+    color = I(scales::alpha('black', .25)),
+    showlegend = FALSE,
+    data = d
+  ) %>%
+  add_lines(
+    ~ x,
+    ~ value,
+    color =  ~ knots,
+    line = list(width = 3),
+    showlegend = TRUE,
+    data = d4
+  ) %>%
+  theme_plotly()
 ```
 
 <br>
 
-However, we don't really have to worry about this except in the conceptual sense, i.e. being able to control the wiggliness.  The odds of you knowing beforehand the number of knots and where to put them is somewhere between slim and none, so this is a good thing.
+However, we don't really have to worry about this except in the conceptual sense, i.e. being able to control the wiggliness.  The odds of you knowing beforehand the number of knots and where to put them is somewhere between slim and none, so it's good that we can control this via a single parameter and via a more automatic process.
+
 
 
 ## Interpreting output for smooth terms
 
+
 ### Effective degrees of freedom
 
-In interpreting the output from <span class="pack">mgcv</span>, we'll start with the <span class="emph">effective degrees of freedom</span>, or edf. In typical OLS regression the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure. In this example, there are actually 9 terms associated with this smooth, but their corresponding parameters are each penalized to some extent and thus the *effective* degrees of freedom does not equal 9. For hypothesis testing an alternate edf is actually used, which is the other one provided there in the summary result (Ref.df).  For more on this see `?summary.gam` and `?anova.gam`. 
+In interpreting the output from <span class="pack">mgcv</span>, we'll start with the  *effective degrees of freedom*, or edf. In typical OLS regression, the model degrees of freedom is equivalent to the number of predictors/terms in the model. This is not so straightforward with a GAM due to the smoothing process and the penalized regression estimation procedure. In our previous example in the application section, there are actually 9 terms associated with the smooth term, but their corresponding parameters are each penalized to some extent, and so the *effective* degrees of freedom does not equal 9. For hypothesis testing, an alternate edf is actually used, which is the other one provided there in the summary result (Ref.df).  For more on this see `?summary.gam` and `?anova.gam`. 
 
-At this point you might be thinking these p-values are a bit fuzzy, and you'd be right.   As is the case with mixed models, machine learning approaches, etc., p-values are not straightforward. The gist is that in the GAM setting they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level, but then standard p-values shouldn't be used that way either.  If they are pretty low you can feel comfortable claiming statistical significance, but if you want a tight p-value you'll need to go back to using a GLM. 
+At this point you might be thinking these p-values are a bit fuzzy, and you'd be right.   As is the case with mixed models, machine learning approaches, etc., p-values are not straightforward. The gist is that in the GAM setting they aren't to be used for harsh cutoffs, say, at an arbitrary .05 level, but then standard p-values shouldn't be used that way either.  If they are pretty low you can feel comfortable claiming statistical significance, but if you want a tight p-value you'll need to go back to using a non-penalized approach like standard GLM. 
 
 The edf would equal 1 if the model penalized the smooth term to a simple linear relationship[^allthewaytozero], and so the effective degrees of freedom falls somewhere between 1 and k-1 (or k), where k is chosen based on the basis. You can think of it as akin to the number of knots.  There is functionality to choose the k value, but note the following from Wood in the help file for `?choose.k`:
 
@@ -378,6 +650,7 @@ And the following:
 > One scenario that can cause confusion is this: a model is fitted with k=10 for a smooth term, and the EDF for the term is estimated as 7.6, some way below the maximum of 9. The model is then refitted with k=20 and the EDF increases to 8.7 - what is happening - how come the EDF was not 8.7 the first time around? The explanation is that the function space with k=20 contains a larger subspace of functions with EDF 8.7 than did the function space with k=10: one of the functions in this larger subspace fits the data a little better than did any function in the smaller subspace. These subtleties seldom have much impact on the statistical conclusions to be drawn from a model fit, however.
 
 If you want a more statistically oriented approach, see `?gam.check`.
+
 
 ### Deviance explained
 
@@ -393,78 +666,98 @@ As noted above, the GCV, or generalized cross validation score, can be taken as 
 
 ### Visual depiction
 
-The following reproduces the plots produced by <span class="pack">mgcv</span> and <span class="pack">visreg</span>.  I'll even use base R plotting to 'keep it real'.
+The following reproduces the plots produced by <span class="pack">mgcv</span>.  I'll even use base R plotting to 'keep it real'.
 
-First we'll start with the basic GAM plot. First we get the term for year, i.e. the linear combination of the basis functions for year.  The <span class="pack">mgcv</span> package provides this for you via the <span class="func">predict</span> function with `type='terms'`. For non-smooth components, this is just the original covariate times its corresponding coefficient.  Next we need the partial residuals, which are just the basic residuals plus the term of interest added. With the original predictor variable, we're ready to proceed.
+First we'll start with the basic GAM plot using our `mod_gam2` from the [application section][Application Using R]. First we get the term for year, i.e. the linear combination of the basis functions for year.  The <span class="pack">mgcv</span> package provides this for you via the <span class="func">predict</span> function with `type='terms'`. For non-smooth components, this is just the original covariate times its corresponding coefficient.  Next we need the partial residuals, which are just the basic residuals plus the term of interest added. With the original predictor variable, we're ready to proceed.
 
 
-```{r termplot_gam, out.width='75%'}
-income_term = predict(mod_gam2, type='terms')[,'s(Income)']
+```{r termplot_gam}
+income_term = predict(mod_gam2, type = 'terms')[, 's(Income)']
 res_partial = residuals(mod_gam2) + income_term
-income = mod_gam2$model$Income
-par(mfrow=c(1,2))
-plot(income, res_partial, ylim=c(-200,100), col='black', 
-     ylab='s(income, 7.59)', pch=19, main='ours')
-lines(income[order(income)], income_term[order(income)])
-plot(mod_gam2, select = 1, se=F, residuals=T, pch=19, rug=F, ylim=c(-200,100), main='mgcv')
+Income = mod_gam2$model$Income
+par(mfrow = c(1, 2))
+plot(
+  x = Income,
+  y = res_partial,
+  ylim = c(-200, 100),
+  col  = 'black',
+  ylab = 's(income, 7.59)',
+  pch  = 19,
+  main = 'ours'
+)
+lines(Income[order(Income)], income_term[order(Income)])
+
+plot(
+  mod_gam2,
+  select = 1,
+  se = F,
+  residuals = T,
+  pch  = 19,
+  rug  = F,
+  ylim = c(-200, 100),
+  main = 'mgcv'
+)
 ```
 
-Now for <span class="pack">visreg</span>. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default, these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal.
+Now for a comparison to <span class="pack">ggeffects</span>, which is an easy tool to use to get predictions on the response scale. It uses the underlying <span class="func">predict</span> function also, but gets a standard prediction while holding the other variables at key values (which you can manipulate). By default, these key values are at the median for numeric variables, and most common category for categorical variables.  Note that we could add more fitted values to make the line smoother, but for our purposes getting the concept is the goal. 
 
-```{r termplot_visreg, echo=-9, out.width='75%'}
-pred_data = pisa %>% 
+```{r termplot_ggeffects, echo=-9}
+pred_data = pisa %>%
   select(Edu, Health) %>%
-  summarise_all(median, na.rm=T) %>% 
-  data.frame(Income=mod_gam2$model$Income)
-preds = predict(mod_gam2, newdata=pred_data)
-res_partial = mod_gam2$residuals + preds
+  summarise_all(median, na.rm = TRUE) %>%
+  tibble(Income = mod_gam2$model$Income)
 
-par(mfrow=c(1,2))
-plot(pred_data$Income[order(pred_data$Income)], 
-     preds[order(pred_data$Income)], 
-     col='dodgerblue', 
-     ylab='f(income)', 
-     lwd=3, 
-     ylim=c(250, 600), 
-     type='l', 
-     main='ours',
-     xlab='Income')
-points(pred_data$Income, res_partial, col='gray50', pch=19)
-visreg(mod_gam2, 
-       xvar='Income', 
-       points.par=list(cex=1), 
-       band=F, 
-       ylim=c(250, 600),
-       main='visreg')
-graphics::layout(1)
+plot_data = tibble(
+  Income = pred_data$Income,
+  preds = predict(mod_gam2, newdata = pred_data),
+  p_resid = mod_gam2$residuals + preds
+)
+
+p1 = plot_data %>% 
+  ggplot(aes(x = Income, y = preds)) +
+  geom_line(alpha = .5)
+
+p2 = plot(
+  ggeffects::ggpredict(mod_gam2, terms = 'Income'),
+  ci = FALSE,
+  use.theme = FALSE, 
+  show.title = FALSE
+)
+```
+
+```{r termplot_ggeffects-show, echo=FALSE}
+p1 + p2 & lims(y = c(275, 525))
 ```
 
 
 ### Examining first derivatives
 
-It may be the case that we'd like to investigate the slopes of the smooth terms at various points to better understand how change is taking place. In standard linear model, the slope is constant, so the regression coefficient for a particular term tells us all we need to know.  For additive models or others with nonlinear effects, the slope changes over the values of the covariate of interest.
+It may be the case that we'd like to investigate the slopes of the smooth terms at various points to better understand how change is taking place. In standard linear model, the slope is constant, so the regression coefficient for a particular feature tells us all we need to know.  For additive models or others with nonlinear effects, the slope changes over the values of the feature of interest.
 
 We can easily extract this information using the <span class="pack">gratia</span> package[^gratia], specifically with the <span class="func">fderiv</span> function.  This allows one to get the estimated slope at various points, either by specifying them with the `newdata` argument or specifying the number of values desired along the range of the the model covariate, as below.
 
-```{r fderiv, echo=1:3, out.width='40%', fig.asp=.5, cache=FALSE}
+```{r fderiv, echo=1:3, fig.asp=.5, cache=FALSE}
 library(gratia)
 
-fd_inc = confint(fderiv(mod_gam1, n = 500))
+fd_inc = derivatives(mod_gam1, n = 500)
 
-fd_inc = fd_inc %>% 
-  mutate(Income = seq(min(mod_gam1$model$Income), max(mod_gam1$model$Income), length.out = 500)) %>% 
-  rename(Estimate = est)
+fd_inc = fd_inc %>%
+  mutate(Income = seq(
+    min(mod_gam1$model$Income),
+    max(mod_gam1$model$Income),
+    length.out = 500
+  )) %>%
+  rename(Estimate = derivative)
 
-plot_ly(fd_inc) %>% 
-  add_lines(x=~Income,  y=0, color=I('gray92'), showlegend=F) %>%
-  add_lines(x=~Income, y=~Estimate, color=I('#ff5500'), showlegend=F) %>%
-  add_markers(x=~Income, y=~Estimate, 
-              showlegend=F, 
-              color = I('#00aaff'),
-              # size=I(100:101),   # this is a very special bug, specific single or multiple values will have different effects
-              data = fd_inc %>% filter(Estimate==max(Estimate)|Estimate==min(Estimate))) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly()
+fd_inc %>% 
+  ggplot(aes(x = Income, y = Estimate)) +
+  geom_hline(yintercept = 0) +
+  geom_line(size = 1) +
+  geom_point(
+    size = 3,
+    alpha = 1,
+    data = fd_inc %>% filter(Estimate == max(Estimate) | Estimate == min(Estimate))
+  )
 ```
 
 
