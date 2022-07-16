@@ -749,8 +749,6 @@ Either of these models is appropriate, but they ask different questions. The MRF
 
 
 
-# References
-
 [^Xlme]: All the same variables in the lme output start with X. This is more to avoid confusion in the functions behind the scenes.
 
 [^timefits]: I don't show it to keep the plot clean, but the fitted values are essentially the same.
