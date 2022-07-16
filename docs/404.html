@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Page not found | Generalized Additive Models</title>
+  <meta name="description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Page not found | Generalized Additive Models" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://m-clark.github.io/generalized-additive-models//img/nineteeneightyR.png" />
+  <meta property="og:description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well." />
+  <meta name="github-repo" content="m-clark/generalized-additive-models/" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Page not found | Generalized Additive Models" />
+  
+  <meta name="twitter:description" content="An introduction to generalized additive models (GAMs) is provided, with an emphasis on generalization from familiar linear models. It makes extensive use of the mgcv package in R. Discussion includes common approaches, standard extensions, and relations to other techniques. More technical modeling details are described and demonstrated as well." />
+  <meta name="twitter:image" content="https://m-clark.github.io/generalized-additive-models//img/nineteeneightyR.png" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class='before'><a href="./">Generalized Additive Models</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="part"><span><b>Part I: Concepts</b></span></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-i"><i class="fa fa-check"></i>Beyond the General Linear Model I</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#general-linear-model"><i class="fa fa-check"></i>General Linear Model</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-linear-model"><i class="fa fa-check"></i>Generalized Linear Model</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-model"><i class="fa fa-check"></i>Generalized Additive Model</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#beyond-the-general-linear-model-ii"><i class="fa fa-check"></i>Beyond the General Linear Model II</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#fitting-the-standard-linear-model"><i class="fa fa-check"></i>Fitting the Standard Linear Model</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#polynomial-regression"><i class="fa fa-check"></i>Polynomial Regression</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#scatterplot-smoothing"><i class="fa fa-check"></i>Scatterplot Smoothing</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#generalized-additive-models"><i class="fa fa-check"></i>Generalized Additive Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html"><i class="fa fa-check"></i>The case for GAMs</a>
+<ul>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#why-not-just-use-standard-methods"><i class="fa fa-check"></i>Why not just use standard methods?</a></li>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#heteroscedasticity-non-normality-etc."><i class="fa fa-check"></i>Heteroscedasticity, non-normality etc.</a></li>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#polynomial-regression-1"><i class="fa fa-check"></i>Polynomial Regression</a>
+<ul>
+<li class="chapter" data-level="" data-path="case_for_gam.html"><a href="case_for_gam.html#a-more-complex-relationship"><i class="fa fa-check"></i>A more complex relationship</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html"><i class="fa fa-check"></i>Building up to GAMs</a>
+<ul>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#piecewise-polynomial"><i class="fa fa-check"></i>Piecewise polynomial</a></li>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#what-is-a-gam"><i class="fa fa-check"></i>What is a GAM?</a></li>
+<li class="chapter" data-level="" data-path="building_gam.html"><a href="building_gam.html#polynomial-spline"><i class="fa fa-check"></i>Polynomial spline</a></li>
+</ul></li>
+<li class="part"><span><b>Part II: Praxis</b></span></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html"><i class="fa fa-check"></i>Application Using R</a>
+<ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#initial-examination"><i class="fa fa-check"></i>Initial Examination</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#single-feature"><i class="fa fa-check"></i>Single Feature</a>
+<ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#linear-fit"><i class="fa fa-check"></i>Linear Fit</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#gam"><i class="fa fa-check"></i>GAM</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#visualization"><i class="fa fa-check"></i>Visualization</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#multiple-features"><i class="fa fa-check"></i>Multiple Features</a>
+<ul>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#linear-fit-1"><i class="fa fa-check"></i>Linear Fit</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#gam-1"><i class="fa fa-check"></i>GAM</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#visualization-1"><i class="fa fa-check"></i>Visualization</a></li>
+<li class="chapter" data-level="" data-path="application.html"><a href="application.html#model-comparison-1"><i class="fa fa-check"></i>Model Comparison</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html"><i class="fa fa-check"></i>Issues</a>
+<ul>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#estimation"><i class="fa fa-check"></i>Estimation</a>
+<ul>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#shrinkage-variable-selection"><i class="fa fa-check"></i>Shrinkage &amp; Variable Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#choice-of-smoothing-function"><i class="fa fa-check"></i>Choice of Smoothing Function</a></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#diagnostics"><i class="fa fa-check"></i>Diagnostics</a>
+<ul>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#concurvity"><i class="fa fa-check"></i>Concurvity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#model-comparison-revisited"><i class="fa fa-check"></i>Model Comparison Revisited</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Approaches</a>
+<ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-nonlinear-modeling-approaches"><i class="fa fa-check"></i>Other Nonlinear Modeling Approaches</a>
+<ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#known-functional-form"><i class="fa fa-check"></i>Known Functional Form</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#response-transformation"><i class="fa fa-check"></i>Response Transformation</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#the-black-box"><i class="fa fa-check"></i>The Black Box</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#bayesian-estimation"><i class="fa fa-check"></i>Bayesian Estimation</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#extensions"><i class="fa fa-check"></i>Extensions</a>
+<ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#other-gams"><i class="fa fa-check"></i>Other GAMs</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#reproducing-kernel-hilbert-space"><i class="fa fa-check"></i>Reproducing Kernel Hilbert Space</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#gaussian-processes"><i class="fa fa-check"></i>Gaussian Processes</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Concluding remarks</a></li>
+<li class="part"><span><b>Part III: Addendum</b></span></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html"><i class="fa fa-check"></i>Technical details</a>
+<ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#gam-2"><i class="fa fa-check"></i>GAM</a>
+<ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#penalized-regression"><i class="fa fa-check"></i>Penalized regression</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#effective-degrees-of-freedom-again"><i class="fa fa-check"></i>Effective degrees of freedom again</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#a-detailed-example"><i class="fa fa-check"></i>A detailed example</a>
+<ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#preview-of-other-bases"><i class="fa fa-check"></i>Preview of other bases</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#the-number-of-knots-and-where-to-put-them"><i class="fa fa-check"></i>The number of knots and where to put them</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#interpreting-output-for-smooth-terms"><i class="fa fa-check"></i>Interpreting output for smooth terms</a>
+<ul>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#effective-degrees-of-freedom"><i class="fa fa-check"></i>Effective degrees of freedom</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#deviance-explained"><i class="fa fa-check"></i>Deviance explained</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#visual-depiction"><i class="fa fa-check"></i>Visual depiction</a></li>
+<li class="chapter" data-level="" data-path="technical.html"><a href="technical.html#examining-first-derivatives"><i class="fa fa-check"></i>Examining first derivatives</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#a-comparison-to-mixed-models"><i class="fa fa-check"></i>A comparison to mixed models</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#time-and-space"><i class="fa fa-check"></i>Time and Space</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#time"><i class="fa fa-check"></i>Time</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#space"><i class="fa fa-check"></i>Space</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li class='after'">
+   <a href="https://m-clark.github.io/">
+      <img src="img/mc_logo.png" style="width:25%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo">
+   </a>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a href="https://github.com/m-clark/">
+         <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+      </a>
+   </div>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+         <i class="fab fa-creative-commons fa-lg"></i>
+         <i class="fab fa-creative-commons-by fa-lg"></i>
+         <i class="fab fa-creative-commons-sa fa-lg"></i>
+      </a>
+   </div>
+</li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Generalized Additive Models</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="page-not-found" class="section level1">
+<h1>Page not found</h1>
+<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
+<p>You may want to try searching to find the page's new location, or use
+the table of contents to find the page you are looking for.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["twitter", "facebook", "google", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"depth": 2,
+"scroll_highlight": true
+},
+"df_print": "kable",
+"highlight": "pygments"
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

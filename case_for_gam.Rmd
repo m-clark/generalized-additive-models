@@ -102,7 +102,7 @@ augment(mod) %>%
   geom_point(alpha = .25, color = '#D55E00') +
   geom_smooth(se = FALSE, color = '#56B4E9') +
   labs(x = 'Fitted value', title = 'Fitted vs. Observed') +
-  hrbrthemes::theme_ipsum_rc()
+  hrbrthemes::theme_ipsum_rc() +
   theme(title = element_text(colour = '#585858'))
 ```
 
@@ -118,7 +118,7 @@ dat %>%
   geom_smooth(aes(), color = '#56B4E9', se = F) +
   facet_grid( ~ variable) +
   labs(title = 'Features vs. Y') +
-  hrbrthemes::theme_ipsum_rc()
+  hrbrthemes::theme_ipsum_rc() +
   theme(
     legend.title = element_blank(),
     legend.background = element_blank(),

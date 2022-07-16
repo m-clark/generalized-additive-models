@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Roboto+Condensed|Lato|Lora|Fira+Sans");
+@import url("https://fonts.googleapis.com/css?family=Bitter|Alex+Brush|Roboto|Roboto+Mono|Roboto+Condensed|Open+Sans|Lato|Lora|Fira+Sans|Yellotail");
 
 /* title page */
 .book .book-body .page-wrapper .page-inner section.normal h1.title {
-  font-size: 250%;
-  font-family: 'Fira Sans', Karla, 'Roboto Condensed', Lora, Lato, Roboto, sans;
+  font-size: 500%;
+  font-family: 'Alex Brush', Karla, 'Roboto Condensed', 'Fira Sans', Lora, Lato, Roboto, sans;
   font-style: normal;
   font-weight: 100;
 }
@@ -51,8 +51,7 @@
     background-color: #fffff8;
     color: #585858;
     padding: 5px 15px;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
-    width: 150%;
+    font-family: Bitter, Roboto, 'Helvetica Neue', sans-serif;
     word-wrap: break-word;
     overflow: hidden;
     line-height: 1.7;
@@ -71,25 +70,44 @@
 }
 
 /* link effects */
-.book .book-body .page-wrapper .page-inner section.normal a {
-    color: #3D68FF;
-    background-image: linear-gradient(180deg,transparent 90%, #FFD43D 0);
-    background-size: 0 100%;
-    background-repeat: no-repeat;
+/*
+https://stackoverflow.com/questions/28623446/hover-effect-expand-bottom-border
+uri class is for urls
+*/
+
+.book .book-body .page-wrapper .page-inner section.normal a:active,
+.book .book-body .page-wrapper .page-inner section.normal a:focus,
+.book .book-body .page-wrapper .page-inner section.normal a:hover {
+    outline: 0;
     text-decoration: none;
-    -webkit-transition: background-size .4s ease;
-    -moz-transition: background-size .4s ease;
-    -ms-transition: background-size .4s ease;
-    -o-transition: background-size .4s ease;
-    transition: background-size .4s ease;
-    border-bottom: 0px solid;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal a:hover {
-  text-decoration: none;
-    background-size: 100% 100%;
-    cursor: pointer;
+.book .book-body .page-wrapper .page-inner section.normal a,
+.book .book-body .page-wrapper .page-inner section.normal a.uri {
+    display: inline-block;
+    color: #1f65b7;
+    text-decoration: none;
 }
+
+.book .book-body .page-wrapper .page-inner section.normal a::after,
+.book .book-body .page-wrapper .page-inner section.normal a.uri::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1.75px;
+    background: #990024;
+    transition: width .3s;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal a:hover::after,
+.book .book-body .page-wrapper .page-inner section.normal a.uri:hover::after{
+    width: 100%;
+    //transition: width .3s;
+}
+
+
+
+
 
 .body-inner {
     background-color: #fffff8;
@@ -211,11 +229,12 @@ i {
 .book .book-body .page-wrapper .page-inner section.normal pre {
     overflow: auto;
     word-wrap: normal;
-    width: 60%;
     margin: 0 0 1.275em;
     padding: .85em 1em;
     background: #fafafa;
+    border-radius: 10px;
 }
+
 
 
 .book .book-body .page-wrapper .page-inner section.normal code,
@@ -258,46 +277,6 @@ h1, h2, h3, h4, h5 {
 }
 
 
-.book .book-body .page-wrapper .page-inner section.normal dl,
-.book .book-body .page-wrapper .page-inner section.normal ol,
-.book .book-body .page-wrapper .page-inner section.normal p,
-.book .book-body .page-wrapper .page-inner section.normal ul {
-    margin-top: 0;
-    margin-bottom: .85em;
-    width: 60%;                 /*fiddle with this relative to marginnote; div.sourceCode should be the same*/
-}
-
-/* taken out of the above */
-.book .book-body .page-wrapper .page-inner section.normal blockquote {
- font-size: 80%;
-}
-
-/* marginnote, sidenotes, footnotes */
-.book .book-body .page-wrapper .page-inner section.normal .marginnote span.mjx-chtml, span.mjx-block {
-    display: block;
-    font-size: 80%;
-}
-
-.book .book-body .page-wrapper .page-inner section.normal .footnotes p, ol {
-  width: 100%;
-  font-size: 90%;
-}
-
-.book .book-body .page-wrapper .page-inner section.normal .marginnote {
-  float: right;
-  clear: right;
-  margin-right: -45%;
-  width: 40%;
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 75%;
-  line-height: 1;
-  vertical-align: baseline;
-  position: relative;
-}
-
-
-
 /* code */
 
 /* logical NA */
@@ -335,20 +314,7 @@ code span.st {
 img {
   display: block;
   margin: 0 auto;
-}
-
-.arc {
-  display: block;
-  width:30%;
-  padding:5px 0;
-  margin: 0 0 10px 0;
-}
-
-.cscar {
-  display: block;
-  width:21%;
-  padding:5px 0;
-  margin: 0 0 10px 0;
+  background: transparent;
 }
 
 /* zoom for img*/
@@ -368,27 +334,36 @@ img {
 }
 
 /* text highlights */
-.emph {
-  color: #E32D00 ;  /*#ff5500 #D14300*/
+.book .book-body .page-wrapper .page-inner section.normal em, .emph {
+  color: #990024BF;  /*#E32D00 #ff5500 #D14300*/
   font-weight: 500;
+  font-style: normal;
 }
 
 /* pack func and objclass colors initially come from hcl(seq(90,360, length.out=4), c=80, l=80); redone for contrast*/
 .pack {
-  color: #990071; /*#AC9CFF #e41a1c*/
+  /* color: #1f65b7; #990071 #AC9CFF #e41a1c*/
   font-weight: 500;
 }
 
+.pack::before {
+  content: "{"
+}
+
+.pack::after {
+  content: "}"
+}
+
 .func {
+  font-family: 'Roboto Mono', Monaco, Consolas, "Liberation Mono", Menlo, 'Courier New', monospace;
   color: #007020;   /*#007199 #00CBB6; #984ea3; can just use `` instead*/
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .objclass {
   color:  #947100;  /*#AAB400 #4daf4a; #FFC5D0*/
   font-weight: 500;
 }
-
 
 /* miscellaneous */
 
@@ -406,12 +381,11 @@ img {
 .plotly {
   margin-left: 5%;
   margin-right: 5%;
-  width: 60%;
 }
 
-.plotly html-widget {
-  width: 75%;
-}
+/*.plotly html-widget {
+  width: 100%;
+}*/
 
 .d3heatmap {
   margin-left: 5%;
@@ -422,10 +396,8 @@ img {
 
 /* tables */
 
-.book .book-body .page-wrapper .page-inner section.normal table {
-  max-width: 35%;
-  margin-left: 7.5%;
-  font-size: 75%;
+table {
+  margin: auto;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal table tr:nth-child(2n) {
@@ -435,4 +407,28 @@ img {
 div.datatables {
     margin-left: auto;     /* to center them when full is not necessary. */
     margin-right: auto;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal .outro {
+  text-align: center;
+  line-height: 500px; /* <-- this is what you must define */
+  vertical-align: bottom;
+  font-size: 150%;
+  color: hotpink;
+  font-family: yellowtail;
+  height: 300px;
+  background-image: url('../img/mc_sunset_2.png');
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* formulas*/
+.MJXc-display {
+  padding: 10px 0px 10px 0px !important;
+}
+
+/* References */
+div.csl-entry {
+  padding: 5px;
 }
