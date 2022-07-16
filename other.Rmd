@@ -102,7 +102,7 @@ conditional_effects(mod_bayes)
 
 Here are 50 posterior draws from the model on the left, with .5, .8, and .95 fitted intervals on the right.
 
-```{r bayes-demo-show2, echo=FALSE, eval=FALSE}
+```{r bayes-demo-show2, echo=FALSE}
 library(ggdist)
 library(tidybayes)
 
@@ -135,7 +135,7 @@ Here we compare the uncertainty in the fitted values between the Bayesian and st
 
 [^brmsfit]: For brms, we're using the fitted method as this more resembles what mgcv is producing via predict.
 
-```{r bayes-compare-uncertainty}
+```{r bayes-compare-uncertainty, echo=FALSE}
 pred_data = tibble(Income = seq(
   min(pisa$Income, na.rm = TRUE),
   max(pisa$Income, na.rm = TRUE),

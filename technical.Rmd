@@ -45,6 +45,21 @@ $$\mathcal{Loss} = \sum (y-X\beta)^2 + \color{#b2001d}{\lambda B'SB}$$
 So, if we're maximizing the likelihood will make it lower than it otherwise would have been, and vice versa in terms of a loss function.  What it means for a GAM is that we'll add a penalty for the coefficients associated with the basis functions[^secondderiv].  The practical side is that it will help to keep us from overfitting the data, where our smooth function might get too wiggly.  As $\lambda \rightarrow \infty$, the result is a linear fit because any wiggliness will add too much to the loss function. As $\lambda \rightarrow 0$, we have the opposite effect, where any wiggliness is incorporated into the model.  In <span class='pack'>mgcv</span>, by default the estimated parameters are chosen via a generalized cross validation, or *GCV*, approach, and that statistic is reported in the summary. It modifies the loss function depicted above to approximate leave-one-out cross-validation selection.
 
 
+### Effective degrees of freedom again
+
+If we define a matrix $F$ that maps the unpenalized estimates of $\beta$ to the penalized estimates such that
+
+$$F = (X^T X + S)^{-1} X^T X$$
+
+and note
+
+$$\tilde{\beta} = (X^T X)^{-1} X^T y$$
+$$\hat{\beta} = F\tilde{\beta}$$
+
+the diagonal elements of $F$ are the effective degrees of freedom for each feature.  
+
+
+
 
 ## A detailed example
 
@@ -100,13 +115,6 @@ bs = sapply(
 )
 
 # head(bs)
-
-# a more digestible example to make things even more clear
-# x2 = seq(0, 1, length.out = 30)
-# sapply(
-#   1:3, 
-#   function(k) ifelse(x2 >= knots[k], (x2 - knots[k]) ^ l, 0)
-# )
 ```
 
 ```{r csbs_show, echo=FALSE}
@@ -634,8 +642,7 @@ fd_inc %>%
   geom_point(
     size = 3,
     alpha = 1,
-    data = fd_inc %>% filter(Estimate == max(Estimate) |
-                               Estimate == min(Estimate))
+    data = fd_inc %>% filter(Estimate == max(Estimate) | Estimate == min(Estimate))
   )
 ```
 

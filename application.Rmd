@@ -33,7 +33,7 @@ The first thing to do is get the data in and do some initial inspections.
 ```{r initial_inspection_of_pisa, echo=1:3}
 # url for the data is: 
 # https://raw.githubusercontent.com/m-clark/generalized-additive-models/master/data/pisasci2006.csv
-pisa = read.csv('data/pisasci2006.csv')
+pisa = read_csv('data/pisasci2006.csv')
 
 pisa %>% 
   tidyext::num_by(vars(-Country)) %>% 
@@ -240,13 +240,13 @@ csbyhand = ggplot(aes(x = Income, y = Overall), data = pisa) +
     aes(x = xp, y = Xp %*% coef(mod.1)),
     data = data.frame(xp, Xp),
     color = "#56B4E9",
-    lwd = .5
+    lwd = 1
   ) +
   geom_line(
     aes(x = Income, y = pred),
     data = pisa %>% add_predictions(mod_init),
     color = palettes$stan_red$stan_red,
-    lwd = .5
+    lwd = 1
   ) +
   xlim(.4, 1) +
   theme_clean()
@@ -428,14 +428,16 @@ The following code demonstrates how to create data necessary for the plot, speci
 # so it will have NAs removed.
 testdata = data.frame(
   Income = seq(.4, 1, length = 100),
-  Edu = mean(mod_gam2$model$Edu),
+  Edu    = mean(mod_gam2$model$Edu),
   Health = mean(mod_gam2$model$Health)
 )
 
-predictions = predict(mod_gam2,
-               newdata = testdata,
-               type = 'response',
-               se = TRUE)
+predictions = predict(
+  mod_gam2,
+  newdata = testdata,
+  type = 'response',
+  se = TRUE
+)
 
 df_preds = data.frame(testdata, predictions) %>%
   mutate(lower = fit - 1.96 * se.fit,
@@ -458,7 +460,12 @@ vis.gam(mod_gam2, type = 'response', plot.type = 'contour')
 ```
 
 ```{r contourheat, echo=FALSE, cache=FALSE, fig.asp=.66}
-plot_gam_2d(model = mod_gam2, main_var = Income, second_var = Edu, n_plot = 250) +
+plot_gam_2d(
+  model = mod_gam2,
+  main_var = Income,
+  second_var = Edu,
+  n_plot = 250
+) +
   theme(legend.text = element_text(size = 6))
 ```
 
@@ -474,30 +481,30 @@ summary(mod_gam3)
 
 vis.gam(
   mod_gam3,
-  type = 'response',
+  type      = 'response',
   plot.type = 'persp',
-  phi = 30,
-  theta = 30,
-  n.grid = 500,
-  border = NA
+  phi       = 30,
+  theta     = 30,
+  n.grid    = 500,
+  border    = NA
 )
 ```
 
 ```{r mod_gam3_plot, fig.asp='75%', echo=F, cache=FALSE}
 plot_gam_2d(
-  model = mod_gam3,
-  main_var = Income,
+  model      = mod_gam3,
+  main_var   = Income,
   second_var = Edu,
-  palette = 'bilbao',
-  direction = 1
+  palette    = 'bilbao',
+  direction  = 1
 )
 
 plot_gam_3d(
-  model = mod_gam3,
-  main_var = Income,
+  model      = mod_gam3,
+  main_var   = Income,
   second_var = Edu,
-  palette = 'bilbao',
-  direction = 1
+  palette    = 'bilbao',
+  direction  = 1
 )
 ```
 

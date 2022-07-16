@@ -7,11 +7,8 @@
 
 ## Why not just use standard methods?
 
-We have seen that GAMs generalize our typical approaches, but can they really help?  The standard linear model is ubiquitous in statistical training and application, and for good reason.  It is simple to do and easy to understand. Let's go ahead and do one to get things started.
+We have seen that GAMs generalize our typical approaches, but can they really help?  The standard linear model is ubiquitous in statistical training and application, and for good reason.  It is simple to do and easy to understand. Let's go ahead and do one to get things started with some simulated data.
 
-```{r setupIntroducingGAM, include=FALSE}
-knitr::opts_chunk$set(cache.rebuild = F, cache = T)
-```
 
 ```{r demolmdat, echo=F}
 set.seed(123)
@@ -21,7 +18,7 @@ dat = gamSim(
   n = 400,
   dist = "normal",
   scale = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 b = gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)

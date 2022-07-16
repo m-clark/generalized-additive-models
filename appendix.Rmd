@@ -110,7 +110,7 @@ A natural setting for GAMs is where there are observations over time. Perhaps we
 
 Here I use the data and example at [Gavin Simpon's nifty blog](https://www.fromthebottomoftheheap.net/), though with my own edits, updated data, and different model[^simpblog].  The data regards global temperature anomalies.
 
-[^simpblog]:Simpson -@simpson_modelling_2018 has offered an article regarding this topic as well.
+[^simpblog]:@simpson_modelling_2018 has offered an article regarding this topic as well.
 
 
 ```{r gamtime_setup, echo = 1:4, eval = FALSE}
@@ -292,20 +292,18 @@ summary(hot_gam_ar$lme)
 In the gam output, we see some slight differences from the original model, but not much (and we wouldn't expect it). From the lme output we can see the estimated autocorrelation value denoted as `Phi`[^Xlme].  Let's see what it does for the uncertainty in our model estimates.
 
 ```{r gam_ar_fit, echo=FALSE, fig.asp=.5}
-plotdat1 = predict(
+plotdat_noar = predict(
   gamm(Annual ~ s(Year), data = gtemp)$gam,
   newdata = tibble(Year = plotdat$Year),
   type = 'response',
   se = TRUE
 ) %>% 
-  as_tibble()
-
-plotdat1 = tibble(
-  Year = plotdat$Year,
-  fit  = plotdat1$fit,
-  upper = fit + 2 * plotdat1$se.fit,
-  lower = fit - 2 * plotdat1$se.fit
-)
+  as_tibble() %>% 
+  mutate(
+    Year  = plotdat$Year,
+    upper = fit + 2 * se.fit,
+    lower = fit - 2 * se.fit
+  )
 
 plotdat_ar = predict(
   hot_gam_ar$gam,
@@ -313,14 +311,12 @@ plotdat_ar = predict(
   type = 'response',
   se = TRUE
 ) %>% 
-  as_tibble()
-
-plotdat_ar = data_frame(
-  Year = plotdat$Year,
-  fit  = plotdat_ar$fit,
-  upper = fit + 2 * plotdat_ar$se.fit,
-  lower = fit - 2 * plotdat_ar$se.fit
-)
+  as_tibble() %>% 
+  mutate(
+    Year  = plotdat$Year,
+    upper = fit + 2 * se.fit,
+    lower = fit - 2 * se.fit   
+  )
 
 plotdat_ar %>%
   ggplot(aes(Year, fit)) +
@@ -329,9 +325,9 @@ plotdat_ar %>%
               alpha = .25) +
   geom_ribbon(
     aes(ymin = lower, ymax = upper),
-    fill = okabe_ito[1],
+    fill  = okabe_ito[1],
     alpha = .5,
-    data = plotdat1
+    data  = plotdat_noar
   ) +
   geom_line(size = 1) +
   scale_x_continuous(breaks = seq(1850, 2000, by = 25))
@@ -339,7 +335,7 @@ plotdat_ar %>%
 
 <br>
 
-We can in fact see that we were a bit optimistic in the previous fit (darker band).  Our new fit is wider at every point[^timefits].  So, in using a GAM for time-series data, we have similar issues that we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
+We can in fact see that we were a bit optimistic in the previous fit (darker band).  Our new fit expreses more uncertainty at every point[^timefits].  So, in using a GAM for time-series data, we have similar issues that we'd have with standard regression settings, and we can deal with them in much the same way to get a better sense of the uncertainty in our estimates.
 
 
 
@@ -766,7 +762,7 @@ Either of these models is appropriate, but they ask different questions. The MRF
 
 [^usingmaps]: If you look at the markdown document for this on GitHub you'll see the code for how to create this using an object from the maps packages rather than needing a shapefile.
 
-[^nosp]: There are actually three different types of objects one could supply here, but unfortunately the one thing <span class="pack">mgcv</span> doesn't do is work with any spatial objects one would already have from the popular R packages used for spatial modeling and visualization.  The fact that this list *is* actually a special class object is of no importance here, it is read simply as a standard list object.
+[^nosp]: There are actually three different types of objects one could supply here, but unfortunately the one thing <span class="pack">mgcv</span> doesn't do is work with any spatial objects one would already have from the popular R packages used for spatial modeling and visualization.  The fact that this list is actually a special class object is of no importance here, it is read simply as a standard list object.
 
 [^munichplot]: Unfortunately, I have neither the data nor the desire to try and make this a pretty plot. It just uses the basic <span class="pack">mgcv</span> plot and an attempted trick (which may not be entirely accurate) to superimpose the mixed model results onto the MRF data.
 

@@ -33,19 +33,6 @@ Smoothing parameters however are in fact estimated rather than arbitrarily set, 
 Some smooths are such that no matter the smoothing parameter, there will always be non-zero coefficients for the basis functions.  An extra penalty may be added such that if the smoothing parameter is large enough, the coefficients will shrink to zero, and some smoothing bases will have such alternative approaches available[^selectarg].  In this manner, one can assess whether a predictor is adding anything to the model, i.e. if it's effective degrees of freedom is near zero, and perhaps use the approach as a variable selection technique.
 
 
-### Effective degrees of freedom again
-
-If we define a matrix $F$ that maps the unpenalized estimates of $\beta$ to the penalized estimates such that
-
-$$F = (X^T X + S)^{-1} X^T X$$
-
-and note
-
-$$\tilde{\beta} = (X^T X)^{-1} X^T y$$
-$$\hat{\beta} = F\tilde{\beta}$$
-
-the diagonal elements of $F$ are the effective degrees of freedom for each feature.  
-
 
 
 ## Choice of Smoothing Function
@@ -56,11 +43,14 @@ A number of smooths are available with the <span class="pack">mgcv</span> packag
 
 ## Diagnostics
 
-We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model.
+We have some built-in abilities to examine whether there are any particular issues, and we can try it with our second GAM model from the [application section][application using r].
 
-```{r gam_check, fig.show='hide', echo=1, eval=3:4}
+```{r gam_check, fig.show='hide', eval=FALSE}
 gam.check(mod_gam2, k.rep = 1000)
+```
 
+
+```{r gam_check-show, fig.show='hide', echo=FALSE}
 test = capture.output(gam.check(mod_gam2, k.rep = 1000))
 cat(paste0(test, collapse = '\n'))
 # par(bg = 'transparent')
@@ -129,7 +119,7 @@ A previous example used the predict function on the data used to fit the model t
 
 We have talked about automated smoothing parameter and term selection, and in general, potential models are selected based on estimation of the smoothing parameter.  Using an extra penalty to allow coefficients to tend toward zero with the argument `select = TRUE` is an automatic way to go about it, where some terms could effectively drop out. Otherwise we could compare models GCV/AIC scores[^gcvdifffam], and in general, either of these would be viable approaches. Consider the following comparison:
 
-```{r mod_comparison, eval=-3}
+```{r mod_comparison}
 mod_1d = gam(Overall ~ s(Income) + s(Edu), data = pisa)
 mod_2d = gam(Overall ~ te(Income, Edu, bs = "tp"), data = pisa)
 
@@ -137,7 +127,9 @@ AIC(mod_1d, mod_2d)
 ```
 
 ```{r mod_comparison_show, echo=FALSE}
-AIC(mod_1d, mod_2d) %>% as_tibble(rownames = 'model') %>% gt()
+AIC(mod_1d, mod_2d) %>% 
+  as_tibble(rownames = 'model') %>% 
+  gt()
 ```
 
 <br>
