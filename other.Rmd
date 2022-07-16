@@ -26,7 +26,7 @@ While it was a convenience 'back in the day' because we didn't have software or 
 
 [^outliers]: A lot of 'outliers' tend to magically go away with an appropriate choice of distribution for the data generating process, or just more predictive features.
 
-There are still cases where one might focus on response transformation, just not so one can overcome some particular nuisance in trying to fit a linear regression.  An example might be in some forms of <span class="">functional data analysis</span>, where we are concerned with some function of the response that has been measured on many occasions over time.  Another example would be in economics, where they like to talk of effects in terms of *elasticities*.
+There are still cases where one might focus on response transformation, just not so one can overcome some particular nuisance in trying to fit a linear regression.  An example might be in some forms of *functional data analysis*, where we are concerned with some function of the response that has been measured on many occasions over time.  Another example would be in economics, where they like to talk of effects in terms of *elasticities*.
 
 
 ### The Black Box
@@ -42,6 +42,131 @@ Two examples of the latter that they provide are *projection pursuit* and *neura
 In the case of neural net models, which have found their stride over the last decade or so under the heading of *deep learning*, one can imagine a model where the input units (features) are  weighted and summed to create hidden layer units, which are then transformed and put through the same process to create outputs (see a simple example above).  Neural networks  are highly flexible in that there can be any number of inputs, hidden layers, and outputs, along with many, many other complexities besides.  And, while such models are very explicit in the black box approach, tools for interpretability have been much more accessible these days.
 
 Such models are usually found among a number machine learning techniques, any number of which might be utilized in a number of disciplines. Other more algorithmic/black box approaches include *networks/graphical models*, and tree-based methods such as *random forests* and *gradient boosting*[^esl]. As Venables and Ripley note, generalized additive models might be thought of as falling somewhere in between the fully parametric and highly interpretable models of linear regression and more black box techniques, a *gray box* if you will.  Indeed, there are even algorithmic approaches which utilize GAMs as part of their approach, including neural additive models (e.g. @agarwal2021neural and @xu2022sparse).
+
+## Bayesian Estimation
+
+We can definitely take a [Bayesian approach](https://m-clark.github.io/bayesian-basics/) to our GAMs if desired, in fact, we already have!  When we called the <span class="func">summary</span> method, the p-values are based on the Bayesian posterior covariance matrix of parameters.  This matrix is also the basis for the standard errors whenever we use the <span class="func">predict</span> method. So our uncertainty estimates are generally Bayesian-ish when using our default approach for span class="pack">mgcv</span>[^bayesfreq].
+
+[^bayesfreq]: This happens to provide better frequentist coverage as well. See the documentation for the summary method.
+
+For a fully Bayesian implementation, the <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the class="pack">mgcv</span> package's syntax style. The reason is that it just uses mgcv to 
+
+```{r bayes-demo, eval=FALSE}
+library(brms)
+
+mod_bayes = brm(
+  Overall ~ s(Income, bs = "cr"), 
+  data = pisa, 
+  thin = 4,
+  cores = 4
+)
+
+conditional_effects(mod_bayes) 
+```
+
+
+
+```{r bayes-model-run, echo=FALSE, eval=FALSE}
+library(brms)
+
+mod_bayes = brm(
+  Overall ~ s(Income, bs = "cr"), 
+  data = pisa, 
+  thin = 4,
+  cores = 4,
+  control = list(adapt_delta = .99),
+  prior = c(
+    # the gam coefs for the smooth are notably large, but not clear we need for
+    # this parameterization (default is student(0, 50) anyway), and estimated
+    # values did not change much setting these.
+    prior(normal(0, 100), class = 'sds', coef = 's(Income, bs = "cr")'), 
+    prior(normal(0, 10), class = 'b')
+  )
+)
+
+saveRDS(mod_bayes, file = 'data/mod_bayes.rds')
+```
+
+Results are very similar as we would expect.
+
+```{r bayes-demo-show, echo=FALSE}
+library(brms)
+
+mod_bayes = read_rds('data/mod_bayes.rds')
+
+summary(mod_bayes)
+
+conditional_effects(mod_bayes)
+```
+
+
+Here are 50 posterior draws from the model on the left, with .5, .8, and .95 fitted intervals on the right.
+
+```{r bayes-demo-show2, echo=FALSE, eval=FALSE}
+library(ggdist)
+library(tidybayes)
+
+p_draw = pisa %>%
+  drop_na(Income) %>%
+  add_epred_draws(mod_bayes, ndraws = 50) %>%
+  ggplot(aes(x = Income, y = Overall)) +
+  geom_line(aes(y = .epred, group = .draw), alpha = .1) +
+  geom_point(size = .5, alpha = .1)
+
+p_ribbon = pisa %>%
+  drop_na(Income) %>%
+  add_epred_draws(mod_bayes, ndraws = 50) %>%
+  ggplot(aes(x = Income, y = Overall)) +
+  stat_lineribbon(
+    aes(y = .epred),
+    size = 1,
+    .width = c(.95, .80, .50),
+    alpha = 1 / 4
+  ) +
+  geom_point(size = .5, alpha = .1) +
+  scale_fill_scico_d(begin = .3,
+                     end = .5,
+                     palette = 'bukavu') 
+
+p_draw + p_ribbon & lims(x = c(.4, .95), y = c(250, 550))
+```
+
+Here we compare the uncertainty in the fitted values between the Bayesian and standard <span class="pack">mgcv</span> approach[^brmsfit]. It looks like the <span class="pack">mgcv</span> credible intervals are generally good estimates, but that <span class="pack">brms</span> shows a bit more regularization. In any case, it's easy enough to try a Bayesian approach for your GAM if you want to!
+
+[^brmsfit]: For brms, we're using the fitted method as this more resembles what mgcv is producing via predict.
+
+```{r bayes-compare-uncertainty}
+pred_data = tibble(Income = seq(
+  min(pisa$Income, na.rm = TRUE),
+  max(pisa$Income, na.rm = TRUE),
+  length.out = 100
+))
+
+bayes_pred = fitted(mod_bayes, newdata = pred_data) %>%
+  as_tibble() %>%
+  mutate(model = 'bayes',
+         Income = pred_data$Income)
+
+mgcv_pred = predict(mod_gam1, newdata = pred_data, se.fit = TRUE) %>%
+  as_tibble() %>%
+  rename(Estimate = fit, Est.Error = se.fit) %>%
+  mutate(
+    Q2.5  = Estimate - 1.96 * Est.Error,
+    Q97.5 = Estimate + 1.96 * Est.Error,
+    model = 'mgcv',
+    Income = pred_data$Income
+  )
+
+bind_rows(bayes_pred, mgcv_pred) %>% 
+  ggplot(aes(x = Income, y = Estimate)) +
+  geom_borderline(aes(color = model)) +
+  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = model), alpha = .1) +
+  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = model), alpha = .1)
+
+# mod_bayes$fit
+```
+
+
 
 
 ## Extensions
@@ -63,9 +188,9 @@ Additive models also provide a framework for dealing with spatially correlated d
 
 #### Structured Additive Regression Models
 
-The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- *structured additive regression models*, or STARs[^linkedin].  It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix.  With those two components, we can specify the models in almost identical fashion, and combine such effects within a single model.  This results in a very powerful regression modeling strategy.  Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling[^bayesgam].
+The combination of random effects, spatial effects, etc. into the additive modeling framework is sometimes given a name of its own- *structured additive regression models*, or STARs[^linkedin].  It is the penalized regression approach that makes this possible, where we have a design matrix that might include basis functions or an indicator matrix for groups, and an appropriate penalty matrix.  With those two components, we can specify the models in almost identical fashion, and combine such effects within a single model.  This results in a very powerful regression modeling strategy.  Furthermore, the penalized regression described has a connection to Bayesian regression with a normal, zero-mean prior for the coefficients, providing a path toward even more flexible modeling.
 
-[^bayesgam]: The <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the mgcv package's syntax style.
+
 
 #### GAMLSS
 
