@@ -636,7 +636,7 @@ mich_df = mich_df %>%
 
 Now we can plot it.  <span class="pack">Plotly</span> works with <span class="pack">maps</span> package objects that have been converted via <span class="pack">ggplot2's</span> <span class="func">map_data</span> function.  So, we create some plot-specific data, and then add our fitted values to it. We then add our own coloring based on the fitted values, and a custom clean theme.
 
-```{r plot_mich, fig.asp=.5, echo=-4}
+```{r plot_mich, echo=-4, fig.asp=1}
 plotdat = map_data("county", 'michigan') %>%
   left_join(mich_df, by = c('subregion' = 'county')) %>%
   mutate(fillcol = cut(fit, breaks = seq(.25, .45, by = .025)))
@@ -707,14 +707,11 @@ gam_rent_re = gam(rent ~ s(district, bs = 're'),
 
 
 ```{r re_vs_mrf_plot, echo=FALSE, fig.asp=.66, cache=FALSE}
-library(ggblend)
-
 tibble(rent99,
        mrf_fit = fitted(gam_rent_mrf),
        mm_fit = fitted(gam_rent_re)) %>%
   ggplot(aes(x = mm_fit, y = mrf_fit)) +
-  geom_point(color = '#D55E00', alpha =.25, size = 3, group = 1)  +
-  theme_clean()
+  geom_point(color = '#D55E00', alpha =.25, size = 3, group = 1) 
 ```
 
 <br>

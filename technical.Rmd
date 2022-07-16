@@ -98,6 +98,7 @@ set.seed(123)
 x  = runif(500)
 mu = sin(2 * (4 * x - 2)) + 2 * exp(-(16 ^ 2) * ((x - .5) ^ 2))
 y  = rnorm(500, mu, .3)
+knots = seq(0, 1, by = .1)
 d  = tibble(x, y) %>% 
   mutate(
     xcut = cut(x, knots, right = F),
@@ -105,7 +106,7 @@ d  = tibble(x, y) %>%
   )
 
 
-knots = seq(0, 1, by = .1)
+# knots = seq(0, 1, by = .1)
 knots = knots[-length(knots)]  # don't need the last value
 l  = 1
 bs = sapply(
@@ -172,6 +173,7 @@ round(bscoefs, 3) %>%
 ```{r csbsScaledPlot, echo=F, fig.asp=.5}
 # NOTE: you've tried all the easy ways and plotly won't color lines and points the same; it will either do all one color or pick a different scheme.
 # but if you don't care about the markers, just make them black, but use more transparency, because there are replicates due to the data melt.
+# update 2022: I ultimately found plotly too frustrating to work with the colors here; since it randomly drops plots (which reappeared if I put another plot in the chunk), I had to try a ggplot fill in, which will never have the same colors, bc plotly apparently has no concept of a manually supplied scale. 
 cs = RColorBrewer::brewer.pal(nlevels(d$xcut), 'Set3')
 # KEEP this version. Dupes Fahrmeier, but not as desirable in my opinion
 # d3 %>%
@@ -188,39 +190,96 @@ d3 = bsScaled %>%
          y = y,
          xcut = as.ordered(d$xcut))
 
-plot_ly() %>%
-  add_markers(
-    ~ x,
-    ~ y,
-    color =  ~ xcut,
-    colors = cs,
-    alpha = .5,
-    showlegend = TRUE,
-    data = d3
-  ) %>% #RColorBrewer::brewer.pal(N, "Set3")
-  # add_markers(~x, ~bsfunc, color=I('navy'), data=data.frame(bsfunc=d3$bsfunc[1], x=0), showlegend=F) %>%
-  add_lines(~x, ~X1,  color = ~xcut, data = filter(d3, xcut == '[0,0.1)'),   showlegend = FALSE) %>%
-  add_lines(~x, ~X2,  color = ~xcut, data = filter(d3, xcut == '[0.1,0.2)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X3,  color = ~xcut, data = filter(d3, xcut == '[0.2,0.3)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X4,  color = ~xcut, data = filter(d3, xcut == '[0.3,0.4)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X5,  color = ~xcut, data = filter(d3, xcut == '[0.4,0.5)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X6,  color = ~xcut, data = filter(d3, xcut == '[0.5,0.6)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X7,  color = ~xcut, data = filter(d3, xcut == '[0.6,0.7)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X8,  color = ~xcut, data = filter(d3, xcut == '[0.7,0.8)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X9,  color = ~xcut, data = filter(d3, xcut == '[0.8,0.9)'), showlegend = FALSE) %>%
-  add_lines(~x, ~X10, color = ~xcut, data = filter(d3, xcut == '[0.9,1)'),   showlegend = FALSE) %>%
-  add_markers(x = 0, y = bscoefs[1], color = I('salmon'), size = I(20), alpha = .5,  showlegend = FALSE) %>% 
-  add_lines(x =  ~x, y = 0, color = I(alpha('black', .25)), data = d3, showlegend = FALSE) %>%
-  theme_plotly() 
+# plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color =  ~ xcut,
+#     colors = cs,
+#     alpha = .5,
+#     showlegend = TRUE,
+#     data = d3
+#   ) %>% #RColorBrewer::brewer.pal(N, "Set3")
+#   # add_markers(~x, ~bsfunc, color=I('navy'), data=data.frame(bsfunc=d3$bsfunc[1], x=0), showlegend=F) %>%
+#   add_lines(~x, ~X1,  color = ~xcut, data = filter(d3, xcut == '[0,0.1)'),   showlegend = FALSE) %>%
+#   add_lines(~x, ~X2,  color = ~xcut, data = filter(d3, xcut == '[0.1,0.2)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X3,  color = ~xcut, data = filter(d3, xcut == '[0.2,0.3)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X4,  color = ~xcut, data = filter(d3, xcut == '[0.3,0.4)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X5,  color = ~xcut, data = filter(d3, xcut == '[0.4,0.5)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X6,  color = ~xcut, data = filter(d3, xcut == '[0.5,0.6)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X7,  color = ~xcut, data = filter(d3, xcut == '[0.6,0.7)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X8,  color = ~xcut, data = filter(d3, xcut == '[0.7,0.8)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X9,  color = ~xcut, data = filter(d3, xcut == '[0.8,0.9)'), showlegend = FALSE) %>%
+#   add_lines(~x, ~X10, color = ~xcut, data = filter(d3, xcut == '[0.9,1)'),   showlegend = FALSE) %>%
+#   add_markers(x = 0, y = bscoefs[1], color = I('salmon'), size = I(20), alpha = .5,  showlegend = FALSE) %>% 
+#   add_lines(x =  ~x, y = 0, color = I(alpha('black', .25)), data = d3, showlegend = FALSE) %>%
+#   theme_plotly() 
+
+d3 %>%
+  select(-y) %>%
+  pivot_longer(-c(x, xcut), names_to = 'knot') %>%
+  ggplot(aes(x = x, y = value, color = xcut)) +
+  geom_hline(yintercept = 0) +
+  geom_point(aes(y = y), alpha = .25, data = d3) +
+  geom_point(aes(x = 0, y = int), 
+             color = 'salmon',
+             size = 2,
+             data = d3 %>% filter(xcut == levels(xcut)[1])) +
+  geom_line(aes(group = xcut, y = X1), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[1])) +
+  geom_line(aes(group = xcut, y = X2), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[2])) +
+  geom_line(aes(group = xcut, y = X3), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[3])) +
+  geom_line(aes(group = xcut, y = X4), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[4])) +
+  geom_line(aes(group = xcut, y = X5), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[5])) +
+  geom_line(aes(group = xcut, y = X6), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[6])) +
+  geom_line(aes(group = xcut, y = X7), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[7])) +
+  geom_line(aes(group = xcut, y = X8), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[8])) +
+  geom_line(aes(group = xcut, y = X9), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[9])) +
+  geom_line(aes(group = xcut, y = X10), 
+            size = 1,
+            alpha = 1,
+            data = d3 %>% filter(xcut == levels(xcut)[10])) +
+  scale_color_manual(values = cs) +
+  theme(
+    legend.position = 'right'
+  )
+
 ```
 
 <br>
 
-In the plot above, which you can click on the legend key to isolate segments, the initial dot represents the global constant ($\gamma_1$, i.e. our intercept). We have a decreasing function starting from that point onward (<span style="color:#8DD3C7">line</span>). Between .1 and .2 (<span style="color:#FFFFB3">line</span>), the coefficient is negative again, furthering the already decreasing slope (i.e. steeper downward). The fourth coefficient is positive, which means that between .2 and .3 our decreasing trend is lessening (<span style="color:#BEBADA">line</span>).  So our coefficients $j$ tell us the change in slope for the data from the previous section of data defined by the knots.  The lengths of the lines reflect the size of the coefficient, i.e. how dramatic the change is. If this gets you to thinking about interactions in more common model settings, you're on the right track (e.g. adding a quadratic term is just letting x have an interaction with itself; same thing is going on here).
+In the plot above, the initial dot represents the global constant ($\gamma_1$, i.e. our intercept). We have a decreasing function starting from that point onward (<span style="color:#8DD3C7">line</span>). Between .1 and .2 (<span style="color:#FFFFB3">line</span>), the coefficient is negative again, furthering the already decreasing slope (i.e. steeper downward). The fourth coefficient is positive, which means that between .2 and .3 our decreasing trend is lessening (<span style="color:#BEBADA">line</span>).  So our coefficients $j$ tell us the change in slope for the data from the previous section of data defined by the knots.  The lengths of the lines reflect the size of the coefficient, i.e. how dramatic the change is. If this gets you to thinking about interactions in more common model settings, you're on the right track (e.g. adding a quadratic term is just letting x have an interaction with itself; same thing is going on here).
 
 Finally, if we plot the sum of the basis functions, which is the same as taking our fitted values from a regression on the basis expansion of X, we get the following fit to the data. And we can see the trend our previous plot suggested.
 
-```{r csbsFitPlotDegree1, echo=FALSE, cache.rebuild=T, fig.asp=.5}
+```{r csbsFitPlotDegree1, echo=FALSE}
+# this plot randomly decides not to show in the doc. love plotly!
 plotData = bind_rows(data.frame(d, sum = fitted(lmMod)),
                  data.frame(
                    x = 0,
@@ -229,31 +288,39 @@ plotData = bind_rows(data.frame(d, sum = fitted(lmMod)),
                    xcut = 'Int'
                  ))
 
+# filter(plotData, xcut != 'Int') %>%
+#   droplevels() %>%
+#   plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color =  ~ xcut,
+#     colors = cs,
+#     alpha = .5,
+#     showlegend = F
+#   ) %>%
+#   add_lines( ~ x,
+#              ~ sum,
+#              color =  ~ xcut,
+#              colors = cs,
+#              showlegend = FALSE) %>%
+#   add_markers(
+#     x = 0,
+#     y = bscoefs[1],
+#     size =  ~ I(20),
+#     color = I('salmon'),
+#     alpha = .5,
+#     showlegend = FALSE
+#   ) %>%
+#   theme_plotly()
+
 filter(plotData, xcut != 'Int') %>%
-  droplevels %>%
-  plot_ly() %>%
-  add_markers(
-    ~ x,
-    ~ y,
-    color =  ~ xcut,
-    colors = cs,
-    alpha = .5,
-    showlegend = F
-  ) %>%
-  add_lines( ~ x,
-             ~ sum,
-             color =  ~ xcut,
-             colors = cs,
-             showlegend = FALSE) %>%
-  add_markers(
-    x = 0,
-    y = bscoefs[1],
-    size =  ~ I(20),
-    color = I('salmon'),
-    alpha = .5,
-    showlegend = FALSE
-  ) %>%
-  theme_plotly()
+  droplevels() %>% 
+  ggplot(aes(x, y)) + 
+  geom_point(aes(color = xcut), alpha = .25, show.legend = FALSE) +
+  geom_line(aes(y = sum, color = xcut), size = 2, alpha = 1, show.legend = FALSE ) +
+  geom_point(x= 0, y = bscoefs[1], color = 'salmon', alpha = .5, size = 3) +
+  scale_color_manual(values = cs)
 ```
 
 <br>
@@ -267,27 +334,39 @@ bs = sapply(1:length(knots), function(k)
 lmModCubicSpline = lm(y ~ poly(x, 3) + bs)
 
 
+# d %>%
+#   # add_predictions(lmModCubicSpline) %>%
+#   mutate(pred = fitted(lmModCubicSpline)) %>%
+#   # data.frame(x, y, pred=fitted(lmModCubicSpline)) %>%
+#   plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .1)),
+#     colors = cs,
+#     showlegend = F
+#   ) %>%
+#   # add_lines(~x, ~pred, color=I('#ff5503'), colors=cs, showlegend=F) %>%
+#   add_lines(
+#     ~ x,
+#     ~ pred,
+#     color =  ~ xcut,
+#     colors = cs,
+#     showlegend = F
+#   ) %>%
+#   theme_plotly() 
+
 d %>%
-  # add_predictions(lmModCubicSpline) %>%
   mutate(pred = fitted(lmModCubicSpline)) %>%
-  # data.frame(x, y, pred=fitted(lmModCubicSpline)) %>%
-  plot_ly() %>%
-  add_markers(
-    ~ x,
-    ~ y,
-    color = I(scales::alpha('black', .1)),
-    colors = cs,
-    showlegend = F
-  ) %>%
-  # add_lines(~x, ~pred, color=I('#ff5503'), colors=cs, showlegend=F) %>%
-  add_lines(
-    ~ x,
-    ~ pred,
-    color =  ~ xcut,
-    colors = cs,
-    showlegend = F
-  ) %>%
-  theme_plotly() 
+  ggplot(aes(x, y)) +
+  geom_point(aes(color = xcut), alpha = .1, show.legend = FALSE) +
+  geom_line(
+    aes(y = pred, color = xcut),
+    size = 2,
+    alpha = 1,
+    show.legend = FALSE
+  ) +
+  scale_color_manual(values = cs)
 ```
 
 <br>
@@ -295,38 +374,50 @@ d %>%
 Now we're getting somewhere.  Let's compare it to the <span class='func'>gam</span> function from the <span class='pack'>mgcv</span> package. We won't usually specify the knots directly, and even as we have set things up similar to the <span class='pack'>mgcv</span> approach, the <span class="func">gam</span> function is still doing some things our by-hand approach is not (penalized regression).  We still get pretty close agreement however.
 
 ```{r csFitPlotvsGAM, echo=FALSE, fig.asp=.5}
-library(mgcv)
+# data.frame(x,
+#            y,
+#            fits = fitted(lmModCubicSpline),
+#            fitsGam = fitted(gam(y ~ s(x, bs = 'cr'), knots = list(x = knots)))) %>%
+#   arrange(x) %>%
+#   plot_ly() %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .25)),
+#     colors = cs,
+#     showlegend = F
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ fits,
+#     color = I('#D55E00'),
+#     line = list(width = 5),
+#     showlegend = T,
+#     name = 'demo'
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ fitsGam,
+#     color = I('#56B4E9'),
+#     colors = cs,
+#     showlegend = T,
+#     name = 'gam'
+#   ) %>%
+#   theme_plotly() 
 
-data.frame(x,
-           y,
-           fits = fitted(lmModCubicSpline),
-           fitsGam = fitted(gam(y ~ s(x, bs = 'cr'), knots = list(x = knots)))) %>%
-  arrange(x) %>%
-  plot_ly() %>%
-  add_markers(
-    ~ x,
-    ~ y,
-    color = I(scales::alpha('black', .25)),
-    colors = cs,
-    showlegend = F
-  ) %>%
-  add_lines(
-    ~ x,
-    ~ fits,
-    color = I('#D55E00'),
-    line = list(width = 5),
-    showlegend = T,
-    name = 'demo'
-  ) %>%
-  add_lines(
-    ~ x,
-    ~ fitsGam,
-    color = I('#56B4E9'),
-    colors = cs,
-    showlegend = T,
-    name = 'gam'
-  ) %>%
-  theme_plotly() 
+tibble(x,
+       y,
+       by_hand = fitted(lmModCubicSpline),
+       mgcv = fitted(gam(y ~ s(x, bs = 'cr'), knots = list(x = knots)))) %>%
+  pivot_longer(-c(x, y), names_to = 'mod', values_to = 'pred')  %>%
+  # mutate(pred = fitted(lmModCubicSpline)) %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = 'black', alpha = .1) +
+  geom_line(
+    aes(y = pred, color = mod),
+    size = 2,
+    alpha = .75
+  )
 ```
 
 <br>
@@ -426,41 +517,64 @@ bSplineXmat = data.frame (Int = 1, x = x, bfs) %>%
   pivot_longer(-c(x), names_to = 'bs', values_to = 'bsfunc')
 
 
-plot_ly(colors = 'Set3') %>%
-  add_markers(
-    ~ x,
-    ~ y,
-    color = I(scales::alpha('black', .25)),
-    showlegend = F,
-    data = d
-  ) %>%
-  add_lines(
-    ~ x,
-    ~ bsfunc,
-    color =  ~ bs,
-    line = list(width = 3),
-    showlegend = F,
-    data = bSplineXmat
-  ) %>%
-  theme_plotly()
+# plot_ly(colors = 'Set3') %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .25)),
+#     showlegend = F,
+#     data = d
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ bsfunc,
+#     color =  ~ bs,
+#     line = list(width = 3),
+#     showlegend = F,
+#     data = bSplineXmat
+#   ) %>%
+#   theme_plotly()
 
-plot_ly(colors = 'Set3') %>%
-  add_markers(
-    ~ x,
-    ~ y,
-    color = I(scales::alpha('black', .25)),
-    showlegend = F,
-    data = d
-  ) %>%
-  add_lines(
-    ~ x,
-    ~ bsfunc,
-    color =  ~ bs,
-    line = list(width = 3),
-    showlegend = F,
-    data = bSplineXmatsc
-  ) %>%
-  theme_plotly()
+d %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = 'black', alpha = .1) +
+  geom_line(
+    aes(y = bsfunc, color = bs),
+    size = 1,
+    data = bSplineXmat,
+    show.legend = FALSE
+  ) +
+  scale_color_brewer(palette = 'Set3')
+
+# plot_ly(colors = 'Set3') %>%
+#   add_markers(
+#     ~ x,
+#     ~ y,
+#     color = I(scales::alpha('black', .25)),
+#     showlegend = F,
+#     data = d
+#   ) %>%
+#   add_lines(
+#     ~ x,
+#     ~ bsfunc,
+#     color =  ~ bs,
+#     line = list(width = 3),
+#     showlegend = F,
+#     data = bSplineXmatsc
+#   ) %>%
+#   theme_plotly()
+
+
+d %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = 'black', alpha = .1) +
+  geom_line(
+    aes(y = bsfunc, color = bs),
+    size = 1,
+    data = bSplineXmatsc,
+    show.legend = FALSE
+  ) +
+  scale_color_brewer(palette = 'Set3')
 ```
 
 
@@ -608,7 +722,7 @@ p2 = plot(
   ci = FALSE,
   use.theme = FALSE, 
   show.title = FALSE
-) + theme_clean()
+)
 ```
 
 ```{r termplot_ggeffects-show, echo=FALSE}

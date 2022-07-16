@@ -33,9 +33,11 @@ Packages to note:
     - <span class="pack">ggeffects</span> *
     - <span class="pack">gratia</span> *
 
-* demo and/or not required
+\* demo and/or not required
+
 † Personal package
-Many others are used behind the scenes.
+
+Many others are used behind the scenes. In addition, I do a lot of cleanup for visualizations in general.
 
 
 R Info: **`r sessionInfo()$R.version$version.string` `r sessionInfo()$R.version$nickname`**

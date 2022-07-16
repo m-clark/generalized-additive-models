@@ -21,6 +21,9 @@ better, and can spread the word**.
 
 Nowadays, GAMs serve as a potentially great starting point for modeling, especially for tabular data. A well-specified GAM should perform very well even compared to boosting or deep learning methods, and so at the very least, serves as a good baseline with enhanced interpretability and easier uncertainty metrics.  For a lot of data situations, GAMs may be all you need.
 
+<br>
+<br>
+
 <div style="text-align:center">
 <span class="" style="font-size:200%; color: #990024; font-family:'Alex Brush'">Best of luck with your data!</span>
 </div>

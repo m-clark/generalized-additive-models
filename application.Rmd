@@ -10,7 +10,7 @@ We're now ready to do some modeling! We've now seen the relationships of GAM to 
 
 ## Initial Examination
 
-The data set has been constructed using average Science scores by country from the Programme for International Student Assessment ([PISA](http://www.pisa.oecd.org/)) 2006, along with GNI per capita (Purchasing Power Parity, 2005 dollars), Educational Index, Health Index, and Human Development Index from [UN data](http://hdr.undp.org/en/data).  The key variables are as follows (variable abbreviations in bold)[^datainfo]:
+The data set has been constructed using average Science scores by country from the Programme for International Student Assessment ([PISA](https://www.oecd.org/pisa/)) 2006, along with GNI per capita (Purchasing Power Parity, 2005 dollars), Educational Index, Health Index, and Human Development Index from [UN data](http://hdr.undp.org/en/data).  The key variables are as follows (variable abbreviations in bold)[^datainfo]:
 
 [^datainfo]: The education component is measured by mean of years of schooling for adults aged 25 years and expected years of schooling for children of school entering age, the health index by life expectancy at birth, and the wealth component is based on the gross national income per capita. The HDI sets a minimum and a maximum for each dimension, and values indicate where each country stands in relation to these endpoints, expressed as a value between 0 and 1. More information on the HDI measures can be found [here](http://hdr.undp.org/en/statistics/hdi/).
 
@@ -67,8 +67,7 @@ p = GGally::ggpairs(
   )),
   # upper=list(continuous=GGally::wrap(better_corr)),
   axisLabels = "none"
-) +
-  theme_clean() 
+)
 
 p
 ```
@@ -100,8 +99,7 @@ scatterwrap = ggplot(aes(x = Value, y = Overall), data = dmelt) +
     vjust = -.2
   ) +
   facet_wrap( ~ Index, scales = 'free_x') +
-  labs(x = '') +
-  theme_clean()
+  labs(x = '')
 
 scatterwrap
 ```
@@ -125,7 +123,6 @@ scatterwrapSmooth = ggplot(aes(x = Value, y = Overall), data = dmelt) +
   ) +
   facet_wrap( ~ Index, scales = 'free_x') +
   labs(x = '') +
-  theme_clean() +
   theme(plot.background = element_rect(color = 'transparent'))
 
 scatterwrapSmooth
@@ -196,8 +193,7 @@ polynomialBasis = ggplot(aes(x = Income, y = Income), data = dpoly) +
     color = "#56B4E9",
     lwd = .5
   ) +
-  facet_grid(basis ~ ., scales = 'free_y') +  # , labeller=label_parsed if using expressions
-  theme_clean()
+  facet_grid(basis ~ ., scales = 'free_y')   # , labeller=label_parsed if using expressions
 
 polynomialBasis
 ```
@@ -248,8 +244,7 @@ csbyhand = ggplot(aes(x = Income, y = Overall), data = pisa) +
     color = palettes$stan_red$stan_red,
     lwd = 1
   ) +
-  xlim(.4, 1) +
-  theme_clean()
+  xlim(.4, 1)
 
 csbyhand
 ```
@@ -445,8 +440,7 @@ df_preds = data.frame(testdata, predictions) %>%
 
 ggplot(aes(x = Income, y = fit), data = df_preds) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = 'gray92') +
-  geom_line(color = '#56B4E9') +
-  theme_clean()  # personal theme
+  geom_line(color = '#56B4E9')
 ```
 
 
@@ -544,4 +538,4 @@ One can verify this by running the same model via the <span class="func">glm</sp
 
 [^ti]: See the smooth `ti` for an ANOVA decomposition of such smooths into main effects and interaction.
 
-[^qatar]: Probably this is due to Qatar. Refer again to the previous [scatterplot](#countryscatter). 
+[^qatar]: Probably this is due to Qatar. Refer again to the previous [scatterplot][Initial Examination]. 

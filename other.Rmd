@@ -199,7 +199,7 @@ Generalized additive models for location, scale, and shape (*GAMLSS*) allow for 
 
 #### Other
 
-In addition, there are boosted, ensemble and other machine learning approaches that apply GAMs. It should be noted that [boosted models](http://projecteuclid.org/euclid.aos/1016218223) *are* GAMs. In short, there's plenty to continue to explore once one gets the hang of generalized additive models.
+In addition, there are boosted, ensemble and other machine learning approaches that apply GAMs. It should be noted that [boosted models can be seen as  GAMs](http://projecteuclid.org/euclid.aos/1016218223). In short, there's plenty to continue to explore once one gets the hang of generalized additive models.
 
 
 ### Reproducing Kernel Hilbert Space
@@ -209,7 +209,6 @@ Generalized smoothing splines are built on the theory of *reproducing kernel Hil
 
 ### Gaussian Processes
 
-<img class='zoom' src='img/gp.png' style="display:block; margin: 0 auto;"> <br> <span style="text-align:center; display:block;">Gaussian Process</span> <br>The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.
 
 We can also approach modeling by using generalizations of the Gaussian distribution.  Where the Gaussian distribution is over vectors and defined by a mean vector and covariance matrix, a *Gaussian Process* is a *distribution over functions*. A function $f$ is distributed as a Gaussian Process defined by a mean function $m$ and covariance function $k$. They have a close tie to RKHS methods, and generalize commonly used models in spatial modeling.
 
@@ -220,6 +219,12 @@ $$f\sim \mathcal{GP}(m,k)$$
 In the Bayesian context, we can define a prior distribution over functions and make draws from a posterior predictive distribution of $f$ once we have observed data.  The reader is encouraged to consult @rasmussen_gaussian_2006 for the necessary detail. The [text](http://www.gaussianprocess.org/gpml/) is free for download, and Rasmussen also provides a nice and brief [intro](http://link.springer.com/chapter/10.1007/978-3-540-28650-9_4).  I also have some R code for [demonstration](https://m-clark.github.io/models-by-example/gaussian-process.html) based on his Matlab code, as well as Bayesian examples in Stan in the same document, though Stan offers easier ways to do it these days. 
 
 Suffice it to say in this context, it turns out that generalized additive models with a tensor product or cubic spline smooth are maximum a posteriori (MAP) estimates of Gaussian processes with specific covariance functions and a zero mean function. In that sense, one might segue nicely to Gaussian processes if familiar with additive models.  The <span class="pack">mgcv</span> package also allows one to use a spline form of Gaussian process. Furthermore, gaussian process regression is akin to a single layer neural network with an infinite number of hidden nodes. So there is a straightforward thread from GAMs to neural nets as well.
+
+
+
+
+<img src='img/gp.png' style="display:block; margin: 0 auto; width: 50%, height: 66%"> <br> <span style="display:block; font-size: 8pt">*Gaussian Process*: The left graph shows functions from the prior distribution, the right shows the posterior mean function, 95% confidence interval shaded, as well as specific draws from the posterior predictive mean distribution.</span> <br>
+
 
 [^econecol]: For example, various theoretically motivated models in economics and ecology. A common model example is the logistic growth curve.
 

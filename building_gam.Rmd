@@ -40,11 +40,16 @@ fits = d %>%
   select(-data)
 
 
-plot_ly(fits) %>% 
-  add_markers(~x, ~y, marker=list(color='#D55E00', opacity=.5), showlegend=F) %>% 
-  add_lines(~x, ~fit, color=I('#56B4E9'), showlegend=F) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly()
+# plot_ly(fits) %>% 
+#   add_markers(~x, ~y, marker=list(color='#D55E00', opacity=.5), showlegend=F) %>% 
+#   add_lines(~x, ~fit, color=I('#56B4E9'), showlegend=F) %>% 
+#   config(displayModeBar=F) %>% 
+#   theme_plotly()
+
+fits %>% 
+  ggplot(aes(x, y)) +
+  geom_point() +
+  geom_line(aes(y = fit, group = xcut), alpha = 1, size = 1)
 ```
 
 <br>
@@ -97,14 +102,20 @@ In summary, you're doing a GLM, but a slightly modified one.  You could have alw
 Let's get things started by demonstrating the results from a GAM that uses a *polynomial spline* for the basis.  The brave may refer to the [technical details][a detailed example] section for additional insights.  Conceptually, it is useful to continue to think of the piecewise approach we talked about before.  However, we'll end up with a smoother and connected result when all is said and done. Very nice!
 
 ```{r polysplinedemo, echo=FALSE}
+# d %>%
+#   add_predictions(model = gam(y ~ s(x, bs='cr', k=12))) %>% 
+#   arrange(x) %>% 
+#   plot_ly() %>% 
+#   add_markers(~x, ~y, marker=list(color='#D55E00', opacity=.5), showlegend=F) %>% 
+#   add_lines(~x, ~pred, color=I('#56B4E9'), showlegend=F) %>% 
+#   config(displayModeBar=F) %>% 
+#   theme_plotly()
+
 d %>%
-  add_predictions(model = gam(y ~ s(x, bs='cr', k=12))) %>% 
-  arrange(x) %>% 
-  plot_ly() %>% 
-  add_markers(~x, ~y, marker=list(color='#D55E00', opacity=.5), showlegend=F) %>% 
-  add_lines(~x, ~pred, color=I('#56B4E9'), showlegend=F) %>% 
-  config(displayModeBar=F) %>% 
-  theme_plotly()
+  add_predictions(model = gam(y ~ s(x, bs = 'cr', k = 12))) %>% 
+  ggplot(aes(x, y)) +
+  geom_point() +
+  geom_line(aes(y = pred), alpha = 1, size = 1)
 ```
 
 <br>

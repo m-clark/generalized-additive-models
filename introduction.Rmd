@@ -28,7 +28,7 @@ One of the issues with this model is that, in its basic form it can be very limi
 
 ### Generalized Linear Model
 
-In that light, we may consider the <span class="emph">generalized linear model</span>.  Generalized linear models incorporate other types of distributions[^expofam], and include a link function $g(.)$ relating the mean $\mu$, or stated differently, the expected values $E(y)$, to the linear predictor $X\beta$, often denoted $\eta$.  So the general form is:
+In that light, we may consider the *generalized linear model*.  Generalized linear models incorporate other types of distributions[^expofam], and include a link function $g(.)$ relating the mean $\mu$, or stated differently, the expected values $E(y)$, to the linear predictor $X\beta$, often denoted $\eta$.  So the general form is:
 
 $$g(\mu) = \eta = X\beta$$
 $$E(y) = \mu = g^{-1}(\eta)$$
@@ -120,7 +120,7 @@ We haven't really moved from the standard linear model in this case, but we have
 
 ### Scatterplot Smoothing
 
-There are still other possible routes we could take. Many are probably familiar with <span class="emph">loess</span> (or lowess) regression, if only in the sense that often statistical packages may, either by default or with relative ease, add a nonparametric fit line to a scatterplot. By default, this is typically *lowess*, or *locally weighted scatterplot smoothing*.  
+There are still other possible routes we could take. Many are probably familiar with *loess* (or lowess) regression, if only in the sense that often statistical packages may, either by default or with relative ease, add a nonparametric fit line to a scatterplot. By default, this is typically *lowess*, or *locally weighted scatterplot smoothing*.  
 
 Take a look at the following figure. For every (sorted) $x_0$ value, we choose a neighborhood around it and, for example, fit a simple regression.  As an example, let's look at $x_0$ = 3.0, and choose a neighborhood of 100 X values below and 100 values above.  
 
@@ -228,8 +228,7 @@ mcycleFigure = ggplot(aes(x = times, y = accel), data = mcycle3) +
   facet_wrap( ~ variable) +
   ylab('Acceleration') +
   xlab('Time') +
-  theme(plot.background = element_blank()) +
-  theme_clean()
+  theme(plot.background = element_blank())
 
 mcycleFigure
 # ggplotly(mcycleFigure) %>%    # unlike plot_ly, ggplotly can't handle % width, but also just randomly disappears
