@@ -432,3 +432,12 @@ div.datatables {
 div.csl-entry {
   padding: 5px;
 }
+
+
+/* suggested here https://github.com/m-clark/generalized-additive-models/issues/13; also with lists, but not sure about incorporating here */
+
+/* Horizontal line with right width */
+
+hr {
+    width: 60%;
+}

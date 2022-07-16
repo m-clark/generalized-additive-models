@@ -227,6 +227,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
 <li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#model-comparison-revisited"><i class="fa fa-check"></i>Model Comparison Revisited</a></li>
+<li class="chapter" data-level="" data-path="issues.html"><a href="issues.html#big-data"><i class="fa fa-check"></i>Big Data</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Approaches</a>
 <ul>
@@ -364,7 +365,7 @@ g(\mu) = b_0 + f(x_1) + f(x_2) \;...\;+f(x_p)
 <p>One common approach we could undertake is to add a transformation of the predictor <span class="math inline">\(X\)</span>, and in this case we might consider a quadratic term such that our model looks something like the following.</p>
 <p><span class="math display">\[
 y \sim \mathcal{N}(\mu,\sigma^2)\\
-\mu = b_0 + b_1\cdot x_1+b_2\cdot x^2
+\mu = b_0 + b_1\cdot x_1+b_2\cdot x_1^2
 \]</span>
 And here is how the model would fit the data.</p>
 <p><img src="gam_files/figure-html/quadraticFitPlot-1.svg" width="768" style="display: block; margin: auto;" /></p>

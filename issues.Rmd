@@ -167,7 +167,15 @@ anova(mod_A, mod_B, test = "Chisq") %>%
 
 Again though, we could have just used the summary output from the second model.
 
-Instances where such a statistical test does not appear to be appropriate within the context of the <span class="mgcv"></span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it's possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical.  Wood suggests that if such model comparison is the ultimate goal, an unpenalized approach[^unpenal] would be best to use in order to have much confidence in the p-values[^gsspack].
+Instances where such a statistical test does not appear to be appropriate within the context of the <span class="pack">mgcv</span> package are when terms are able to be penalized to zero; in such a case p-values will be much too low. In addition, when comparing GAMs, sometimes the nesting of models would not be so clear when there are multiple smooths involved, and additional steps may need to be taken to make sure they are nested to use the statistical test. We must make sure that each smooth term in the null model has no more effective degrees of freedom than the same term in the alternative, otherwise it's possible that the model with more terms can have lower effective degrees of freedom but better fit, rendering the test nonsensical.  Wood suggests that if such model comparison is the ultimate goal, an unpenalized approach[^unpenal] would be best to use in order to have much confidence in the p-values[^gsspack].
+
+
+## Big Data
+
+Many times you'll come across some notably large data for which you'd still like to fit a GAM too. Wood has implemented a lot of speed and memory efficiency into the <span class="func">bam</span> function, which works basically the same as the gam function. Assuming you get the data into memory, even millions of rows will likely pose little issue for mgcv.
+
+Where things do start to hurt computationally is in the number of parameters.  While <span class="pack">mgcv</span> is great just as a [mixed model tool to incorporate random effects][A comparison to mixed models], as the dimensionality grows, <span class="func">bam</span>'s performance will start to suffer. This would likely not be a big deal for standard implementation of GAM for smooth terms, but when using it for categorical random effects (i.e. `bs = 're'`), having a lot of groups means a lot of parameters to estimate.  I have a [demo that provides more details](https://m-clark.github.io/posts/2019-10-20-big-mixed-models/).
+
 
 [^lambdaset]: See p. 128, @wood_generalized_2006, or p. 168 in @wood_generalized_2017.  
 
