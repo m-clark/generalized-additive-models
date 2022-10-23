@@ -167,7 +167,7 @@ dxy %>%
 
 <br>
 
-The above plot shows the result from such a fitting process.  For comparison, the regular regression fit is also provided. Even without using a lowess approach, we could have fit have fit a model assuming a quadratic relationship,  $y = x + x^2$, and it would result in a far better fit than the simpler model[^yquad].  While polynomial regression might suffice in some cases, the issue is that nonlinear relationships are generally not specified so easily, as we'll see next[^popcrash].
+The above plot shows the result from such a fitting process.  For comparison, the regular regression fit is also provided. Even without using a lowess approach, we could have fit a model assuming a quadratic relationship,  $y = x + x^2$, and it would result in a far better fit than the simpler model[^yquad].  While polynomial regression might suffice in some cases, the issue is that nonlinear relationships are generally not specified so easily, as we'll see next[^popcrash].
 
 ```{r mcycleDataSetup, echo=FALSE}
 library(splines)
