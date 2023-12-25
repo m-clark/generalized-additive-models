@@ -45,11 +45,11 @@ Such models are usually found among a number machine learning techniques, any nu
 
 ## Bayesian Estimation
 
-We can definitely take a [Bayesian approach](https://m-clark.github.io/bayesian-basics/) to our GAMs if desired, in fact, we already have!  When we called the <span class="func">summary</span> method, the p-values are based on the Bayesian posterior covariance matrix of parameters.  This matrix is also the basis for the standard errors whenever we use the <span class="func">predict</span> method. So our uncertainty estimates are generally Bayesian-ish when using our default approach for span class="pack">mgcv</span>[^bayesfreq].
+We can definitely take a [Bayesian approach](https://m-clark.github.io/bayesian-basics/) to our GAMs if desired, in fact, we already have!  When we called the <span class="func">summary</span> method, the p-values are based on the Bayesian posterior covariance matrix of parameters.  This matrix is also the basis for the standard errors whenever we use the <span class="func">predict</span> method. So our uncertainty estimates are generally Bayesian-ish when using our default approach for <span class="pack">mgcv</span>[^bayesfreq].
 
 [^bayesfreq]: This happens to provide better frequentist coverage as well. See the documentation for the summary method.
 
-For a fully Bayesian implementation, the <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the class="pack">mgcv</span> package's syntax style. The reason is that it just uses mgcv to 
+For a fully Bayesian implementation, the <span class="pack">brms</span> package serves as an easy to use starting point in R, and has functionality for using the <span class="pack">mgcv</span> package's syntax style. The reason is that it just uses mgcv to 
 
 ```{r bayes-demo, eval=FALSE}
 library(brms)
